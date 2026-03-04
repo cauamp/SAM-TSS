@@ -1,0 +1,6 @@
+Starting RTMVSS training at Wed Mar  4 16:18:54 EST 2026
+Job ID: 57343664
+Running on host: ng30704
+GPUs available: 0
+Could not load model, file does not exist:  models/rtmvss_1.py
+Training completed at Wed Mar  4 16:19:08 EST 2026

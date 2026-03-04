@@ -128,6 +128,8 @@ class MVSeg(GenericDataset):
         orig_res = (320, 480)
         if args.backbone == "deeplab50":
             work_res = (320, 480) #(480, 640)
+        elif args.backbone == "sam_based":
+            work_res = (1024, 1024) 
         else:
             work_res = (-1, -1)
             print("unknown backbone")

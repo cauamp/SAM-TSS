@@ -1,7 +1,0 @@
-/localscratch/spool/slurmd/job57319250/slurm_script: line 25: ./activate.sh: No such file or directory
-Traceback (most recent call last):
-  File "/lustre06/project/6085198/caua/SAM-TSS/src/sam_tss/main.py", line 11, in <module>
-    import routines
-  File "/lustre06/project/6085198/caua/SAM-TSS/src/sam_tss/routines.py", line 4, in <module>
-    import scipy.ndimage
-ModuleNotFoundError: No module named 'scipy'

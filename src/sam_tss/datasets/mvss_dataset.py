@@ -9,7 +9,7 @@ from datasets.transform import Relabel, ToLabel
 ###############################################################################################
 # Sets the dataset path
 
-MVSeg_ROOT = "/set_your_path/MVSeg_Dataset/"
+MVSeg_ROOT = "/Users/cauamp/Documents/MVSeg_Dataset"
 
 ###############################################################################################
 

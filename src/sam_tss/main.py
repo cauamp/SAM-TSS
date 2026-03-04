@@ -78,6 +78,8 @@ if __name__ == '__main__':
                         help='SAM2 model config (sam2.1_hiera_t/s/b+/l)')
     parser.add_argument('--sam2-ckpt', type=str, required=True,
                         help='Path to SAM2 checkpoint')
+    parser.add_argument('--load', type=str, default=None,
+                        help='Path to pretrained RTMVSS checkpoint (e.g., ./weights/dvisal.pt)')
     parser.add_argument('--num-classes', type=int, default=26,
                         help='Number of segmentation classes (26 for MVSeg)')
     parser.add_argument('--num-frame-queries', type=int, default=5,

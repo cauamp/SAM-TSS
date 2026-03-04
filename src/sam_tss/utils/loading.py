@@ -63,11 +63,20 @@ def load_model_from_file(args, model_path, board, gpu, checkpoint):
                     for k, v in sam2_state.items():
                         new_state_dict["module.sam2." + k] = v
                 
-                # Add checkpoint weights
-                for k, v in checkpoint_weights.items():
-                    new_state_dict[k] = v
+                # Add checkpoint weights with proper key handling
+                # Check if checkpoint keys have "module." prefix
+                sample_key = next(iter(checkpoint_weights.keys()))
+                has_module_prefix = sample_key.startswith("module.")
                 
-                model.load_state_dict(new_state_dict, strict=True)
+                for k, v in checkpoint_weights.items():
+                    if has_module_prefix:
+                        # Keys already have module prefix, use as-is
+                        new_state_dict[k] = v
+                    else:
+                        # Add module prefix for DDP compatibility
+                        new_state_dict["module." + k] = v
+                
+                model.load_state_dict(new_state_dict, strict=False)
                 
                 if print_all_logs:
                     print("Loaded merged weights: SAM2 + RTMVSS checkpoint")

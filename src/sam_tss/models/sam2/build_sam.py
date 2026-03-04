@@ -94,7 +94,24 @@ def build_sam2(
         config_dir = str(config_path.parent.absolute())
         config_name = config_path.stem
     else:
-        config_path = Path.cwd() / config_file
+        # For relative paths, search in sam2 configs directory
+        sam2_dir = Path(__file__).parent
+        # Try to find config in sam2/configs subdirectories
+        possible_paths = [
+            sam2_dir / "configs" / "sam2.1" / config_file,
+            sam2_dir / "configs" / "sam2" / config_file,
+            sam2_dir / "configs" / config_file,
+            Path.cwd() / config_file,  # fallback to cwd
+        ]
+        config_path = None
+        for path in possible_paths:
+            if path.exists():
+                config_path = path
+                break
+        
+        if config_path is None:
+            raise FileNotFoundError(f"Config file not found: {config_file}. Searched in: {[str(p) for p in possible_paths]}")
+        
         config_dir = str(config_path.parent.absolute())
         config_name = config_path.stem
     
@@ -145,7 +162,24 @@ def build_sam2_video_predictor(
         config_dir = str(config_path.parent.absolute())
         config_name = config_path.stem
     else:
-        config_path = Path.cwd() / config_file
+        # For relative paths, search in sam2 configs directory
+        sam2_dir = Path(__file__).parent
+        # Try to find config in sam2/configs subdirectories
+        possible_paths = [
+            sam2_dir / "configs" / "sam2.1" / config_file,
+            sam2_dir / "configs" / "sam2" / config_file,
+            sam2_dir / "configs" / config_file,
+            Path.cwd() / config_file,  # fallback to cwd
+        ]
+        config_path = None
+        for path in possible_paths:
+            if path.exists():
+                config_path = path
+                break
+        
+        if config_path is None:
+            raise FileNotFoundError(f"Config file not found: {config_file}. Searched in: {[str(p) for p in possible_paths]}")
+        
         config_dir = str(config_path.parent.absolute())
         config_name = config_path.stem
     

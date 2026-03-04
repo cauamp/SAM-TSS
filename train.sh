@@ -4,8 +4,8 @@
 CUDA_VISIBLE_DEVICES=0 uv run src/sam_tss/main.py \
   --model rtmvss_1.py \
   --sam2-config sam2.1_hiera_l.yaml \
-  --sam2-ckpt /path/to/sam2_hiera_large.pt \
-  --load ./weights/dvisal.pt \
+  --sam2-ckpt ./src/sam_tss/models/sam2/sam2.1_hiera_large.pt \
+  --load ./src/sam-tss/weights/dvisal.pt \
   --num-classes 26 \
   --num-frame-queries 5 \
   --num-video-queries 5 \

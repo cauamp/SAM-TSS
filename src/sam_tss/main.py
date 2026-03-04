@@ -40,7 +40,7 @@ def process(gpu, args):
     if args.resume:
         checkpoint = load_checkpoint(saver.save_dir, args.shallow_dec)
 
-    model_path = os.path.join("models", args.model)     # Loading Model file, i.e., mvnet.py
+    model_path = os.path.join("src/sam_tss/models", args.model)     # Loading Model file, i.e., mvnet.py
     model = load_model_from_file(args, model_path, board, gpu, checkpoint)
 
     if gpu == 0:

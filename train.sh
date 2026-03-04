@@ -2,7 +2,7 @@
 
 # Stage1: Training Warm-up for RTMVSS model
 CUDA_VISIBLE_DEVICES=0 uv run src/sam_tss/main.py \
-  --model src/tam_tss/models/rtmvss_1.py \
+  --model rtmvss_1.py \
   --sam2-config sam2.1_hiera_l.yaml \
   --sam2-ckpt /path/to/sam2_hiera_large.pt \
   --load ./weights/dvisal.pt \

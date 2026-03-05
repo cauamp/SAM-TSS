@@ -303,7 +303,9 @@ class rtmvss(nn.Module):
                     # Apply sigmoid only for memory update (needs probabilities)
                     # Reshape for update: [bsz, num_classes, h, w] -> [bsz*num_classes, 1, h, w]
                     masks_for_update = torch.sigmoid(sam_high_masks_logits).view(bsz * self.num_classes, 1, h, w).contiguous()
-                    self.update_video_queries(feats_img[-1][:, ti], masks_for_update)
+                    # Expand pix_feat to match multi-class structure: [bsz, C, H, W] -> [bsz*num_classes, C, H, W]
+                    pix_feat_expanded = feats_img[-1][:, ti].unsqueeze(1).expand(-1, self.num_classes, -1, -1, -1).reshape(bsz * self.num_classes, *feats_img[-1][:, ti].shape[1:]).contiguous()
+                    self.update_video_queries(pix_feat_expanded, masks_for_update)
                     
                 frames_pred.append(sam_high_masks_logits)
 
@@ -457,7 +459,9 @@ class rtmvss(nn.Module):
                 # Apply sigmoid only for memory update (needs probabilities)
                 # Reshape for update: [bsz, num_classes, h, w] -> [bsz*num_classes, 1, h, w]
                 masks_for_update = torch.sigmoid(sam_high_masks_logits).view(bsz * self.num_classes, 1, h, w).contiguous()
-                self.update_video_queries(feats_img[-1][:, 0], masks_for_update)
+                # Expand pix_feat to match multi-class structure: [bsz, C, H, W] -> [bsz*num_classes, C, H, W]
+                pix_feat_expanded = feats_img[-1][:, 0].unsqueeze(1).expand(-1, self.num_classes, -1, -1, -1).reshape(bsz * self.num_classes, *feats_img[-1][:, 0].shape[1:]).contiguous()
+                self.update_video_queries(pix_feat_expanded, masks_for_update)
 
             # Convert to MVNet-compatible output format for inference
             # Add temporal dimension: [bsz, num_classes, h, w] -> [bsz, 1, num_classes, h, w]

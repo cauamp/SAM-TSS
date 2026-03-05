@@ -173,29 +173,32 @@ class rtmvss(nn.Module):
         # d_proj = depths.repeat(1, 3, 1, 1)
         feats_img, feats_d = self.sam2_image_encoder(imgs, d_proj)
 
+        # Use actual feature sizes computed from the backbone
+        feat_sizes = self.actual_feat_sizes if hasattr(self, 'actual_feat_sizes') else self._bb_feat_sizes
+        
         # auxiliary supervision
         if is_training:
             intermediate_mask_stage2 = self.mixer2(feats_img[2])
             intermediate_mask_stage2 = (
                 intermediate_mask_stage2.squeeze(1)
-                .view(bsz, frames, self._bb_feat_sizes[2][0], self._bb_feat_sizes[2][1])
+                .reshape(bsz, frames, feat_sizes[2][0], feat_sizes[2][1])
                 .contiguous()
             )
 
             intermediate_mask = [intermediate_mask_stage2]
 
         for i in range(3):
-            size = self._bb_feat_sizes[i][0]
+            size = feat_sizes[i][0]
 
-            feats_img[i] = feats_img[i].view(bsz, frames, -1, size, size).contiguous()
-            feats_d[i] = feats_d[i].view(bsz, frames, -1, size, size).contiguous()
+            feats_img[i] = feats_img[i].reshape(bsz, frames, -1, size, size).contiguous()
+            feats_d[i] = feats_d[i].reshape(bsz, frames, -1, size, size).contiguous()
 
         if is_training:
             if is_mem and not self.video_query_initialized:
                 self.video_query_weight = self.video_queries.weight.unsqueeze(1).repeat(1, bsz, 1).contiguous()
                 self.video_query_initialized = True
             dense_embeddings = self.sam2.sam_prompt_encoder.no_mask_embed.weight.reshape(1, -1, 1, 1).expand(
-                bsz, -1, self._bb_feat_sizes[-1][0], self._bb_feat_sizes[-1][1]
+                bsz, -1, feat_sizes[-1][0], feat_sizes[-1][1]
             )
 
             for ti in range(0, frames):
@@ -227,6 +230,13 @@ class rtmvss(nn.Module):
                     "bqc,bchw->bqhw", video_query_embeddings, feats_img[-1][:, ti]
                 ).contiguous()
                 # dense_embeddings = self.dense_embed(video_embed_with_current_feat)
+                
+                # Dynamically reinitialize sparse_embed if input dimension doesn't match
+                spatial_dim = video_embed_with_current_feat.shape[-1] * video_embed_with_current_feat.shape[-2]
+                expected_input_dim = self.sparse_embed.in_features
+                if spatial_dim != expected_input_dim:
+                    self.sparse_embed = nn.Linear(spatial_dim, 256).to(self.device)
+                
                 if is_mem:
                     sparse_embeddings = self.sparse_embed(
                         video_embed_with_current_feat.view(bsz, self.num_video_queries, -1).contiguous()
@@ -359,7 +369,7 @@ class rtmvss(nn.Module):
             #     (bsz, 0, 256), device=self.device
             # )
             dense_embeddings = self.sam2.sam_prompt_encoder.no_mask_embed.weight.reshape(1, -1, 1, 1).expand(
-                bsz, -1, self._bb_feat_sizes[-1][0], self._bb_feat_sizes[-1][1]
+                bsz, -1, feat_sizes[-1][0], feat_sizes[-1][1]
             )
             high_res_features = [feats_img[idx][:, 0] for idx in range(2)]
 
@@ -387,6 +397,13 @@ class rtmvss(nn.Module):
                 "bqc,bchw->bqhw", video_query_embeddings, feats_img[-1][:, 0]
             ).contiguous()
             # dense_embeddings = self.dense_embed(video_embed_with_current_feat)
+            
+            # Dynamically reinitialize sparse_embed if input dimension doesn't match
+            spatial_dim = video_embed_with_current_feat.shape[-1] * video_embed_with_current_feat.shape[-2]
+            expected_input_dim = self.sparse_embed.in_features
+            if spatial_dim != expected_input_dim:
+                self.sparse_embed = nn.Linear(spatial_dim, 256).to(self.device)
+            
             if is_mem:
                 sparse_embeddings = self.sparse_embed(
                     video_embed_with_current_feat.view(bsz, self.num_video_queries, -1).contiguous()
@@ -591,10 +608,23 @@ class rtmvss(nn.Module):
         if self.sam2.directly_add_no_mem_embed:
             vision_feats[-1] = vision_feats[-1] + self.sam2.no_mem_embed
 
-        feats = [
-            feat.permute(1, 2, 0).view(batch_size, -1, *feat_size).contiguous()
-            for feat, feat_size in zip(vision_feats, self._bb_feat_sizes)
-        ]
+        # Dynamically compute feature sizes from actual tensor shapes
+        # vision_feats have shape [seq_len, H*W, C]
+        feats = []
+        actual_feat_sizes = []
+        for feat in vision_feats:
+            seq_len, spatial_dim, channels = feat.shape
+            # Infer H and W from spatial_dim (assuming square features)
+            feat_size = int(spatial_dim ** 0.5)
+            assert feat_size * feat_size == spatial_dim, f"Expected square features, got spatial_dim={spatial_dim}"
+            actual_feat_sizes.append((feat_size, feat_size))
+            # Reshape: [seq_len, H*W, C] -> [H*W, C, seq_len] -> [batch_size, C, H, W]
+            # Use reshape instead of view for non-contiguous tensors
+            feat_reshaped = feat.permute(1, 2, 0).reshape(batch_size, channels, feat_size, feat_size).contiguous()
+            feats.append(feat_reshaped)
+        
+        # Store actual feature sizes for use in forward pass
+        self.actual_feat_sizes = actual_feat_sizes
 
         return feats
 

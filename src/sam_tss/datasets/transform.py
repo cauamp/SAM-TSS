@@ -91,10 +91,12 @@ class MyCoTransform(object):
 
             if_crop = random.random()
             if if_crop < 0.5:
-                randcrop_x = random.randint(0, inputs_list[0].size[0] - inputs_list[0].size[0]*0.8)
-                randcrop_y = random.randint(0, inputs_list[0].size[1] - inputs_list[0].size[1]*0.8)
+                crop_width = int(inputs_list[0].size[0] * 0.8)
+                crop_height = int(inputs_list[0].size[1] * 0.8)
+                randcrop_x = random.randint(0, inputs_list[0].size[0] - crop_width)
+                randcrop_y = random.randint(0, inputs_list[0].size[1] - crop_height)
                 crop_tuple = (randcrop_x, randcrop_y,
-                              randcrop_x + inputs_list[0].size[0]*0.8, randcrop_y + inputs_list[0].size[1]*0.8)
+                              randcrop_x + crop_width, randcrop_y + crop_height)
 
                 for i, val in enumerate(inputs_list):
                     inputs_list[i] = val.crop(crop_tuple)

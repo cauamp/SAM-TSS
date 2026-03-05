@@ -609,18 +609,19 @@ class rtmvss(nn.Module):
             vision_feats[-1] = vision_feats[-1] + self.sam2.no_mem_embed
 
         # Dynamically compute feature sizes from actual tensor shapes
-        # vision_feats have shape [seq_len, H*W, C]
+        # vision_feats have shape [bsz*frames, H*W, C] where bsz*frames is the total number of images processed
+        # (batch_size * temporal_length since video frames are flattened into batch dimension)
         feats = []
         actual_feat_sizes = []
         for feat in vision_feats:
-            seq_len, spatial_dim, channels = feat.shape
+            actual_batch_dim, spatial_dim, channels = feat.shape  # actual_batch_dim = bsz*frames
             # Infer H and W from spatial_dim (assuming square features)
             feat_size = int(spatial_dim ** 0.5)
             assert feat_size * feat_size == spatial_dim, f"Expected square features, got spatial_dim={spatial_dim}"
             actual_feat_sizes.append((feat_size, feat_size))
-            # Reshape: [seq_len, H*W, C] -> [H*W, C, seq_len] -> [batch_size, C, H, W]
+            # Reshape: [bsz*frames, H*W, C] -> [H*W, C, bsz*frames] -> [bsz*frames, C, H, W]
             # Use reshape instead of view for non-contiguous tensors
-            feat_reshaped = feat.permute(1, 2, 0).reshape(batch_size, channels, feat_size, feat_size).contiguous()
+            feat_reshaped = feat.permute(1, 2, 0).reshape(actual_batch_dim, channels, feat_size, feat_size).contiguous()
             feats.append(feat_reshaped)
         
         # Store actual feature sizes for use in forward pass

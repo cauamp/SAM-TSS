@@ -178,20 +178,20 @@ class rtmvss(nn.Module):
         
         # auxiliary supervision
         if is_training:
-            intermediate_mask_stage2 = self.mixer2(feats_img[2])
-            # mixer2 outputs [bsz*frames, 1, H, W], squeeze to [bsz*frames, H, W]
-            intermediate_mask_stage2 = intermediate_mask_stage2.squeeze(1)
-            # Infer actual spatial dimensions from tensor shape instead of using feat_sizes
-            actual_h, actual_w = intermediate_mask_stage2.shape[1], intermediate_mask_stage2.shape[2]
-            intermediate_mask_stage2 = intermediate_mask_stage2.reshape(bsz, frames, actual_h, actual_w).contiguous()
+            intermediate_mask_stage2 = self.mixer2(feats_img[2])  # [bsz*frames, 1, H, W]
+            intermediate_mask_stage2 = intermediate_mask_stage2.squeeze(1)  # [bsz*frames, H, W]
+            # Infer actual spatial dimensions from tensor shape
+            spatial_h, spatial_w = intermediate_mask_stage2.shape[1], intermediate_mask_stage2.shape[2]
+            intermediate_mask_stage2 = intermediate_mask_stage2.reshape(bsz, frames, spatial_h, spatial_w).contiguous()
 
             intermediate_mask = [intermediate_mask_stage2]
 
+        # Reshape features for temporal processing
         for i in range(3):
-            size = feat_sizes[i][0]
-
-            feats_img[i] = feats_img[i].reshape(bsz, frames, -1, size, size).contiguous()
-            feats_d[i] = feats_d[i].reshape(bsz, frames, -1, size, size).contiguous()
+            # Dynamically infer the spatial size from the actual tensor
+            _, C, feat_h, feat_w = feats_img[i].shape  # [bsz*frames, C, H, W]
+            feats_img[i] = feats_img[i].reshape(bsz, frames, C, feat_h, feat_w).contiguous()
+            feats_d[i] = feats_d[i].reshape(bsz, frames, C, feat_h, feat_w).contiguous()
 
         if is_training:
             if is_mem and not self.video_query_initialized:

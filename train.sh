@@ -5,10 +5,10 @@ CUDA_VISIBLE_DEVICES=0 uv run src/sam_tss/main.py \
   --model rtmvss_1.py \
   --sam2-config sam2.1_hiera_l.yaml \
   --sam2-ckpt ./src/sam_tss/models/sam2/sam2.1_hiera_large.pt \
-  --load ./src/sam-tss/weights/dvisal.pt \
+  --load ./src/sam_tss/weights/dvisal.pt \
   --num-classes 26 \
-  --num-frame-queries 5 \
-  --num-video-queries 5 \
+  --num-frame-queries 30 \
+  --num-video-queries 8 \
   --enable-memory \
   --training \
   --baseline-mode \
@@ -16,7 +16,7 @@ CUDA_VISIBLE_DEVICES=0 uv run src/sam_tss/main.py \
   --lr-start 2e-4 \
   --lr-strategy plateau_08 \
   --num-epochs 150 \
-  --batch-size 2 \
+  --batch-size 1 \
   --stm-queue-size 3 \
   --sample-rate 3 \
   --savedir save/training_base_rtmvss

@@ -179,11 +179,11 @@ class rtmvss(nn.Module):
         # auxiliary supervision
         if is_training:
             intermediate_mask_stage2 = self.mixer2(feats_img[2])
-            intermediate_mask_stage2 = (
-                intermediate_mask_stage2.squeeze(1)
-                .reshape(bsz, frames, feat_sizes[2][0], feat_sizes[2][1])
-                .contiguous()
-            )
+            # mixer2 outputs [bsz*frames, 1, H, W], squeeze to [bsz*frames, H, W]
+            intermediate_mask_stage2 = intermediate_mask_stage2.squeeze(1)
+            # Infer actual spatial dimensions from tensor shape instead of using feat_sizes
+            actual_h, actual_w = intermediate_mask_stage2.shape[1], intermediate_mask_stage2.shape[2]
+            intermediate_mask_stage2 = intermediate_mask_stage2.reshape(bsz, frames, actual_h, actual_w).contiguous()
 
             intermediate_mask = [intermediate_mask_stage2]
 

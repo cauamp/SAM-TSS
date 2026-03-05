@@ -197,11 +197,13 @@ class rtmvss(nn.Module):
             if is_mem and not self.video_query_initialized:
                 self.video_query_weight = self.video_queries.weight.unsqueeze(1).repeat(1, bsz, 1).contiguous()
                 self.video_query_initialized = True
+            # Use feat_sizes[-1] for the lowest resolution level (main embeddings)
             dense_embeddings = self.sam2.sam_prompt_encoder.no_mask_embed.weight.reshape(1, -1, 1, 1).expand(
                 bsz, -1, feat_sizes[-1][0], feat_sizes[-1][1]
             )
 
             for ti in range(0, frames):
+                # Use levels 0 and 1 for high-res features
                 high_res_features = [feats_img[idx][:, ti] for idx in range(2)]
 
                 frame_query_weight = self.frame_queries.weight.unsqueeze(1).repeat(1, bsz, 1).contiguous()
@@ -273,8 +275,8 @@ class rtmvss(nn.Module):
 
 
                 # Expand other inputs for all classes
-                # feats_img[-1][:, 0]: [bsz, C, H, W] -> [bsz*num_classes, C, H, W]
-                image_embeddings_expanded = feats_img[-1][:, 0].unsqueeze(1).expand(-1, self.num_classes, -1, -1, -1).reshape(bsz * self.num_classes, *feats_img[-1][:, 0].shape[1:]).contiguous()
+                # feats_img[-1][:, ti]: [bsz, C, H, W] -> [bsz*num_classes, C, H, W]
+                image_embeddings_expanded = feats_img[-1][:, ti].unsqueeze(1).expand(-1, self.num_classes, -1, -1, -1).reshape(bsz * self.num_classes, *feats_img[-1][:, ti].shape[1:]).contiguous()
 
                 # dense_embeddings: [bsz, 256, 28, 28] -> [bsz*num_classes, 256, 28, 28]
                 dense_embeddings_expanded = dense_embeddings.unsqueeze(1).expand(-1, self.num_classes, -1, -1, -1).reshape(bsz * self.num_classes, *dense_embeddings.shape[1:]).contiguous()
@@ -609,19 +611,22 @@ class rtmvss(nn.Module):
             vision_feats[-1] = vision_feats[-1] + self.sam2.no_mem_embed
 
         # Dynamically compute feature sizes from actual tensor shapes
-        # vision_feats have shape [bsz*frames, H*W, C] where bsz*frames is the total number of images processed
-        # (batch_size * temporal_length since video frames are flattened into batch dimension)
+        # vision_feats from SAM2 have shape [H*W, bsz*frames, C] (note: spatial first!)
+        # We need to reshape them to [bsz*frames, C, H, W]
         feats = []
         actual_feat_sizes = []
-        for feat in vision_feats:
-            actual_batch_dim, spatial_dim, channels = feat.shape  # actual_batch_dim = bsz*frames
+        for i, feat in enumerate(vision_feats):
+            spatial_dim, actual_batch_dim, channels = feat.shape  # Note: spatial_dim first!
+            
             # Infer H and W from spatial_dim (assuming square features)
             feat_size = int(spatial_dim ** 0.5)
-            assert feat_size * feat_size == spatial_dim, f"Expected square features, got spatial_dim={spatial_dim}"
+            assert feat_size * feat_size == spatial_dim, f"Expected square features at level {i}, got spatial_dim={spatial_dim}, shape={feat.shape}"
             actual_feat_sizes.append((feat_size, feat_size))
-            # Reshape: [bsz*frames, H*W, C] -> [H*W, C, bsz*frames] -> [bsz*frames, C, H, W]
-            # Use reshape instead of view for non-contiguous tensors
-            feat_reshaped = feat.permute(1, 2, 0).reshape(actual_batch_dim, channels, feat_size, feat_size).contiguous()
+            # Reshape: [H*W, bsz*frames, C] -> [bsz*frames, C, H*W] -> [bsz*frames, C, H, W]
+            # Permute to get [bsz*frames, C, H*W] first
+            feat_permuted = feat.permute(1, 2, 0)  # [H*W, batch, C] -> [batch, C, H*W]
+            # Then reshape to [bsz*frames, C, H, W]
+            feat_reshaped = feat_permuted.reshape(actual_batch_dim, channels, feat_size, feat_size).contiguous()
             feats.append(feat_reshaped)
         
         # Store actual feature sizes for use in forward pass

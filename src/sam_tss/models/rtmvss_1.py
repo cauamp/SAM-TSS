@@ -172,7 +172,11 @@ class rtmvss(nn.Module):
         d_proj = self.encoder_adapter0(depths)
         # d_proj = depths.repeat(1, 3, 1, 1)
         feats_img, feats_d = self.sam2_image_encoder(imgs, d_proj)
-
+        print(f"Encoder output feature shapes: {[feat.shape for feat in feats_img]}")  # Debug print
+        #resize imgs and depths to 512x512 
+        imgs = F.interpolate(imgs, size=(512, 512), mode='bilinear', align_corners=False)
+        depths = F.interpolate(depths, size=(512, 512), mode='bilinear', align_corners=False)
+        
         # Use actual feature sizes computed from the backbone
         feat_sizes = self.actual_feat_sizes if hasattr(self, 'actual_feat_sizes') else self._bb_feat_sizes
         
@@ -306,7 +310,9 @@ class rtmvss(nn.Module):
                     align_corners=False,
                 )
                 # Keep raw logits - no sigmoid needed since MVNet expects logits
-
+                
+                # Squeeze channel dimension: [bsz*num_classes, 1, h, w] -> [bsz*num_classes, h, w]
+                sam_high_mask = sam_high_mask.squeeze(1)
                 # Reshape back: [bsz*num_classes, h, w] -> [bsz, num_classes, h, w]
                 sam_high_masks_logits = sam_high_mask.view(bsz, self.num_classes, h, w).contiguous()
 
@@ -469,7 +475,9 @@ class rtmvss(nn.Module):
                 align_corners=False,
             )
             # Keep raw logits - no sigmoid needed since MVNet expects logits
-
+            
+            # Squeeze channel dimension: [bsz*num_classes, 1, h, w] -> [bsz*num_classes, h, w]
+            sam_high_mask = sam_high_mask.squeeze(1)
             # Reshape back: [bsz*num_classes, h, w] -> [bsz, num_classes, h, w]
             sam_high_masks_logits = sam_high_mask.view(bsz, self.num_classes, h, w).contiguous()
             

@@ -1,0 +1,20 @@
+warning: `VIRTUAL_ENV=/lustre06/project/6085198/caua/SAM-TSS/.venv` does not match the project environment path `.venv` and will be ignored; use `--active` to target the active environment instead
+/lustre06/project/6085198/caua/sam-tss/.venv/lib64/python3.9/site-packages/torch/distributed/distributed_c10d.py:4807: UserWarning: No device id is provided via `init_process_group` or `barrier `. Using the current device set by the user. 
+  warnings.warn(  # warn only once
+/lustre06/project/6085198/caua/sam-tss/src/sam_tss/models/sam2/modeling/sam/transformer.py:270: UserWarning: Memory efficient kernel not used because: (Triggered internally at /pytorch/aten/src/ATen/native/transformers/cuda/sdp_utils.cpp:858.)
+  out = F.scaled_dot_product_attention(q, k, v, dropout_p=dropout_p)
+/lustre06/project/6085198/caua/sam-tss/src/sam_tss/models/sam2/modeling/sam/transformer.py:270: UserWarning: Memory Efficient attention has been runtime disabled. (Triggered internally at /pytorch/aten/src/ATen/native/transformers/sdp_utils_cpp.h:552.)
+  out = F.scaled_dot_product_attention(q, k, v, dropout_p=dropout_p)
+/lustre06/project/6085198/caua/sam-tss/src/sam_tss/models/sam2/modeling/sam/transformer.py:270: UserWarning: Flash attention kernel not used because: (Triggered internally at /pytorch/aten/src/ATen/native/transformers/cuda/sdp_utils.cpp:860.)
+  out = F.scaled_dot_product_attention(q, k, v, dropout_p=dropout_p)
+/lustre06/project/6085198/caua/sam-tss/src/sam_tss/models/sam2/modeling/sam/transformer.py:270: UserWarning: Expected query, key and value to all be of dtype: {Half, BFloat16}. Got Query dtype: float, Key dtype: float, and Value dtype: float instead. (Triggered internally at /pytorch/aten/src/ATen/native/transformers/sdp_utils_cpp.h:91.)
+  out = F.scaled_dot_product_attention(q, k, v, dropout_p=dropout_p)
+/lustre06/project/6085198/caua/sam-tss/src/sam_tss/models/sam2/modeling/sam/transformer.py:270: UserWarning: CuDNN attention kernel not used because: (Triggered internally at /pytorch/aten/src/ATen/native/transformers/cuda/sdp_utils.cpp:862.)
+  out = F.scaled_dot_product_attention(q, k, v, dropout_p=dropout_p)
+/lustre06/project/6085198/caua/sam-tss/.venv/lib64/python3.9/site-packages/torch/nn/modules/module.py:1784: UserWarning: Flash Attention kernel failed due to: No available kernel. Aborting execution.
+Falling back to all available kernels for scaled_dot_product_attention (which may have a slower speed).
+  return forward_call(*args, **kwargs)
+/lustre06/project/6085198/caua/sam-tss/.venv/lib64/python3.9/site-packages/torch/autograd/graph.py:829: UserWarning: Grad strides do not match bucket view strides. This may indicate grad was not created according to the gradient layout contract, or that the param's strides changed since DDP was constructed.  This is not an error, but may impair performance.
+grad.sizes() = [64, 256, 1, 1], strides() = [256, 1, 256, 256]
+bucket_view.sizes() = [64, 256, 1, 1], strides() = [256, 1, 1, 1] (Triggered internally at /pytorch/torch/csrc/distributed/c10d/reducer.cpp:334.)
+  return Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass

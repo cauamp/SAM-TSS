@@ -1,0 +1,2161 @@
+Starting RTMVSS training at Fri Mar  6 16:52:56 EST 2026
+Job ID: 57427902
+Running on host: ng10302
+GPUs available: 0
+Loaded model file:  src/sam_tss/models/rtmvss_1.py
+Loading RTMVSS checkpoint:  ./src/sam_tss/weights/dvisal.pt
+Loading SAM2 checkpoint:  ./src/sam_tss/models/sam2/sam2.1_hiera_large.pt
+Loaded merged weights: SAM2 + RTMVSS checkpoint
+Optimized parameters:
+module.class_query
+module.encoder_adapter0.0.weight
+module.encoder_adapter0.0.bias
+module.encoder_adapter0.2.weight
+module.encoder_adapter0.2.bias
+module.encoder_adapter0_.0.weight
+module.encoder_adapter0_.0.bias
+module.encoder_adapter0_.2.weight
+module.encoder_adapter0_.2.bias
+module.encoder_adapter1.fc_up.weight
+module.encoder_adapter1.fc_up.bias
+module.encoder_adapter1.fc_down.weight
+module.encoder_adapter1.fc_down.bias
+module.encoder_adapter1.skip.weight
+module.encoder_adapter1.skip.bias
+module.encoder_adapter2.fc_up.weight
+module.encoder_adapter2.fc_up.bias
+module.encoder_adapter2.fc_down.weight
+module.encoder_adapter2.fc_down.bias
+module.encoder_adapter2.skip.weight
+module.encoder_adapter2.skip.bias
+module.encoder_adapter3.fc_up.weight
+module.encoder_adapter3.fc_up.bias
+module.encoder_adapter3.fc_down.weight
+module.encoder_adapter3.fc_down.bias
+module.encoder_adapter3.skip.weight
+module.encoder_adapter3.skip.bias
+module.encoder_adapter4.fc_up.weight
+module.encoder_adapter4.fc_up.bias
+module.encoder_adapter4.fc_down.weight
+module.encoder_adapter4.fc_down.bias
+module.encoder_adapter4.skip.weight
+module.encoder_adapter4.skip.bias
+module.mixer0.0.weight
+module.mixer0.0.bias
+module.mixer0.2.weight
+module.mixer0.2.bias
+module.mixer0.4.weight
+module.mixer0.4.bias
+module.mixer1.0.weight
+module.mixer1.0.bias
+module.mixer1.2.weight
+module.mixer1.2.bias
+module.mixer1.4.weight
+module.mixer1.4.bias
+module.mixer2.0.weight
+module.mixer2.0.bias
+module.mixer2.2.weight
+module.mixer2.2.bias
+module.mixer2.4.weight
+module.mixer2.4.bias
+module.sam2.maskmem_tpos_enc
+module.sam2.no_mem_embed
+module.sam2.no_mem_pos_enc
+module.sam2.no_obj_ptr
+module.sam2.no_obj_embed_spatial
+module.sam2.image_encoder.trunk.pos_embed
+module.sam2.image_encoder.trunk.pos_embed_window
+module.sam2.image_encoder.trunk.patch_embed.proj.weight
+module.sam2.image_encoder.trunk.patch_embed.proj.bias
+module.sam2.image_encoder.trunk.blocks.0.norm1.weight
+module.sam2.image_encoder.trunk.blocks.0.norm1.bias
+module.sam2.image_encoder.trunk.blocks.0.attn.qkv.weight
+module.sam2.image_encoder.trunk.blocks.0.attn.qkv.bias
+module.sam2.image_encoder.trunk.blocks.0.attn.proj.weight
+module.sam2.image_encoder.trunk.blocks.0.attn.proj.bias
+module.sam2.image_encoder.trunk.blocks.0.norm2.weight
+module.sam2.image_encoder.trunk.blocks.0.norm2.bias
+module.sam2.image_encoder.trunk.blocks.0.mlp.layers.0.weight
+module.sam2.image_encoder.trunk.blocks.0.mlp.layers.0.bias
+module.sam2.image_encoder.trunk.blocks.0.mlp.layers.1.weight
+module.sam2.image_encoder.trunk.blocks.0.mlp.layers.1.bias
+module.sam2.image_encoder.trunk.blocks.1.norm1.weight
+module.sam2.image_encoder.trunk.blocks.1.norm1.bias
+module.sam2.image_encoder.trunk.blocks.1.attn.qkv.weight
+module.sam2.image_encoder.trunk.blocks.1.attn.qkv.bias
+module.sam2.image_encoder.trunk.blocks.1.attn.proj.weight
+module.sam2.image_encoder.trunk.blocks.1.attn.proj.bias
+module.sam2.image_encoder.trunk.blocks.1.norm2.weight
+module.sam2.image_encoder.trunk.blocks.1.norm2.bias
+module.sam2.image_encoder.trunk.blocks.1.mlp.layers.0.weight
+module.sam2.image_encoder.trunk.blocks.1.mlp.layers.0.bias
+module.sam2.image_encoder.trunk.blocks.1.mlp.layers.1.weight
+module.sam2.image_encoder.trunk.blocks.1.mlp.layers.1.bias
+module.sam2.image_encoder.trunk.blocks.2.norm1.weight
+module.sam2.image_encoder.trunk.blocks.2.norm1.bias
+module.sam2.image_encoder.trunk.blocks.2.attn.qkv.weight
+module.sam2.image_encoder.trunk.blocks.2.attn.qkv.bias
+module.sam2.image_encoder.trunk.blocks.2.attn.proj.weight
+module.sam2.image_encoder.trunk.blocks.2.attn.proj.bias
+module.sam2.image_encoder.trunk.blocks.2.norm2.weight
+module.sam2.image_encoder.trunk.blocks.2.norm2.bias
+module.sam2.image_encoder.trunk.blocks.2.mlp.layers.0.weight
+module.sam2.image_encoder.trunk.blocks.2.mlp.layers.0.bias
+module.sam2.image_encoder.trunk.blocks.2.mlp.layers.1.weight
+module.sam2.image_encoder.trunk.blocks.2.mlp.layers.1.bias
+module.sam2.image_encoder.trunk.blocks.2.proj.weight
+module.sam2.image_encoder.trunk.blocks.2.proj.bias
+module.sam2.image_encoder.trunk.blocks.3.norm1.weight
+module.sam2.image_encoder.trunk.blocks.3.norm1.bias
+module.sam2.image_encoder.trunk.blocks.3.attn.qkv.weight
+module.sam2.image_encoder.trunk.blocks.3.attn.qkv.bias
+module.sam2.image_encoder.trunk.blocks.3.attn.proj.weight
+module.sam2.image_encoder.trunk.blocks.3.attn.proj.bias
+module.sam2.image_encoder.trunk.blocks.3.norm2.weight
+module.sam2.image_encoder.trunk.blocks.3.norm2.bias
+module.sam2.image_encoder.trunk.blocks.3.mlp.layers.0.weight
+module.sam2.image_encoder.trunk.blocks.3.mlp.layers.0.bias
+module.sam2.image_encoder.trunk.blocks.3.mlp.layers.1.weight
+module.sam2.image_encoder.trunk.blocks.3.mlp.layers.1.bias
+module.sam2.image_encoder.trunk.blocks.4.norm1.weight
+module.sam2.image_encoder.trunk.blocks.4.norm1.bias
+module.sam2.image_encoder.trunk.blocks.4.attn.qkv.weight
+module.sam2.image_encoder.trunk.blocks.4.attn.qkv.bias
+module.sam2.image_encoder.trunk.blocks.4.attn.proj.weight
+module.sam2.image_encoder.trunk.blocks.4.attn.proj.bias
+module.sam2.image_encoder.trunk.blocks.4.norm2.weight
+module.sam2.image_encoder.trunk.blocks.4.norm2.bias
+module.sam2.image_encoder.trunk.blocks.4.mlp.layers.0.weight
+module.sam2.image_encoder.trunk.blocks.4.mlp.layers.0.bias
+module.sam2.image_encoder.trunk.blocks.4.mlp.layers.1.weight
+module.sam2.image_encoder.trunk.blocks.4.mlp.layers.1.bias
+module.sam2.image_encoder.trunk.blocks.5.norm1.weight
+module.sam2.image_encoder.trunk.blocks.5.norm1.bias
+module.sam2.image_encoder.trunk.blocks.5.attn.qkv.weight
+module.sam2.image_encoder.trunk.blocks.5.attn.qkv.bias
+module.sam2.image_encoder.trunk.blocks.5.attn.proj.weight
+module.sam2.image_encoder.trunk.blocks.5.attn.proj.bias
+module.sam2.image_encoder.trunk.blocks.5.norm2.weight
+module.sam2.image_encoder.trunk.blocks.5.norm2.bias
+module.sam2.image_encoder.trunk.blocks.5.mlp.layers.0.weight
+module.sam2.image_encoder.trunk.blocks.5.mlp.layers.0.bias
+module.sam2.image_encoder.trunk.blocks.5.mlp.layers.1.weight
+module.sam2.image_encoder.trunk.blocks.5.mlp.layers.1.bias
+module.sam2.image_encoder.trunk.blocks.6.norm1.weight
+module.sam2.image_encoder.trunk.blocks.6.norm1.bias
+module.sam2.image_encoder.trunk.blocks.6.attn.qkv.weight
+module.sam2.image_encoder.trunk.blocks.6.attn.qkv.bias
+module.sam2.image_encoder.trunk.blocks.6.attn.proj.weight
+module.sam2.image_encoder.trunk.blocks.6.attn.proj.bias
+module.sam2.image_encoder.trunk.blocks.6.norm2.weight
+module.sam2.image_encoder.trunk.blocks.6.norm2.bias
+module.sam2.image_encoder.trunk.blocks.6.mlp.layers.0.weight
+module.sam2.image_encoder.trunk.blocks.6.mlp.layers.0.bias
+module.sam2.image_encoder.trunk.blocks.6.mlp.layers.1.weight
+module.sam2.image_encoder.trunk.blocks.6.mlp.layers.1.bias
+module.sam2.image_encoder.trunk.blocks.7.norm1.weight
+module.sam2.image_encoder.trunk.blocks.7.norm1.bias
+module.sam2.image_encoder.trunk.blocks.7.attn.qkv.weight
+module.sam2.image_encoder.trunk.blocks.7.attn.qkv.bias
+module.sam2.image_encoder.trunk.blocks.7.attn.proj.weight
+module.sam2.image_encoder.trunk.blocks.7.attn.proj.bias
+module.sam2.image_encoder.trunk.blocks.7.norm2.weight
+module.sam2.image_encoder.trunk.blocks.7.norm2.bias
+module.sam2.image_encoder.trunk.blocks.7.mlp.layers.0.weight
+module.sam2.image_encoder.trunk.blocks.7.mlp.layers.0.bias
+module.sam2.image_encoder.trunk.blocks.7.mlp.layers.1.weight
+module.sam2.image_encoder.trunk.blocks.7.mlp.layers.1.bias
+module.sam2.image_encoder.trunk.blocks.8.norm1.weight
+module.sam2.image_encoder.trunk.blocks.8.norm1.bias
+module.sam2.image_encoder.trunk.blocks.8.attn.qkv.weight
+module.sam2.image_encoder.trunk.blocks.8.attn.qkv.bias
+module.sam2.image_encoder.trunk.blocks.8.attn.proj.weight
+module.sam2.image_encoder.trunk.blocks.8.attn.proj.bias
+module.sam2.image_encoder.trunk.blocks.8.norm2.weight
+module.sam2.image_encoder.trunk.blocks.8.norm2.bias
+module.sam2.image_encoder.trunk.blocks.8.mlp.layers.0.weight
+module.sam2.image_encoder.trunk.blocks.8.mlp.layers.0.bias
+module.sam2.image_encoder.trunk.blocks.8.mlp.layers.1.weight
+module.sam2.image_encoder.trunk.blocks.8.mlp.layers.1.bias
+module.sam2.image_encoder.trunk.blocks.8.proj.weight
+module.sam2.image_encoder.trunk.blocks.8.proj.bias
+module.sam2.image_encoder.trunk.blocks.9.norm1.weight
+module.sam2.image_encoder.trunk.blocks.9.norm1.bias
+module.sam2.image_encoder.trunk.blocks.9.attn.qkv.weight
+module.sam2.image_encoder.trunk.blocks.9.attn.qkv.bias
+module.sam2.image_encoder.trunk.blocks.9.attn.proj.weight
+module.sam2.image_encoder.trunk.blocks.9.attn.proj.bias
+module.sam2.image_encoder.trunk.blocks.9.norm2.weight
+module.sam2.image_encoder.trunk.blocks.9.norm2.bias
+module.sam2.image_encoder.trunk.blocks.9.mlp.layers.0.weight
+module.sam2.image_encoder.trunk.blocks.9.mlp.layers.0.bias
+module.sam2.image_encoder.trunk.blocks.9.mlp.layers.1.weight
+module.sam2.image_encoder.trunk.blocks.9.mlp.layers.1.bias
+module.sam2.image_encoder.trunk.blocks.10.norm1.weight
+module.sam2.image_encoder.trunk.blocks.10.norm1.bias
+module.sam2.image_encoder.trunk.blocks.10.attn.qkv.weight
+module.sam2.image_encoder.trunk.blocks.10.attn.qkv.bias
+module.sam2.image_encoder.trunk.blocks.10.attn.proj.weight
+module.sam2.image_encoder.trunk.blocks.10.attn.proj.bias
+module.sam2.image_encoder.trunk.blocks.10.norm2.weight
+module.sam2.image_encoder.trunk.blocks.10.norm2.bias
+module.sam2.image_encoder.trunk.blocks.10.mlp.layers.0.weight
+module.sam2.image_encoder.trunk.blocks.10.mlp.layers.0.bias
+module.sam2.image_encoder.trunk.blocks.10.mlp.layers.1.weight
+module.sam2.image_encoder.trunk.blocks.10.mlp.layers.1.bias
+module.sam2.image_encoder.trunk.blocks.11.norm1.weight
+module.sam2.image_encoder.trunk.blocks.11.norm1.bias
+module.sam2.image_encoder.trunk.blocks.11.attn.qkv.weight
+module.sam2.image_encoder.trunk.blocks.11.attn.qkv.bias
+module.sam2.image_encoder.trunk.blocks.11.attn.proj.weight
+module.sam2.image_encoder.trunk.blocks.11.attn.proj.bias
+module.sam2.image_encoder.trunk.blocks.11.norm2.weight
+module.sam2.image_encoder.trunk.blocks.11.norm2.bias
+module.sam2.image_encoder.trunk.blocks.11.mlp.layers.0.weight
+module.sam2.image_encoder.trunk.blocks.11.mlp.layers.0.bias
+module.sam2.image_encoder.trunk.blocks.11.mlp.layers.1.weight
+module.sam2.image_encoder.trunk.blocks.11.mlp.layers.1.bias
+module.sam2.image_encoder.trunk.blocks.12.norm1.weight
+module.sam2.image_encoder.trunk.blocks.12.norm1.bias
+module.sam2.image_encoder.trunk.blocks.12.attn.qkv.weight
+module.sam2.image_encoder.trunk.blocks.12.attn.qkv.bias
+module.sam2.image_encoder.trunk.blocks.12.attn.proj.weight
+module.sam2.image_encoder.trunk.blocks.12.attn.proj.bias
+module.sam2.image_encoder.trunk.blocks.12.norm2.weight
+module.sam2.image_encoder.trunk.blocks.12.norm2.bias
+module.sam2.image_encoder.trunk.blocks.12.mlp.layers.0.weight
+module.sam2.image_encoder.trunk.blocks.12.mlp.layers.0.bias
+module.sam2.image_encoder.trunk.blocks.12.mlp.layers.1.weight
+module.sam2.image_encoder.trunk.blocks.12.mlp.layers.1.bias
+module.sam2.image_encoder.trunk.blocks.13.norm1.weight
+module.sam2.image_encoder.trunk.blocks.13.norm1.bias
+module.sam2.image_encoder.trunk.blocks.13.attn.qkv.weight
+module.sam2.image_encoder.trunk.blocks.13.attn.qkv.bias
+module.sam2.image_encoder.trunk.blocks.13.attn.proj.weight
+module.sam2.image_encoder.trunk.blocks.13.attn.proj.bias
+module.sam2.image_encoder.trunk.blocks.13.norm2.weight
+module.sam2.image_encoder.trunk.blocks.13.norm2.bias
+module.sam2.image_encoder.trunk.blocks.13.mlp.layers.0.weight
+module.sam2.image_encoder.trunk.blocks.13.mlp.layers.0.bias
+module.sam2.image_encoder.trunk.blocks.13.mlp.layers.1.weight
+module.sam2.image_encoder.trunk.blocks.13.mlp.layers.1.bias
+module.sam2.image_encoder.trunk.blocks.14.norm1.weight
+module.sam2.image_encoder.trunk.blocks.14.norm1.bias
+module.sam2.image_encoder.trunk.blocks.14.attn.qkv.weight
+module.sam2.image_encoder.trunk.blocks.14.attn.qkv.bias
+module.sam2.image_encoder.trunk.blocks.14.attn.proj.weight
+module.sam2.image_encoder.trunk.blocks.14.attn.proj.bias
+module.sam2.image_encoder.trunk.blocks.14.norm2.weight
+module.sam2.image_encoder.trunk.blocks.14.norm2.bias
+module.sam2.image_encoder.trunk.blocks.14.mlp.layers.0.weight
+module.sam2.image_encoder.trunk.blocks.14.mlp.layers.0.bias
+module.sam2.image_encoder.trunk.blocks.14.mlp.layers.1.weight
+module.sam2.image_encoder.trunk.blocks.14.mlp.layers.1.bias
+module.sam2.image_encoder.trunk.blocks.15.norm1.weight
+module.sam2.image_encoder.trunk.blocks.15.norm1.bias
+module.sam2.image_encoder.trunk.blocks.15.attn.qkv.weight
+module.sam2.image_encoder.trunk.blocks.15.attn.qkv.bias
+module.sam2.image_encoder.trunk.blocks.15.attn.proj.weight
+module.sam2.image_encoder.trunk.blocks.15.attn.proj.bias
+module.sam2.image_encoder.trunk.blocks.15.norm2.weight
+module.sam2.image_encoder.trunk.blocks.15.norm2.bias
+module.sam2.image_encoder.trunk.blocks.15.mlp.layers.0.weight
+module.sam2.image_encoder.trunk.blocks.15.mlp.layers.0.bias
+module.sam2.image_encoder.trunk.blocks.15.mlp.layers.1.weight
+module.sam2.image_encoder.trunk.blocks.15.mlp.layers.1.bias
+module.sam2.image_encoder.trunk.blocks.16.norm1.weight
+module.sam2.image_encoder.trunk.blocks.16.norm1.bias
+module.sam2.image_encoder.trunk.blocks.16.attn.qkv.weight
+module.sam2.image_encoder.trunk.blocks.16.attn.qkv.bias
+module.sam2.image_encoder.trunk.blocks.16.attn.proj.weight
+module.sam2.image_encoder.trunk.blocks.16.attn.proj.bias
+module.sam2.image_encoder.trunk.blocks.16.norm2.weight
+module.sam2.image_encoder.trunk.blocks.16.norm2.bias
+module.sam2.image_encoder.trunk.blocks.16.mlp.layers.0.weight
+module.sam2.image_encoder.trunk.blocks.16.mlp.layers.0.bias
+module.sam2.image_encoder.trunk.blocks.16.mlp.layers.1.weight
+module.sam2.image_encoder.trunk.blocks.16.mlp.layers.1.bias
+module.sam2.image_encoder.trunk.blocks.17.norm1.weight
+module.sam2.image_encoder.trunk.blocks.17.norm1.bias
+module.sam2.image_encoder.trunk.blocks.17.attn.qkv.weight
+module.sam2.image_encoder.trunk.blocks.17.attn.qkv.bias
+module.sam2.image_encoder.trunk.blocks.17.attn.proj.weight
+module.sam2.image_encoder.trunk.blocks.17.attn.proj.bias
+module.sam2.image_encoder.trunk.blocks.17.norm2.weight
+module.sam2.image_encoder.trunk.blocks.17.norm2.bias
+module.sam2.image_encoder.trunk.blocks.17.mlp.layers.0.weight
+module.sam2.image_encoder.trunk.blocks.17.mlp.layers.0.bias
+module.sam2.image_encoder.trunk.blocks.17.mlp.layers.1.weight
+module.sam2.image_encoder.trunk.blocks.17.mlp.layers.1.bias
+module.sam2.image_encoder.trunk.blocks.18.norm1.weight
+module.sam2.image_encoder.trunk.blocks.18.norm1.bias
+module.sam2.image_encoder.trunk.blocks.18.attn.qkv.weight
+module.sam2.image_encoder.trunk.blocks.18.attn.qkv.bias
+module.sam2.image_encoder.trunk.blocks.18.attn.proj.weight
+module.sam2.image_encoder.trunk.blocks.18.attn.proj.bias
+module.sam2.image_encoder.trunk.blocks.18.norm2.weight
+module.sam2.image_encoder.trunk.blocks.18.norm2.bias
+module.sam2.image_encoder.trunk.blocks.18.mlp.layers.0.weight
+module.sam2.image_encoder.trunk.blocks.18.mlp.layers.0.bias
+module.sam2.image_encoder.trunk.blocks.18.mlp.layers.1.weight
+module.sam2.image_encoder.trunk.blocks.18.mlp.layers.1.bias
+module.sam2.image_encoder.trunk.blocks.19.norm1.weight
+module.sam2.image_encoder.trunk.blocks.19.norm1.bias
+module.sam2.image_encoder.trunk.blocks.19.attn.qkv.weight
+module.sam2.image_encoder.trunk.blocks.19.attn.qkv.bias
+module.sam2.image_encoder.trunk.blocks.19.attn.proj.weight
+module.sam2.image_encoder.trunk.blocks.19.attn.proj.bias
+module.sam2.image_encoder.trunk.blocks.19.norm2.weight
+module.sam2.image_encoder.trunk.blocks.19.norm2.bias
+module.sam2.image_encoder.trunk.blocks.19.mlp.layers.0.weight
+module.sam2.image_encoder.trunk.blocks.19.mlp.layers.0.bias
+module.sam2.image_encoder.trunk.blocks.19.mlp.layers.1.weight
+module.sam2.image_encoder.trunk.blocks.19.mlp.layers.1.bias
+module.sam2.image_encoder.trunk.blocks.20.norm1.weight
+module.sam2.image_encoder.trunk.blocks.20.norm1.bias
+module.sam2.image_encoder.trunk.blocks.20.attn.qkv.weight
+module.sam2.image_encoder.trunk.blocks.20.attn.qkv.bias
+module.sam2.image_encoder.trunk.blocks.20.attn.proj.weight
+module.sam2.image_encoder.trunk.blocks.20.attn.proj.bias
+module.sam2.image_encoder.trunk.blocks.20.norm2.weight
+module.sam2.image_encoder.trunk.blocks.20.norm2.bias
+module.sam2.image_encoder.trunk.blocks.20.mlp.layers.0.weight
+module.sam2.image_encoder.trunk.blocks.20.mlp.layers.0.bias
+module.sam2.image_encoder.trunk.blocks.20.mlp.layers.1.weight
+module.sam2.image_encoder.trunk.blocks.20.mlp.layers.1.bias
+module.sam2.image_encoder.trunk.blocks.21.norm1.weight
+module.sam2.image_encoder.trunk.blocks.21.norm1.bias
+module.sam2.image_encoder.trunk.blocks.21.attn.qkv.weight
+module.sam2.image_encoder.trunk.blocks.21.attn.qkv.bias
+module.sam2.image_encoder.trunk.blocks.21.attn.proj.weight
+module.sam2.image_encoder.trunk.blocks.21.attn.proj.bias
+module.sam2.image_encoder.trunk.blocks.21.norm2.weight
+module.sam2.image_encoder.trunk.blocks.21.norm2.bias
+module.sam2.image_encoder.trunk.blocks.21.mlp.layers.0.weight
+module.sam2.image_encoder.trunk.blocks.21.mlp.layers.0.bias
+module.sam2.image_encoder.trunk.blocks.21.mlp.layers.1.weight
+module.sam2.image_encoder.trunk.blocks.21.mlp.layers.1.bias
+module.sam2.image_encoder.trunk.blocks.22.norm1.weight
+module.sam2.image_encoder.trunk.blocks.22.norm1.bias
+module.sam2.image_encoder.trunk.blocks.22.attn.qkv.weight
+module.sam2.image_encoder.trunk.blocks.22.attn.qkv.bias
+module.sam2.image_encoder.trunk.blocks.22.attn.proj.weight
+module.sam2.image_encoder.trunk.blocks.22.attn.proj.bias
+module.sam2.image_encoder.trunk.blocks.22.norm2.weight
+module.sam2.image_encoder.trunk.blocks.22.norm2.bias
+module.sam2.image_encoder.trunk.blocks.22.mlp.layers.0.weight
+module.sam2.image_encoder.trunk.blocks.22.mlp.layers.0.bias
+module.sam2.image_encoder.trunk.blocks.22.mlp.layers.1.weight
+module.sam2.image_encoder.trunk.blocks.22.mlp.layers.1.bias
+module.sam2.image_encoder.trunk.blocks.23.norm1.weight
+module.sam2.image_encoder.trunk.blocks.23.norm1.bias
+module.sam2.image_encoder.trunk.blocks.23.attn.qkv.weight
+module.sam2.image_encoder.trunk.blocks.23.attn.qkv.bias
+module.sam2.image_encoder.trunk.blocks.23.attn.proj.weight
+module.sam2.image_encoder.trunk.blocks.23.attn.proj.bias
+module.sam2.image_encoder.trunk.blocks.23.norm2.weight
+module.sam2.image_encoder.trunk.blocks.23.norm2.bias
+module.sam2.image_encoder.trunk.blocks.23.mlp.layers.0.weight
+module.sam2.image_encoder.trunk.blocks.23.mlp.layers.0.bias
+module.sam2.image_encoder.trunk.blocks.23.mlp.layers.1.weight
+module.sam2.image_encoder.trunk.blocks.23.mlp.layers.1.bias
+module.sam2.image_encoder.trunk.blocks.24.norm1.weight
+module.sam2.image_encoder.trunk.blocks.24.norm1.bias
+module.sam2.image_encoder.trunk.blocks.24.attn.qkv.weight
+module.sam2.image_encoder.trunk.blocks.24.attn.qkv.bias
+module.sam2.image_encoder.trunk.blocks.24.attn.proj.weight
+module.sam2.image_encoder.trunk.blocks.24.attn.proj.bias
+module.sam2.image_encoder.trunk.blocks.24.norm2.weight
+module.sam2.image_encoder.trunk.blocks.24.norm2.bias
+module.sam2.image_encoder.trunk.blocks.24.mlp.layers.0.weight
+module.sam2.image_encoder.trunk.blocks.24.mlp.layers.0.bias
+module.sam2.image_encoder.trunk.blocks.24.mlp.layers.1.weight
+module.sam2.image_encoder.trunk.blocks.24.mlp.layers.1.bias
+module.sam2.image_encoder.trunk.blocks.25.norm1.weight
+module.sam2.image_encoder.trunk.blocks.25.norm1.bias
+module.sam2.image_encoder.trunk.blocks.25.attn.qkv.weight
+module.sam2.image_encoder.trunk.blocks.25.attn.qkv.bias
+module.sam2.image_encoder.trunk.blocks.25.attn.proj.weight
+module.sam2.image_encoder.trunk.blocks.25.attn.proj.bias
+module.sam2.image_encoder.trunk.blocks.25.norm2.weight
+module.sam2.image_encoder.trunk.blocks.25.norm2.bias
+module.sam2.image_encoder.trunk.blocks.25.mlp.layers.0.weight
+module.sam2.image_encoder.trunk.blocks.25.mlp.layers.0.bias
+module.sam2.image_encoder.trunk.blocks.25.mlp.layers.1.weight
+module.sam2.image_encoder.trunk.blocks.25.mlp.layers.1.bias
+module.sam2.image_encoder.trunk.blocks.26.norm1.weight
+module.sam2.image_encoder.trunk.blocks.26.norm1.bias
+module.sam2.image_encoder.trunk.blocks.26.attn.qkv.weight
+module.sam2.image_encoder.trunk.blocks.26.attn.qkv.bias
+module.sam2.image_encoder.trunk.blocks.26.attn.proj.weight
+module.sam2.image_encoder.trunk.blocks.26.attn.proj.bias
+module.sam2.image_encoder.trunk.blocks.26.norm2.weight
+module.sam2.image_encoder.trunk.blocks.26.norm2.bias
+module.sam2.image_encoder.trunk.blocks.26.mlp.layers.0.weight
+module.sam2.image_encoder.trunk.blocks.26.mlp.layers.0.bias
+module.sam2.image_encoder.trunk.blocks.26.mlp.layers.1.weight
+module.sam2.image_encoder.trunk.blocks.26.mlp.layers.1.bias
+module.sam2.image_encoder.trunk.blocks.27.norm1.weight
+module.sam2.image_encoder.trunk.blocks.27.norm1.bias
+module.sam2.image_encoder.trunk.blocks.27.attn.qkv.weight
+module.sam2.image_encoder.trunk.blocks.27.attn.qkv.bias
+module.sam2.image_encoder.trunk.blocks.27.attn.proj.weight
+module.sam2.image_encoder.trunk.blocks.27.attn.proj.bias
+module.sam2.image_encoder.trunk.blocks.27.norm2.weight
+module.sam2.image_encoder.trunk.blocks.27.norm2.bias
+module.sam2.image_encoder.trunk.blocks.27.mlp.layers.0.weight
+module.sam2.image_encoder.trunk.blocks.27.mlp.layers.0.bias
+module.sam2.image_encoder.trunk.blocks.27.mlp.layers.1.weight
+module.sam2.image_encoder.trunk.blocks.27.mlp.layers.1.bias
+module.sam2.image_encoder.trunk.blocks.28.norm1.weight
+module.sam2.image_encoder.trunk.blocks.28.norm1.bias
+module.sam2.image_encoder.trunk.blocks.28.attn.qkv.weight
+module.sam2.image_encoder.trunk.blocks.28.attn.qkv.bias
+module.sam2.image_encoder.trunk.blocks.28.attn.proj.weight
+module.sam2.image_encoder.trunk.blocks.28.attn.proj.bias
+module.sam2.image_encoder.trunk.blocks.28.norm2.weight
+module.sam2.image_encoder.trunk.blocks.28.norm2.bias
+module.sam2.image_encoder.trunk.blocks.28.mlp.layers.0.weight
+module.sam2.image_encoder.trunk.blocks.28.mlp.layers.0.bias
+module.sam2.image_encoder.trunk.blocks.28.mlp.layers.1.weight
+module.sam2.image_encoder.trunk.blocks.28.mlp.layers.1.bias
+module.sam2.image_encoder.trunk.blocks.29.norm1.weight
+module.sam2.image_encoder.trunk.blocks.29.norm1.bias
+module.sam2.image_encoder.trunk.blocks.29.attn.qkv.weight
+module.sam2.image_encoder.trunk.blocks.29.attn.qkv.bias
+module.sam2.image_encoder.trunk.blocks.29.attn.proj.weight
+module.sam2.image_encoder.trunk.blocks.29.attn.proj.bias
+module.sam2.image_encoder.trunk.blocks.29.norm2.weight
+module.sam2.image_encoder.trunk.blocks.29.norm2.bias
+module.sam2.image_encoder.trunk.blocks.29.mlp.layers.0.weight
+module.sam2.image_encoder.trunk.blocks.29.mlp.layers.0.bias
+module.sam2.image_encoder.trunk.blocks.29.mlp.layers.1.weight
+module.sam2.image_encoder.trunk.blocks.29.mlp.layers.1.bias
+module.sam2.image_encoder.trunk.blocks.30.norm1.weight
+module.sam2.image_encoder.trunk.blocks.30.norm1.bias
+module.sam2.image_encoder.trunk.blocks.30.attn.qkv.weight
+module.sam2.image_encoder.trunk.blocks.30.attn.qkv.bias
+module.sam2.image_encoder.trunk.blocks.30.attn.proj.weight
+module.sam2.image_encoder.trunk.blocks.30.attn.proj.bias
+module.sam2.image_encoder.trunk.blocks.30.norm2.weight
+module.sam2.image_encoder.trunk.blocks.30.norm2.bias
+module.sam2.image_encoder.trunk.blocks.30.mlp.layers.0.weight
+module.sam2.image_encoder.trunk.blocks.30.mlp.layers.0.bias
+module.sam2.image_encoder.trunk.blocks.30.mlp.layers.1.weight
+module.sam2.image_encoder.trunk.blocks.30.mlp.layers.1.bias
+module.sam2.image_encoder.trunk.blocks.31.norm1.weight
+module.sam2.image_encoder.trunk.blocks.31.norm1.bias
+module.sam2.image_encoder.trunk.blocks.31.attn.qkv.weight
+module.sam2.image_encoder.trunk.blocks.31.attn.qkv.bias
+module.sam2.image_encoder.trunk.blocks.31.attn.proj.weight
+module.sam2.image_encoder.trunk.blocks.31.attn.proj.bias
+module.sam2.image_encoder.trunk.blocks.31.norm2.weight
+module.sam2.image_encoder.trunk.blocks.31.norm2.bias
+module.sam2.image_encoder.trunk.blocks.31.mlp.layers.0.weight
+module.sam2.image_encoder.trunk.blocks.31.mlp.layers.0.bias
+module.sam2.image_encoder.trunk.blocks.31.mlp.layers.1.weight
+module.sam2.image_encoder.trunk.blocks.31.mlp.layers.1.bias
+module.sam2.image_encoder.trunk.blocks.32.norm1.weight
+module.sam2.image_encoder.trunk.blocks.32.norm1.bias
+module.sam2.image_encoder.trunk.blocks.32.attn.qkv.weight
+module.sam2.image_encoder.trunk.blocks.32.attn.qkv.bias
+module.sam2.image_encoder.trunk.blocks.32.attn.proj.weight
+module.sam2.image_encoder.trunk.blocks.32.attn.proj.bias
+module.sam2.image_encoder.trunk.blocks.32.norm2.weight
+module.sam2.image_encoder.trunk.blocks.32.norm2.bias
+module.sam2.image_encoder.trunk.blocks.32.mlp.layers.0.weight
+module.sam2.image_encoder.trunk.blocks.32.mlp.layers.0.bias
+module.sam2.image_encoder.trunk.blocks.32.mlp.layers.1.weight
+module.sam2.image_encoder.trunk.blocks.32.mlp.layers.1.bias
+module.sam2.image_encoder.trunk.blocks.33.norm1.weight
+module.sam2.image_encoder.trunk.blocks.33.norm1.bias
+module.sam2.image_encoder.trunk.blocks.33.attn.qkv.weight
+module.sam2.image_encoder.trunk.blocks.33.attn.qkv.bias
+module.sam2.image_encoder.trunk.blocks.33.attn.proj.weight
+module.sam2.image_encoder.trunk.blocks.33.attn.proj.bias
+module.sam2.image_encoder.trunk.blocks.33.norm2.weight
+module.sam2.image_encoder.trunk.blocks.33.norm2.bias
+module.sam2.image_encoder.trunk.blocks.33.mlp.layers.0.weight
+module.sam2.image_encoder.trunk.blocks.33.mlp.layers.0.bias
+module.sam2.image_encoder.trunk.blocks.33.mlp.layers.1.weight
+module.sam2.image_encoder.trunk.blocks.33.mlp.layers.1.bias
+module.sam2.image_encoder.trunk.blocks.34.norm1.weight
+module.sam2.image_encoder.trunk.blocks.34.norm1.bias
+module.sam2.image_encoder.trunk.blocks.34.attn.qkv.weight
+module.sam2.image_encoder.trunk.blocks.34.attn.qkv.bias
+module.sam2.image_encoder.trunk.blocks.34.attn.proj.weight
+module.sam2.image_encoder.trunk.blocks.34.attn.proj.bias
+module.sam2.image_encoder.trunk.blocks.34.norm2.weight
+module.sam2.image_encoder.trunk.blocks.34.norm2.bias
+module.sam2.image_encoder.trunk.blocks.34.mlp.layers.0.weight
+module.sam2.image_encoder.trunk.blocks.34.mlp.layers.0.bias
+module.sam2.image_encoder.trunk.blocks.34.mlp.layers.1.weight
+module.sam2.image_encoder.trunk.blocks.34.mlp.layers.1.bias
+module.sam2.image_encoder.trunk.blocks.35.norm1.weight
+module.sam2.image_encoder.trunk.blocks.35.norm1.bias
+module.sam2.image_encoder.trunk.blocks.35.attn.qkv.weight
+module.sam2.image_encoder.trunk.blocks.35.attn.qkv.bias
+module.sam2.image_encoder.trunk.blocks.35.attn.proj.weight
+module.sam2.image_encoder.trunk.blocks.35.attn.proj.bias
+module.sam2.image_encoder.trunk.blocks.35.norm2.weight
+module.sam2.image_encoder.trunk.blocks.35.norm2.bias
+module.sam2.image_encoder.trunk.blocks.35.mlp.layers.0.weight
+module.sam2.image_encoder.trunk.blocks.35.mlp.layers.0.bias
+module.sam2.image_encoder.trunk.blocks.35.mlp.layers.1.weight
+module.sam2.image_encoder.trunk.blocks.35.mlp.layers.1.bias
+module.sam2.image_encoder.trunk.blocks.36.norm1.weight
+module.sam2.image_encoder.trunk.blocks.36.norm1.bias
+module.sam2.image_encoder.trunk.blocks.36.attn.qkv.weight
+module.sam2.image_encoder.trunk.blocks.36.attn.qkv.bias
+module.sam2.image_encoder.trunk.blocks.36.attn.proj.weight
+module.sam2.image_encoder.trunk.blocks.36.attn.proj.bias
+module.sam2.image_encoder.trunk.blocks.36.norm2.weight
+module.sam2.image_encoder.trunk.blocks.36.norm2.bias
+module.sam2.image_encoder.trunk.blocks.36.mlp.layers.0.weight
+module.sam2.image_encoder.trunk.blocks.36.mlp.layers.0.bias
+module.sam2.image_encoder.trunk.blocks.36.mlp.layers.1.weight
+module.sam2.image_encoder.trunk.blocks.36.mlp.layers.1.bias
+module.sam2.image_encoder.trunk.blocks.37.norm1.weight
+module.sam2.image_encoder.trunk.blocks.37.norm1.bias
+module.sam2.image_encoder.trunk.blocks.37.attn.qkv.weight
+module.sam2.image_encoder.trunk.blocks.37.attn.qkv.bias
+module.sam2.image_encoder.trunk.blocks.37.attn.proj.weight
+module.sam2.image_encoder.trunk.blocks.37.attn.proj.bias
+module.sam2.image_encoder.trunk.blocks.37.norm2.weight
+module.sam2.image_encoder.trunk.blocks.37.norm2.bias
+module.sam2.image_encoder.trunk.blocks.37.mlp.layers.0.weight
+module.sam2.image_encoder.trunk.blocks.37.mlp.layers.0.bias
+module.sam2.image_encoder.trunk.blocks.37.mlp.layers.1.weight
+module.sam2.image_encoder.trunk.blocks.37.mlp.layers.1.bias
+module.sam2.image_encoder.trunk.blocks.38.norm1.weight
+module.sam2.image_encoder.trunk.blocks.38.norm1.bias
+module.sam2.image_encoder.trunk.blocks.38.attn.qkv.weight
+module.sam2.image_encoder.trunk.blocks.38.attn.qkv.bias
+module.sam2.image_encoder.trunk.blocks.38.attn.proj.weight
+module.sam2.image_encoder.trunk.blocks.38.attn.proj.bias
+module.sam2.image_encoder.trunk.blocks.38.norm2.weight
+module.sam2.image_encoder.trunk.blocks.38.norm2.bias
+module.sam2.image_encoder.trunk.blocks.38.mlp.layers.0.weight
+module.sam2.image_encoder.trunk.blocks.38.mlp.layers.0.bias
+module.sam2.image_encoder.trunk.blocks.38.mlp.layers.1.weight
+module.sam2.image_encoder.trunk.blocks.38.mlp.layers.1.bias
+module.sam2.image_encoder.trunk.blocks.39.norm1.weight
+module.sam2.image_encoder.trunk.blocks.39.norm1.bias
+module.sam2.image_encoder.trunk.blocks.39.attn.qkv.weight
+module.sam2.image_encoder.trunk.blocks.39.attn.qkv.bias
+module.sam2.image_encoder.trunk.blocks.39.attn.proj.weight
+module.sam2.image_encoder.trunk.blocks.39.attn.proj.bias
+module.sam2.image_encoder.trunk.blocks.39.norm2.weight
+module.sam2.image_encoder.trunk.blocks.39.norm2.bias
+module.sam2.image_encoder.trunk.blocks.39.mlp.layers.0.weight
+module.sam2.image_encoder.trunk.blocks.39.mlp.layers.0.bias
+module.sam2.image_encoder.trunk.blocks.39.mlp.layers.1.weight
+module.sam2.image_encoder.trunk.blocks.39.mlp.layers.1.bias
+module.sam2.image_encoder.trunk.blocks.40.norm1.weight
+module.sam2.image_encoder.trunk.blocks.40.norm1.bias
+module.sam2.image_encoder.trunk.blocks.40.attn.qkv.weight
+module.sam2.image_encoder.trunk.blocks.40.attn.qkv.bias
+module.sam2.image_encoder.trunk.blocks.40.attn.proj.weight
+module.sam2.image_encoder.trunk.blocks.40.attn.proj.bias
+module.sam2.image_encoder.trunk.blocks.40.norm2.weight
+module.sam2.image_encoder.trunk.blocks.40.norm2.bias
+module.sam2.image_encoder.trunk.blocks.40.mlp.layers.0.weight
+module.sam2.image_encoder.trunk.blocks.40.mlp.layers.0.bias
+module.sam2.image_encoder.trunk.blocks.40.mlp.layers.1.weight
+module.sam2.image_encoder.trunk.blocks.40.mlp.layers.1.bias
+module.sam2.image_encoder.trunk.blocks.41.norm1.weight
+module.sam2.image_encoder.trunk.blocks.41.norm1.bias
+module.sam2.image_encoder.trunk.blocks.41.attn.qkv.weight
+module.sam2.image_encoder.trunk.blocks.41.attn.qkv.bias
+module.sam2.image_encoder.trunk.blocks.41.attn.proj.weight
+module.sam2.image_encoder.trunk.blocks.41.attn.proj.bias
+module.sam2.image_encoder.trunk.blocks.41.norm2.weight
+module.sam2.image_encoder.trunk.blocks.41.norm2.bias
+module.sam2.image_encoder.trunk.blocks.41.mlp.layers.0.weight
+module.sam2.image_encoder.trunk.blocks.41.mlp.layers.0.bias
+module.sam2.image_encoder.trunk.blocks.41.mlp.layers.1.weight
+module.sam2.image_encoder.trunk.blocks.41.mlp.layers.1.bias
+module.sam2.image_encoder.trunk.blocks.42.norm1.weight
+module.sam2.image_encoder.trunk.blocks.42.norm1.bias
+module.sam2.image_encoder.trunk.blocks.42.attn.qkv.weight
+module.sam2.image_encoder.trunk.blocks.42.attn.qkv.bias
+module.sam2.image_encoder.trunk.blocks.42.attn.proj.weight
+module.sam2.image_encoder.trunk.blocks.42.attn.proj.bias
+module.sam2.image_encoder.trunk.blocks.42.norm2.weight
+module.sam2.image_encoder.trunk.blocks.42.norm2.bias
+module.sam2.image_encoder.trunk.blocks.42.mlp.layers.0.weight
+module.sam2.image_encoder.trunk.blocks.42.mlp.layers.0.bias
+module.sam2.image_encoder.trunk.blocks.42.mlp.layers.1.weight
+module.sam2.image_encoder.trunk.blocks.42.mlp.layers.1.bias
+module.sam2.image_encoder.trunk.blocks.43.norm1.weight
+module.sam2.image_encoder.trunk.blocks.43.norm1.bias
+module.sam2.image_encoder.trunk.blocks.43.attn.qkv.weight
+module.sam2.image_encoder.trunk.blocks.43.attn.qkv.bias
+module.sam2.image_encoder.trunk.blocks.43.attn.proj.weight
+module.sam2.image_encoder.trunk.blocks.43.attn.proj.bias
+module.sam2.image_encoder.trunk.blocks.43.norm2.weight
+module.sam2.image_encoder.trunk.blocks.43.norm2.bias
+module.sam2.image_encoder.trunk.blocks.43.mlp.layers.0.weight
+module.sam2.image_encoder.trunk.blocks.43.mlp.layers.0.bias
+module.sam2.image_encoder.trunk.blocks.43.mlp.layers.1.weight
+module.sam2.image_encoder.trunk.blocks.43.mlp.layers.1.bias
+module.sam2.image_encoder.trunk.blocks.44.norm1.weight
+module.sam2.image_encoder.trunk.blocks.44.norm1.bias
+module.sam2.image_encoder.trunk.blocks.44.attn.qkv.weight
+module.sam2.image_encoder.trunk.blocks.44.attn.qkv.bias
+module.sam2.image_encoder.trunk.blocks.44.attn.proj.weight
+module.sam2.image_encoder.trunk.blocks.44.attn.proj.bias
+module.sam2.image_encoder.trunk.blocks.44.norm2.weight
+module.sam2.image_encoder.trunk.blocks.44.norm2.bias
+module.sam2.image_encoder.trunk.blocks.44.mlp.layers.0.weight
+module.sam2.image_encoder.trunk.blocks.44.mlp.layers.0.bias
+module.sam2.image_encoder.trunk.blocks.44.mlp.layers.1.weight
+module.sam2.image_encoder.trunk.blocks.44.mlp.layers.1.bias
+module.sam2.image_encoder.trunk.blocks.44.proj.weight
+module.sam2.image_encoder.trunk.blocks.44.proj.bias
+module.sam2.image_encoder.trunk.blocks.45.norm1.weight
+module.sam2.image_encoder.trunk.blocks.45.norm1.bias
+module.sam2.image_encoder.trunk.blocks.45.attn.qkv.weight
+module.sam2.image_encoder.trunk.blocks.45.attn.qkv.bias
+module.sam2.image_encoder.trunk.blocks.45.attn.proj.weight
+module.sam2.image_encoder.trunk.blocks.45.attn.proj.bias
+module.sam2.image_encoder.trunk.blocks.45.norm2.weight
+module.sam2.image_encoder.trunk.blocks.45.norm2.bias
+module.sam2.image_encoder.trunk.blocks.45.mlp.layers.0.weight
+module.sam2.image_encoder.trunk.blocks.45.mlp.layers.0.bias
+module.sam2.image_encoder.trunk.blocks.45.mlp.layers.1.weight
+module.sam2.image_encoder.trunk.blocks.45.mlp.layers.1.bias
+module.sam2.image_encoder.trunk.blocks.46.norm1.weight
+module.sam2.image_encoder.trunk.blocks.46.norm1.bias
+module.sam2.image_encoder.trunk.blocks.46.attn.qkv.weight
+module.sam2.image_encoder.trunk.blocks.46.attn.qkv.bias
+module.sam2.image_encoder.trunk.blocks.46.attn.proj.weight
+module.sam2.image_encoder.trunk.blocks.46.attn.proj.bias
+module.sam2.image_encoder.trunk.blocks.46.norm2.weight
+module.sam2.image_encoder.trunk.blocks.46.norm2.bias
+module.sam2.image_encoder.trunk.blocks.46.mlp.layers.0.weight
+module.sam2.image_encoder.trunk.blocks.46.mlp.layers.0.bias
+module.sam2.image_encoder.trunk.blocks.46.mlp.layers.1.weight
+module.sam2.image_encoder.trunk.blocks.46.mlp.layers.1.bias
+module.sam2.image_encoder.trunk.blocks.47.norm1.weight
+module.sam2.image_encoder.trunk.blocks.47.norm1.bias
+module.sam2.image_encoder.trunk.blocks.47.attn.qkv.weight
+module.sam2.image_encoder.trunk.blocks.47.attn.qkv.bias
+module.sam2.image_encoder.trunk.blocks.47.attn.proj.weight
+module.sam2.image_encoder.trunk.blocks.47.attn.proj.bias
+module.sam2.image_encoder.trunk.blocks.47.norm2.weight
+module.sam2.image_encoder.trunk.blocks.47.norm2.bias
+module.sam2.image_encoder.trunk.blocks.47.mlp.layers.0.weight
+module.sam2.image_encoder.trunk.blocks.47.mlp.layers.0.bias
+module.sam2.image_encoder.trunk.blocks.47.mlp.layers.1.weight
+module.sam2.image_encoder.trunk.blocks.47.mlp.layers.1.bias
+module.sam2.image_encoder.neck.convs.0.conv.weight
+module.sam2.image_encoder.neck.convs.0.conv.bias
+module.sam2.image_encoder.neck.convs.1.conv.weight
+module.sam2.image_encoder.neck.convs.1.conv.bias
+module.sam2.image_encoder.neck.convs.2.conv.weight
+module.sam2.image_encoder.neck.convs.2.conv.bias
+module.sam2.image_encoder.neck.convs.3.conv.weight
+module.sam2.image_encoder.neck.convs.3.conv.bias
+module.sam2.mask_downsample.weight
+module.sam2.mask_downsample.bias
+module.sam2.memory_attention.layers.0.self_attn.q_proj.weight
+module.sam2.memory_attention.layers.0.self_attn.q_proj.bias
+module.sam2.memory_attention.layers.0.self_attn.k_proj.weight
+module.sam2.memory_attention.layers.0.self_attn.k_proj.bias
+module.sam2.memory_attention.layers.0.self_attn.v_proj.weight
+module.sam2.memory_attention.layers.0.self_attn.v_proj.bias
+module.sam2.memory_attention.layers.0.self_attn.out_proj.weight
+module.sam2.memory_attention.layers.0.self_attn.out_proj.bias
+module.sam2.memory_attention.layers.0.cross_attn_image.q_proj.weight
+module.sam2.memory_attention.layers.0.cross_attn_image.q_proj.bias
+module.sam2.memory_attention.layers.0.cross_attn_image.k_proj.weight
+module.sam2.memory_attention.layers.0.cross_attn_image.k_proj.bias
+module.sam2.memory_attention.layers.0.cross_attn_image.v_proj.weight
+module.sam2.memory_attention.layers.0.cross_attn_image.v_proj.bias
+module.sam2.memory_attention.layers.0.cross_attn_image.out_proj.weight
+module.sam2.memory_attention.layers.0.cross_attn_image.out_proj.bias
+module.sam2.memory_attention.layers.0.linear1.weight
+module.sam2.memory_attention.layers.0.linear1.bias
+module.sam2.memory_attention.layers.0.linear2.weight
+module.sam2.memory_attention.layers.0.linear2.bias
+module.sam2.memory_attention.layers.0.norm1.weight
+module.sam2.memory_attention.layers.0.norm1.bias
+module.sam2.memory_attention.layers.0.norm2.weight
+module.sam2.memory_attention.layers.0.norm2.bias
+module.sam2.memory_attention.layers.0.norm3.weight
+module.sam2.memory_attention.layers.0.norm3.bias
+module.sam2.memory_attention.layers.1.self_attn.q_proj.weight
+module.sam2.memory_attention.layers.1.self_attn.q_proj.bias
+module.sam2.memory_attention.layers.1.self_attn.k_proj.weight
+module.sam2.memory_attention.layers.1.self_attn.k_proj.bias
+module.sam2.memory_attention.layers.1.self_attn.v_proj.weight
+module.sam2.memory_attention.layers.1.self_attn.v_proj.bias
+module.sam2.memory_attention.layers.1.self_attn.out_proj.weight
+module.sam2.memory_attention.layers.1.self_attn.out_proj.bias
+module.sam2.memory_attention.layers.1.cross_attn_image.q_proj.weight
+module.sam2.memory_attention.layers.1.cross_attn_image.q_proj.bias
+module.sam2.memory_attention.layers.1.cross_attn_image.k_proj.weight
+module.sam2.memory_attention.layers.1.cross_attn_image.k_proj.bias
+module.sam2.memory_attention.layers.1.cross_attn_image.v_proj.weight
+module.sam2.memory_attention.layers.1.cross_attn_image.v_proj.bias
+module.sam2.memory_attention.layers.1.cross_attn_image.out_proj.weight
+module.sam2.memory_attention.layers.1.cross_attn_image.out_proj.bias
+module.sam2.memory_attention.layers.1.linear1.weight
+module.sam2.memory_attention.layers.1.linear1.bias
+module.sam2.memory_attention.layers.1.linear2.weight
+module.sam2.memory_attention.layers.1.linear2.bias
+module.sam2.memory_attention.layers.1.norm1.weight
+module.sam2.memory_attention.layers.1.norm1.bias
+module.sam2.memory_attention.layers.1.norm2.weight
+module.sam2.memory_attention.layers.1.norm2.bias
+module.sam2.memory_attention.layers.1.norm3.weight
+module.sam2.memory_attention.layers.1.norm3.bias
+module.sam2.memory_attention.layers.2.self_attn.q_proj.weight
+module.sam2.memory_attention.layers.2.self_attn.q_proj.bias
+module.sam2.memory_attention.layers.2.self_attn.k_proj.weight
+module.sam2.memory_attention.layers.2.self_attn.k_proj.bias
+module.sam2.memory_attention.layers.2.self_attn.v_proj.weight
+module.sam2.memory_attention.layers.2.self_attn.v_proj.bias
+module.sam2.memory_attention.layers.2.self_attn.out_proj.weight
+module.sam2.memory_attention.layers.2.self_attn.out_proj.bias
+module.sam2.memory_attention.layers.2.cross_attn_image.q_proj.weight
+module.sam2.memory_attention.layers.2.cross_attn_image.q_proj.bias
+module.sam2.memory_attention.layers.2.cross_attn_image.k_proj.weight
+module.sam2.memory_attention.layers.2.cross_attn_image.k_proj.bias
+module.sam2.memory_attention.layers.2.cross_attn_image.v_proj.weight
+module.sam2.memory_attention.layers.2.cross_attn_image.v_proj.bias
+module.sam2.memory_attention.layers.2.cross_attn_image.out_proj.weight
+module.sam2.memory_attention.layers.2.cross_attn_image.out_proj.bias
+module.sam2.memory_attention.layers.2.linear1.weight
+module.sam2.memory_attention.layers.2.linear1.bias
+module.sam2.memory_attention.layers.2.linear2.weight
+module.sam2.memory_attention.layers.2.linear2.bias
+module.sam2.memory_attention.layers.2.norm1.weight
+module.sam2.memory_attention.layers.2.norm1.bias
+module.sam2.memory_attention.layers.2.norm2.weight
+module.sam2.memory_attention.layers.2.norm2.bias
+module.sam2.memory_attention.layers.2.norm3.weight
+module.sam2.memory_attention.layers.2.norm3.bias
+module.sam2.memory_attention.layers.3.self_attn.q_proj.weight
+module.sam2.memory_attention.layers.3.self_attn.q_proj.bias
+module.sam2.memory_attention.layers.3.self_attn.k_proj.weight
+module.sam2.memory_attention.layers.3.self_attn.k_proj.bias
+module.sam2.memory_attention.layers.3.self_attn.v_proj.weight
+module.sam2.memory_attention.layers.3.self_attn.v_proj.bias
+module.sam2.memory_attention.layers.3.self_attn.out_proj.weight
+module.sam2.memory_attention.layers.3.self_attn.out_proj.bias
+module.sam2.memory_attention.layers.3.cross_attn_image.q_proj.weight
+module.sam2.memory_attention.layers.3.cross_attn_image.q_proj.bias
+module.sam2.memory_attention.layers.3.cross_attn_image.k_proj.weight
+module.sam2.memory_attention.layers.3.cross_attn_image.k_proj.bias
+module.sam2.memory_attention.layers.3.cross_attn_image.v_proj.weight
+module.sam2.memory_attention.layers.3.cross_attn_image.v_proj.bias
+module.sam2.memory_attention.layers.3.cross_attn_image.out_proj.weight
+module.sam2.memory_attention.layers.3.cross_attn_image.out_proj.bias
+module.sam2.memory_attention.layers.3.linear1.weight
+module.sam2.memory_attention.layers.3.linear1.bias
+module.sam2.memory_attention.layers.3.linear2.weight
+module.sam2.memory_attention.layers.3.linear2.bias
+module.sam2.memory_attention.layers.3.norm1.weight
+module.sam2.memory_attention.layers.3.norm1.bias
+module.sam2.memory_attention.layers.3.norm2.weight
+module.sam2.memory_attention.layers.3.norm2.bias
+module.sam2.memory_attention.layers.3.norm3.weight
+module.sam2.memory_attention.layers.3.norm3.bias
+module.sam2.memory_attention.norm.weight
+module.sam2.memory_attention.norm.bias
+module.sam2.memory_encoder.mask_downsampler.encoder.0.weight
+module.sam2.memory_encoder.mask_downsampler.encoder.0.bias
+module.sam2.memory_encoder.mask_downsampler.encoder.1.weight
+module.sam2.memory_encoder.mask_downsampler.encoder.1.bias
+module.sam2.memory_encoder.mask_downsampler.encoder.3.weight
+module.sam2.memory_encoder.mask_downsampler.encoder.3.bias
+module.sam2.memory_encoder.mask_downsampler.encoder.4.weight
+module.sam2.memory_encoder.mask_downsampler.encoder.4.bias
+module.sam2.memory_encoder.mask_downsampler.encoder.6.weight
+module.sam2.memory_encoder.mask_downsampler.encoder.6.bias
+module.sam2.memory_encoder.mask_downsampler.encoder.7.weight
+module.sam2.memory_encoder.mask_downsampler.encoder.7.bias
+module.sam2.memory_encoder.mask_downsampler.encoder.9.weight
+module.sam2.memory_encoder.mask_downsampler.encoder.9.bias
+module.sam2.memory_encoder.mask_downsampler.encoder.10.weight
+module.sam2.memory_encoder.mask_downsampler.encoder.10.bias
+module.sam2.memory_encoder.mask_downsampler.encoder.12.weight
+module.sam2.memory_encoder.mask_downsampler.encoder.12.bias
+module.sam2.memory_encoder.pix_feat_proj.weight
+module.sam2.memory_encoder.pix_feat_proj.bias
+module.sam2.memory_encoder.fuser.layers.0.gamma
+module.sam2.memory_encoder.fuser.layers.0.dwconv.weight
+module.sam2.memory_encoder.fuser.layers.0.dwconv.bias
+module.sam2.memory_encoder.fuser.layers.0.norm.weight
+module.sam2.memory_encoder.fuser.layers.0.norm.bias
+module.sam2.memory_encoder.fuser.layers.0.pwconv1.weight
+module.sam2.memory_encoder.fuser.layers.0.pwconv1.bias
+module.sam2.memory_encoder.fuser.layers.0.pwconv2.weight
+module.sam2.memory_encoder.fuser.layers.0.pwconv2.bias
+module.sam2.memory_encoder.fuser.layers.1.gamma
+module.sam2.memory_encoder.fuser.layers.1.dwconv.weight
+module.sam2.memory_encoder.fuser.layers.1.dwconv.bias
+module.sam2.memory_encoder.fuser.layers.1.norm.weight
+module.sam2.memory_encoder.fuser.layers.1.norm.bias
+module.sam2.memory_encoder.fuser.layers.1.pwconv1.weight
+module.sam2.memory_encoder.fuser.layers.1.pwconv1.bias
+module.sam2.memory_encoder.fuser.layers.1.pwconv2.weight
+module.sam2.memory_encoder.fuser.layers.1.pwconv2.bias
+module.sam2.memory_encoder.out_proj.weight
+module.sam2.memory_encoder.out_proj.bias
+module.sam2.sam_prompt_encoder.point_embeddings.0.weight
+module.sam2.sam_prompt_encoder.point_embeddings.1.weight
+module.sam2.sam_prompt_encoder.point_embeddings.2.weight
+module.sam2.sam_prompt_encoder.point_embeddings.3.weight
+module.sam2.sam_prompt_encoder.not_a_point_embed.weight
+module.sam2.sam_prompt_encoder.mask_downscaling.0.weight
+module.sam2.sam_prompt_encoder.mask_downscaling.0.bias
+module.sam2.sam_prompt_encoder.mask_downscaling.1.weight
+module.sam2.sam_prompt_encoder.mask_downscaling.1.bias
+module.sam2.sam_prompt_encoder.mask_downscaling.3.weight
+module.sam2.sam_prompt_encoder.mask_downscaling.3.bias
+module.sam2.sam_prompt_encoder.mask_downscaling.4.weight
+module.sam2.sam_prompt_encoder.mask_downscaling.4.bias
+module.sam2.sam_prompt_encoder.mask_downscaling.6.weight
+module.sam2.sam_prompt_encoder.mask_downscaling.6.bias
+module.sam2.sam_prompt_encoder.no_mask_embed.weight
+module.sam2.sam_mask_decoder.transformer.layers.0.self_attn.q_proj.weight
+module.sam2.sam_mask_decoder.transformer.layers.0.self_attn.q_proj.bias
+module.sam2.sam_mask_decoder.transformer.layers.0.self_attn.k_proj.weight
+module.sam2.sam_mask_decoder.transformer.layers.0.self_attn.k_proj.bias
+module.sam2.sam_mask_decoder.transformer.layers.0.self_attn.v_proj.weight
+module.sam2.sam_mask_decoder.transformer.layers.0.self_attn.v_proj.bias
+module.sam2.sam_mask_decoder.transformer.layers.0.self_attn.out_proj.weight
+module.sam2.sam_mask_decoder.transformer.layers.0.self_attn.out_proj.bias
+module.sam2.sam_mask_decoder.transformer.layers.0.norm1.weight
+module.sam2.sam_mask_decoder.transformer.layers.0.norm1.bias
+module.sam2.sam_mask_decoder.transformer.layers.0.cross_attn_token_to_image.q_proj.weight
+module.sam2.sam_mask_decoder.transformer.layers.0.cross_attn_token_to_image.q_proj.bias
+module.sam2.sam_mask_decoder.transformer.layers.0.cross_attn_token_to_image.k_proj.weight
+module.sam2.sam_mask_decoder.transformer.layers.0.cross_attn_token_to_image.k_proj.bias
+module.sam2.sam_mask_decoder.transformer.layers.0.cross_attn_token_to_image.v_proj.weight
+module.sam2.sam_mask_decoder.transformer.layers.0.cross_attn_token_to_image.v_proj.bias
+module.sam2.sam_mask_decoder.transformer.layers.0.cross_attn_token_to_image.out_proj.weight
+module.sam2.sam_mask_decoder.transformer.layers.0.cross_attn_token_to_image.out_proj.bias
+module.sam2.sam_mask_decoder.transformer.layers.0.norm2.weight
+module.sam2.sam_mask_decoder.transformer.layers.0.norm2.bias
+module.sam2.sam_mask_decoder.transformer.layers.0.mlp.layers.0.weight
+module.sam2.sam_mask_decoder.transformer.layers.0.mlp.layers.0.bias
+module.sam2.sam_mask_decoder.transformer.layers.0.mlp.layers.1.weight
+module.sam2.sam_mask_decoder.transformer.layers.0.mlp.layers.1.bias
+module.sam2.sam_mask_decoder.transformer.layers.0.norm3.weight
+module.sam2.sam_mask_decoder.transformer.layers.0.norm3.bias
+module.sam2.sam_mask_decoder.transformer.layers.0.norm4.weight
+module.sam2.sam_mask_decoder.transformer.layers.0.norm4.bias
+module.sam2.sam_mask_decoder.transformer.layers.0.cross_attn_image_to_token.q_proj.weight
+module.sam2.sam_mask_decoder.transformer.layers.0.cross_attn_image_to_token.q_proj.bias
+module.sam2.sam_mask_decoder.transformer.layers.0.cross_attn_image_to_token.k_proj.weight
+module.sam2.sam_mask_decoder.transformer.layers.0.cross_attn_image_to_token.k_proj.bias
+module.sam2.sam_mask_decoder.transformer.layers.0.cross_attn_image_to_token.v_proj.weight
+module.sam2.sam_mask_decoder.transformer.layers.0.cross_attn_image_to_token.v_proj.bias
+module.sam2.sam_mask_decoder.transformer.layers.0.cross_attn_image_to_token.out_proj.weight
+module.sam2.sam_mask_decoder.transformer.layers.0.cross_attn_image_to_token.out_proj.bias
+module.sam2.sam_mask_decoder.transformer.layers.1.self_attn.q_proj.weight
+module.sam2.sam_mask_decoder.transformer.layers.1.self_attn.q_proj.bias
+module.sam2.sam_mask_decoder.transformer.layers.1.self_attn.k_proj.weight
+module.sam2.sam_mask_decoder.transformer.layers.1.self_attn.k_proj.bias
+module.sam2.sam_mask_decoder.transformer.layers.1.self_attn.v_proj.weight
+module.sam2.sam_mask_decoder.transformer.layers.1.self_attn.v_proj.bias
+module.sam2.sam_mask_decoder.transformer.layers.1.self_attn.out_proj.weight
+module.sam2.sam_mask_decoder.transformer.layers.1.self_attn.out_proj.bias
+module.sam2.sam_mask_decoder.transformer.layers.1.norm1.weight
+module.sam2.sam_mask_decoder.transformer.layers.1.norm1.bias
+module.sam2.sam_mask_decoder.transformer.layers.1.cross_attn_token_to_image.q_proj.weight
+module.sam2.sam_mask_decoder.transformer.layers.1.cross_attn_token_to_image.q_proj.bias
+module.sam2.sam_mask_decoder.transformer.layers.1.cross_attn_token_to_image.k_proj.weight
+module.sam2.sam_mask_decoder.transformer.layers.1.cross_attn_token_to_image.k_proj.bias
+module.sam2.sam_mask_decoder.transformer.layers.1.cross_attn_token_to_image.v_proj.weight
+module.sam2.sam_mask_decoder.transformer.layers.1.cross_attn_token_to_image.v_proj.bias
+module.sam2.sam_mask_decoder.transformer.layers.1.cross_attn_token_to_image.out_proj.weight
+module.sam2.sam_mask_decoder.transformer.layers.1.cross_attn_token_to_image.out_proj.bias
+module.sam2.sam_mask_decoder.transformer.layers.1.norm2.weight
+module.sam2.sam_mask_decoder.transformer.layers.1.norm2.bias
+module.sam2.sam_mask_decoder.transformer.layers.1.mlp.layers.0.weight
+module.sam2.sam_mask_decoder.transformer.layers.1.mlp.layers.0.bias
+module.sam2.sam_mask_decoder.transformer.layers.1.mlp.layers.1.weight
+module.sam2.sam_mask_decoder.transformer.layers.1.mlp.layers.1.bias
+module.sam2.sam_mask_decoder.transformer.layers.1.norm3.weight
+module.sam2.sam_mask_decoder.transformer.layers.1.norm3.bias
+module.sam2.sam_mask_decoder.transformer.layers.1.norm4.weight
+module.sam2.sam_mask_decoder.transformer.layers.1.norm4.bias
+module.sam2.sam_mask_decoder.transformer.layers.1.cross_attn_image_to_token.q_proj.weight
+module.sam2.sam_mask_decoder.transformer.layers.1.cross_attn_image_to_token.q_proj.bias
+module.sam2.sam_mask_decoder.transformer.layers.1.cross_attn_image_to_token.k_proj.weight
+module.sam2.sam_mask_decoder.transformer.layers.1.cross_attn_image_to_token.k_proj.bias
+module.sam2.sam_mask_decoder.transformer.layers.1.cross_attn_image_to_token.v_proj.weight
+module.sam2.sam_mask_decoder.transformer.layers.1.cross_attn_image_to_token.v_proj.bias
+module.sam2.sam_mask_decoder.transformer.layers.1.cross_attn_image_to_token.out_proj.weight
+module.sam2.sam_mask_decoder.transformer.layers.1.cross_attn_image_to_token.out_proj.bias
+module.sam2.sam_mask_decoder.transformer.final_attn_token_to_image.q_proj.weight
+module.sam2.sam_mask_decoder.transformer.final_attn_token_to_image.q_proj.bias
+module.sam2.sam_mask_decoder.transformer.final_attn_token_to_image.k_proj.weight
+module.sam2.sam_mask_decoder.transformer.final_attn_token_to_image.k_proj.bias
+module.sam2.sam_mask_decoder.transformer.final_attn_token_to_image.v_proj.weight
+module.sam2.sam_mask_decoder.transformer.final_attn_token_to_image.v_proj.bias
+module.sam2.sam_mask_decoder.transformer.final_attn_token_to_image.out_proj.weight
+module.sam2.sam_mask_decoder.transformer.final_attn_token_to_image.out_proj.bias
+module.sam2.sam_mask_decoder.transformer.norm_final_attn.weight
+module.sam2.sam_mask_decoder.transformer.norm_final_attn.bias
+module.sam2.sam_mask_decoder.iou_token.weight
+module.sam2.sam_mask_decoder.mask_tokens.weight
+module.sam2.sam_mask_decoder.obj_score_token.weight
+module.sam2.sam_mask_decoder.output_upscaling.0.weight
+module.sam2.sam_mask_decoder.output_upscaling.0.bias
+module.sam2.sam_mask_decoder.output_upscaling.1.weight
+module.sam2.sam_mask_decoder.output_upscaling.1.bias
+module.sam2.sam_mask_decoder.output_upscaling.3.weight
+module.sam2.sam_mask_decoder.output_upscaling.3.bias
+module.sam2.sam_mask_decoder.conv_s0.weight
+module.sam2.sam_mask_decoder.conv_s0.bias
+module.sam2.sam_mask_decoder.conv_s1.weight
+module.sam2.sam_mask_decoder.conv_s1.bias
+module.sam2.sam_mask_decoder.output_hypernetworks_mlps.0.layers.0.weight
+module.sam2.sam_mask_decoder.output_hypernetworks_mlps.0.layers.0.bias
+module.sam2.sam_mask_decoder.output_hypernetworks_mlps.0.layers.1.weight
+module.sam2.sam_mask_decoder.output_hypernetworks_mlps.0.layers.1.bias
+module.sam2.sam_mask_decoder.output_hypernetworks_mlps.0.layers.2.weight
+module.sam2.sam_mask_decoder.output_hypernetworks_mlps.0.layers.2.bias
+module.sam2.sam_mask_decoder.output_hypernetworks_mlps.1.layers.0.weight
+module.sam2.sam_mask_decoder.output_hypernetworks_mlps.1.layers.0.bias
+module.sam2.sam_mask_decoder.output_hypernetworks_mlps.1.layers.1.weight
+module.sam2.sam_mask_decoder.output_hypernetworks_mlps.1.layers.1.bias
+module.sam2.sam_mask_decoder.output_hypernetworks_mlps.1.layers.2.weight
+module.sam2.sam_mask_decoder.output_hypernetworks_mlps.1.layers.2.bias
+module.sam2.sam_mask_decoder.output_hypernetworks_mlps.2.layers.0.weight
+module.sam2.sam_mask_decoder.output_hypernetworks_mlps.2.layers.0.bias
+module.sam2.sam_mask_decoder.output_hypernetworks_mlps.2.layers.1.weight
+module.sam2.sam_mask_decoder.output_hypernetworks_mlps.2.layers.1.bias
+module.sam2.sam_mask_decoder.output_hypernetworks_mlps.2.layers.2.weight
+module.sam2.sam_mask_decoder.output_hypernetworks_mlps.2.layers.2.bias
+module.sam2.sam_mask_decoder.output_hypernetworks_mlps.3.layers.0.weight
+module.sam2.sam_mask_decoder.output_hypernetworks_mlps.3.layers.0.bias
+module.sam2.sam_mask_decoder.output_hypernetworks_mlps.3.layers.1.weight
+module.sam2.sam_mask_decoder.output_hypernetworks_mlps.3.layers.1.bias
+module.sam2.sam_mask_decoder.output_hypernetworks_mlps.3.layers.2.weight
+module.sam2.sam_mask_decoder.output_hypernetworks_mlps.3.layers.2.bias
+module.sam2.sam_mask_decoder.iou_prediction_head.layers.0.weight
+module.sam2.sam_mask_decoder.iou_prediction_head.layers.0.bias
+module.sam2.sam_mask_decoder.iou_prediction_head.layers.1.weight
+module.sam2.sam_mask_decoder.iou_prediction_head.layers.1.bias
+module.sam2.sam_mask_decoder.iou_prediction_head.layers.2.weight
+module.sam2.sam_mask_decoder.iou_prediction_head.layers.2.bias
+module.sam2.sam_mask_decoder.pred_obj_score_head.layers.0.weight
+module.sam2.sam_mask_decoder.pred_obj_score_head.layers.0.bias
+module.sam2.sam_mask_decoder.pred_obj_score_head.layers.1.weight
+module.sam2.sam_mask_decoder.pred_obj_score_head.layers.1.bias
+module.sam2.sam_mask_decoder.pred_obj_score_head.layers.2.weight
+module.sam2.sam_mask_decoder.pred_obj_score_head.layers.2.bias
+module.sam2.obj_ptr_proj.layers.0.weight
+module.sam2.obj_ptr_proj.layers.0.bias
+module.sam2.obj_ptr_proj.layers.1.weight
+module.sam2.obj_ptr_proj.layers.1.bias
+module.sam2.obj_ptr_proj.layers.2.weight
+module.sam2.obj_ptr_proj.layers.2.bias
+module.sam2.obj_ptr_tpos_proj.weight
+module.sam2.obj_ptr_tpos_proj.bias
+module.frame_queries.weight
+module.frame_queires_embed.decoder_norm.weight
+module.frame_queires_embed.decoder_norm.bias
+module.frame_queires_embed.mask_embed.layers.0.weight
+module.frame_queires_embed.mask_embed.layers.0.bias
+module.frame_queires_embed.mask_embed.layers.1.weight
+module.frame_queires_embed.mask_embed.layers.1.bias
+module.frame_queires_embed.mask_embed.layers.2.weight
+module.frame_queires_embed.mask_embed.layers.2.bias
+module.video_queries.weight
+module.frame2video_embed.0.weight
+module.frame2video_embed.0.bias
+module.video_queires_embed.decoder_norm.weight
+module.video_queires_embed.decoder_norm.bias
+module.video_queires_embed.mask_embed.layers.0.weight
+module.video_queires_embed.mask_embed.layers.0.bias
+module.video_queires_embed.mask_embed.layers.1.weight
+module.video_queires_embed.mask_embed.layers.1.bias
+module.video_queires_embed.mask_embed.layers.2.weight
+module.video_queires_embed.mask_embed.layers.2.bias
+module.video_cross_attention.linear_q.weight
+module.video_cross_attention.linear_q.bias
+module.video_cross_attention.linear_k.weight
+module.video_cross_attention.linear_k.bias
+module.video_cross_attention.linear_v.weight
+module.video_cross_attention.linear_v.bias
+module.transformer_cross_attention.linear_q.weight
+module.transformer_cross_attention.linear_q.bias
+module.transformer_cross_attention.linear_k.weight
+module.transformer_cross_attention.linear_k.bias
+module.transformer_cross_attention.linear_v.weight
+module.transformer_cross_attention.linear_v.bias
+module.transformer_self_attention.linear_q.weight
+module.transformer_self_attention.linear_q.bias
+module.transformer_self_attention.linear_k.weight
+module.transformer_self_attention.linear_k.bias
+module.transformer_self_attention.linear_v.weight
+module.transformer_self_attention.linear_v.bias
+module.transformer_ffn.0.weight
+module.transformer_ffn.0.bias
+module.transformer_ffn.1.weight
+module.transformer_ffn.1.bias
+module.memory_proj.0.weight
+module.memory_proj.0.bias
+module.memory_proj.1.weight
+module.memory_proj.1.bias
+module.memory_proj.3.weight
+module.memory_proj.3.bias
+module.sparse_embed.weight
+module.sparse_embed.bias
+module.sparse_embed_for_class.weight
+module.sparse_embed_for_class.bias
+Total optimized parameters: 1005
+===============================================================
+MVSeg SUMMARY
+      baseline_mode: True
+           orig_res: (320, 480)
+           work_res: (1024, 1024)
+   normalize_tensor: Compose(
+    Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
+)
+        num_classes: 26
+           colorize: <datasets.transform.Colorize object at 0x1507800c3e50>
+           backbone: sam_based
+            augment: True
+        random_crop: True
+       use_orig_res: False
+           interval: [3, 0]
+        sample_rate: 3
+  input_images_size: 2241
+     gt_images_size: 2241
+     ir_images_size: 2241
+===============================================================
+MVSeg SUMMARY
+      baseline_mode: True
+           orig_res: (320, 480)
+           work_res: (1024, 1024)
+   normalize_tensor: Compose(
+    Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
+)
+        num_classes: 26
+           colorize: <datasets.transform.Colorize object at 0x1507800c3d30>
+           backbone: sam_based
+            augment: False
+        random_crop: True
+       use_orig_res: False
+           interval: [3, 0]
+        sample_rate: 3
+  input_images_size: 926
+     gt_images_size: 926
+     ir_images_size: 926
+LEARNING RATE:  0.0002
+----- TRAINING - EPOCH 1 -----
+TRAIN loss: 3.2483 | Epoch:   1 | Step:    0 | seq_len  4 | Total images for 1 gpu     4 | Median step time per image 2656.5136 ms | Total images:     4
+TRAIN loss: 3.2580 | Epoch:   1 | Step:  100 | seq_len  4 | Total images for 1 gpu   404 | Median step time per image 434.6385 ms | Total images:   404
+TRAIN loss: nan | Epoch:   1 | Step:  200 | seq_len  4 | Total images for 1 gpu   804 | Median step time per image 434.4516 ms | Total images:   804
+TRAIN loss: nan | Epoch:   1 | Step:  300 | seq_len  4 | Total images for 1 gpu  1204 | Median step time per image 433.0388 ms | Total images:  1204
+TRAIN loss: nan | Epoch:   1 | Step:  400 | seq_len  4 | Total images for 1 gpu  1604 | Median step time per image 433.0092 ms | Total images:  1604
+TRAIN loss: nan | Epoch:   1 | Step:  500 | seq_len  4 | Total images for 1 gpu  2004 | Median step time per image 432.9990 ms | Total images:  2004
+TRAIN loss: nan | Epoch:   1 | Step:  600 | seq_len  4 | Total images for 1 gpu  2404 | Median step time per image 432.9933 ms | Total images:  2404
+TRAIN loss: nan | Epoch:   1 | Step:  700 | seq_len  4 | Total images for 1 gpu  2804 | Median step time per image 432.9927 ms | Total images:  2804
+TRAIN loss: nan | Epoch:   1 | Step:  800 | seq_len  4 | Total images for 1 gpu  3204 | Median step time per image 433.0113 ms | Total images:  3204
+TRAIN loss: nan | Epoch:   1 | Step:  900 | seq_len  4 | Total images for 1 gpu  3604 | Median step time per image 433.0238 ms | Total images:  3604
+TRAIN loss: nan | Epoch:   1 | Step: 1000 | seq_len  4 | Total images for 1 gpu  4004 | Median step time per image 433.0360 ms | Total images:  4004
+TRAIN loss: nan | Epoch:   1 | Step: 1100 | seq_len  4 | Total images for 1 gpu  4404 | Median step time per image 433.0512 ms | Total images:  4404
+TRAIN loss: nan | Epoch:   1 | Step: 1200 | seq_len  4 | Total images for 1 gpu  4804 | Median step time per image 433.0598 ms | Total images:  4804
+TRAIN loss: nan | Epoch:   1 | Step: 1300 | seq_len  4 | Total images for 1 gpu  5204 | Median step time per image 433.0620 ms | Total images:  5204
+TRAIN loss: nan | Epoch:   1 | Step: 1400 | seq_len  4 | Total images for 1 gpu  5604 | Median step time per image 433.0650 ms | Total images:  5604
+TRAIN loss: nan | Epoch:   1 | Step: 1500 | seq_len  4 | Total images for 1 gpu  6004 | Median step time per image 433.0575 ms | Total images:  6004
+TRAIN loss: nan | Epoch:   1 | Step: 1600 | seq_len  4 | Total images for 1 gpu  6404 | Median step time per image 433.0580 ms | Total images:  6404
+TRAIN loss: nan | Epoch:   1 | Step: 1700 | seq_len  4 | Total images for 1 gpu  6804 | Median step time per image 433.0575 ms | Total images:  6804
+TRAIN loss: nan | Epoch:   1 | Step: 1800 | seq_len  4 | Total images for 1 gpu  7204 | Median step time per image 433.0502 ms | Total images:  7204
+TRAIN loss: nan | Epoch:   1 | Step: 1900 | seq_len  4 | Total images for 1 gpu  7604 | Median step time per image 433.0465 ms | Total images:  7604
+TRAIN loss: nan | Epoch:   1 | Step: 2000 | seq_len  4 | Total images for 1 gpu  8004 | Median step time per image 433.0433 ms | Total images:  8004
+TRAIN loss: nan | Epoch:   1 | Step: 2100 | seq_len  4 | Total images for 1 gpu  8404 | Median step time per image 433.0418 ms | Total images:  8404
+TRAIN loss: nan | Epoch:   1 | Step: 2200 | seq_len  4 | Total images for 1 gpu  8804 | Median step time per image 433.0394 ms | Total images:  8804
+TRAIN loss: nan | Epoch:   1 | Step: 2240 | seq_len  4 | Total images for 1 gpu  8964 | Median step time per image 433.0395 ms | Total images:  8964
+----- VALIDATE - EPOCH 1 -----
+VAL loss: nan | Epoch:   1 | Step:    0 | seq_len  4 | Total images for 1 gpu     4 | Median step time per image 348.4107 ms | Total images:     4
+VAL loss: nan | Epoch:   1 | Step:  100 | seq_len  4 | Total images for 1 gpu   404 | Median step time per image 263.5382 ms | Total images:   404
+VAL loss: nan | Epoch:   1 | Step:  200 | seq_len  4 | Total images for 1 gpu   804 | Median step time per image 263.5466 ms | Total images:   804
+VAL loss: nan | Epoch:   1 | Step:  300 | seq_len  4 | Total images for 1 gpu  1204 | Median step time per image 263.5564 ms | Total images:  1204
+VAL loss: nan | Epoch:   1 | Step:  400 | seq_len  4 | Total images for 1 gpu  1604 | Median step time per image 263.5600 ms | Total images:  1604
+VAL loss: nan | Epoch:   1 | Step:  500 | seq_len  4 | Total images for 1 gpu  2004 | Median step time per image 263.5646 ms | Total images:  2004
+VAL loss: nan | Epoch:   1 | Step:  600 | seq_len  4 | Total images for 1 gpu  2404 | Median step time per image 263.5775 ms | Total images:  2404
+VAL loss: nan | Epoch:   1 | Step:  700 | seq_len  4 | Total images for 1 gpu  2804 | Median step time per image 263.5877 ms | Total images:  2804
+VAL loss: nan | Epoch:   1 | Step:  800 | seq_len  4 | Total images for 1 gpu  3204 | Median step time per image 263.6023 ms | Total images:  3204
+VAL loss: nan | Epoch:   1 | Step:  900 | seq_len  4 | Total images for 1 gpu  3604 | Median step time per image 263.6111 ms | Total images:  3604
+VAL loss: nan | Epoch:   1 | Step:  925 | seq_len  4 | Total images for 1 gpu  3704 | Median step time per image 263.6128 ms | Total images:  3704
+PREDICTION LOW  RESOLUTION: torch.Size([1, 1, 1, 1024, 1024])
+LABELS     LOW  RESOLUTION: torch.Size([1, 1, 1, 1024, 1024])
+EPOCH on VAL set: Seq mIoU [31;1m  0.04[0m %
+mIoU(t) on VAL set: [31;1m  0.04[0m %
+Per-Class IoU (WorkRes):
+        Background : [31;1m 1.14[0m % 
+               Car : [31;1m 0.00[0m % 
+               Bus : [31;1m 0.00[0m % 
+        Motorcycle : [31;1m 0.00[0m % 
+           Bicycle : [31;1m 0.00[0m % 
+        Pedestrian : [31;1m 0.00[0m % 
+      Motorcyclist : [31;1m 0.00[0m % 
+         Bicyclist : [31;1m 0.00[0m % 
+              Cart : [31;1m 0.00[0m % 
+             Bench : [31;1m 0.00[0m % 
+          Umbrella : [31;1m 0.00[0m % 
+               Box : [31;1m 0.00[0m % 
+              Pole : [31;1m 0.00[0m % 
+       Street_lamp : [31;1m 0.00[0m % 
+     Traffic_light : [31;1m 0.00[0m % 
+      Traffic_sign : [31;1m 0.00[0m % 
+          Car_stop : [31;1m 0.00[0m % 
+        Color_cone : [31;1m 0.00[0m % 
+               Sky : [31;1m 0.00[0m % 
+              Road : [31;1m 0.00[0m % 
+          Sidewalk : [31;1m 0.00[0m % 
+              Curb : [31;1m 0.00[0m % 
+        Vegetation : [31;1m 0.00[0m % 
+           Terrain : [31;1m 0.00[0m % 
+          Building : [31;1m 0.00[0m % 
+Saving model checkpoint: save/training_base_rtmvss/checkpoint.pth.tar
+Saving model as best: save/training_base_rtmvss/model_best.pth.tar
+Saving for epoch: 1 model as best: save/training_base_rtmvss/model_best.pth
+LEARNING RATE:  0.0002
+----- TRAINING - EPOCH 2 -----
+TRAIN loss: nan | Epoch:   2 | Step:    0 | seq_len  4 | Total images for 1 gpu     4 | Median step time per image 447.2338 ms | Total images:     4
+TRAIN loss: nan | Epoch:   2 | Step:  100 | seq_len  4 | Total images for 1 gpu   404 | Median step time per image 432.9869 ms | Total images:   404
+TRAIN loss: nan | Epoch:   2 | Step:  200 | seq_len  4 | Total images for 1 gpu   804 | Median step time per image 432.9022 ms | Total images:   804
+TRAIN loss: nan | Epoch:   2 | Step:  300 | seq_len  4 | Total images for 1 gpu  1204 | Median step time per image 432.8986 ms | Total images:  1204
+TRAIN loss: nan | Epoch:   2 | Step:  400 | seq_len  4 | Total images for 1 gpu  1604 | Median step time per image 432.8860 ms | Total images:  1604
+TRAIN loss: nan | Epoch:   2 | Step:  500 | seq_len  4 | Total images for 1 gpu  2004 | Median step time per image 432.8758 ms | Total images:  2004
+TRAIN loss: nan | Epoch:   2 | Step:  600 | seq_len  4 | Total images for 1 gpu  2404 | Median step time per image 432.8696 ms | Total images:  2404
+TRAIN loss: nan | Epoch:   2 | Step:  700 | seq_len  4 | Total images for 1 gpu  2804 | Median step time per image 432.8626 ms | Total images:  2804
+TRAIN loss: nan | Epoch:   2 | Step:  800 | seq_len  4 | Total images for 1 gpu  3204 | Median step time per image 432.8598 ms | Total images:  3204
+TRAIN loss: nan | Epoch:   2 | Step:  900 | seq_len  4 | Total images for 1 gpu  3604 | Median step time per image 432.8591 ms | Total images:  3604
+TRAIN loss: nan | Epoch:   2 | Step: 1000 | seq_len  4 | Total images for 1 gpu  4004 | Median step time per image 432.8592 ms | Total images:  4004
+TRAIN loss: nan | Epoch:   2 | Step: 1100 | seq_len  4 | Total images for 1 gpu  4404 | Median step time per image 432.8585 ms | Total images:  4404
+TRAIN loss: nan | Epoch:   2 | Step: 1200 | seq_len  4 | Total images for 1 gpu  4804 | Median step time per image 432.8576 ms | Total images:  4804
+TRAIN loss: nan | Epoch:   2 | Step: 1300 | seq_len  4 | Total images for 1 gpu  5204 | Median step time per image 432.8574 ms | Total images:  5204
+TRAIN loss: nan | Epoch:   2 | Step: 1400 | seq_len  4 | Total images for 1 gpu  5604 | Median step time per image 432.8574 ms | Total images:  5604
+TRAIN loss: nan | Epoch:   2 | Step: 1500 | seq_len  4 | Total images for 1 gpu  6004 | Median step time per image 432.8585 ms | Total images:  6004
+TRAIN loss: nan | Epoch:   2 | Step: 1600 | seq_len  4 | Total images for 1 gpu  6404 | Median step time per image 432.8596 ms | Total images:  6404
+TRAIN loss: nan | Epoch:   2 | Step: 1700 | seq_len  4 | Total images for 1 gpu  6804 | Median step time per image 432.8606 ms | Total images:  6804
+TRAIN loss: nan | Epoch:   2 | Step: 1800 | seq_len  4 | Total images for 1 gpu  7204 | Median step time per image 432.8621 ms | Total images:  7204
+TRAIN loss: nan | Epoch:   2 | Step: 1900 | seq_len  4 | Total images for 1 gpu  7604 | Median step time per image 432.8629 ms | Total images:  7604
+TRAIN loss: nan | Epoch:   2 | Step: 2000 | seq_len  4 | Total images for 1 gpu  8004 | Median step time per image 432.8661 ms | Total images:  8004
+TRAIN loss: nan | Epoch:   2 | Step: 2100 | seq_len  4 | Total images for 1 gpu  8404 | Median step time per image 432.8696 ms | Total images:  8404
+TRAIN loss: nan | Epoch:   2 | Step: 2200 | seq_len  4 | Total images for 1 gpu  8804 | Median step time per image 432.8721 ms | Total images:  8804
+TRAIN loss: nan | Epoch:   2 | Step: 2240 | seq_len  4 | Total images for 1 gpu  8964 | Median step time per image 432.8733 ms | Total images:  8964
+----- VALIDATE - EPOCH 2 -----
+VAL loss: nan | Epoch:   2 | Step:    0 | seq_len  4 | Total images for 1 gpu     4 | Median step time per image 325.8922 ms | Total images:     4
+VAL loss: nan | Epoch:   2 | Step:  100 | seq_len  4 | Total images for 1 gpu   404 | Median step time per image 263.2859 ms | Total images:   404
+VAL loss: nan | Epoch:   2 | Step:  200 | seq_len  4 | Total images for 1 gpu   804 | Median step time per image 263.2920 ms | Total images:   804
+VAL loss: nan | Epoch:   2 | Step:  300 | seq_len  4 | Total images for 1 gpu  1204 | Median step time per image 263.3059 ms | Total images:  1204
+VAL loss: nan | Epoch:   2 | Step:  400 | seq_len  4 | Total images for 1 gpu  1604 | Median step time per image 263.3046 ms | Total images:  1604
+VAL loss: nan | Epoch:   2 | Step:  500 | seq_len  4 | Total images for 1 gpu  2004 | Median step time per image 263.3059 ms | Total images:  2004
+VAL loss: nan | Epoch:   2 | Step:  600 | seq_len  4 | Total images for 1 gpu  2404 | Median step time per image 263.3083 ms | Total images:  2404
+VAL loss: nan | Epoch:   2 | Step:  700 | seq_len  4 | Total images for 1 gpu  2804 | Median step time per image 263.3150 ms | Total images:  2804
+VAL loss: nan | Epoch:   2 | Step:  800 | seq_len  4 | Total images for 1 gpu  3204 | Median step time per image 263.3171 ms | Total images:  3204
+VAL loss: nan | Epoch:   2 | Step:  900 | seq_len  4 | Total images for 1 gpu  3604 | Median step time per image 263.3203 ms | Total images:  3604
+VAL loss: nan | Epoch:   2 | Step:  925 | seq_len  4 | Total images for 1 gpu  3704 | Median step time per image 263.3228 ms | Total images:  3704
+PREDICTION LOW  RESOLUTION: torch.Size([1, 1, 1, 1024, 1024])
+LABELS     LOW  RESOLUTION: torch.Size([1, 1, 1, 1024, 1024])
+EPOCH on VAL set: Seq mIoU [31;1m  0.04[0m %
+mIoU(t) on VAL set: [31;1m  0.04[0m %
+Per-Class IoU (WorkRes):
+        Background : [31;1m 1.14[0m % 
+               Car : [31;1m 0.00[0m % 
+               Bus : [31;1m 0.00[0m % 
+        Motorcycle : [31;1m 0.00[0m % 
+           Bicycle : [31;1m 0.00[0m % 
+        Pedestrian : [31;1m 0.00[0m % 
+      Motorcyclist : [31;1m 0.00[0m % 
+         Bicyclist : [31;1m 0.00[0m % 
+              Cart : [31;1m 0.00[0m % 
+             Bench : [31;1m 0.00[0m % 
+          Umbrella : [31;1m 0.00[0m % 
+               Box : [31;1m 0.00[0m % 
+              Pole : [31;1m 0.00[0m % 
+       Street_lamp : [31;1m 0.00[0m % 
+     Traffic_light : [31;1m 0.00[0m % 
+      Traffic_sign : [31;1m 0.00[0m % 
+          Car_stop : [31;1m 0.00[0m % 
+        Color_cone : [31;1m 0.00[0m % 
+               Sky : [31;1m 0.00[0m % 
+              Road : [31;1m 0.00[0m % 
+          Sidewalk : [31;1m 0.00[0m % 
+              Curb : [31;1m 0.00[0m % 
+        Vegetation : [31;1m 0.00[0m % 
+           Terrain : [31;1m 0.00[0m % 
+          Building : [31;1m 0.00[0m % 
+Saving model checkpoint: save/training_base_rtmvss/checkpoint.pth.tar
+LEARNING RATE:  0.0002
+----- TRAINING - EPOCH 3 -----
+TRAIN loss: nan | Epoch:   3 | Step:    0 | seq_len  4 | Total images for 1 gpu     4 | Median step time per image 446.9747 ms | Total images:     4
+TRAIN loss: nan | Epoch:   3 | Step:  100 | seq_len  4 | Total images for 1 gpu   404 | Median step time per image 433.0161 ms | Total images:   404
+TRAIN loss: nan | Epoch:   3 | Step:  200 | seq_len  4 | Total images for 1 gpu   804 | Median step time per image 432.9523 ms | Total images:   804
+TRAIN loss: nan | Epoch:   3 | Step:  300 | seq_len  4 | Total images for 1 gpu  1204 | Median step time per image 432.9212 ms | Total images:  1204
+TRAIN loss: nan | Epoch:   3 | Step:  400 | seq_len  4 | Total images for 1 gpu  1604 | Median step time per image 432.9112 ms | Total images:  1604
+TRAIN loss: nan | Epoch:   3 | Step:  500 | seq_len  4 | Total images for 1 gpu  2004 | Median step time per image 432.9045 ms | Total images:  2004
+TRAIN loss: nan | Epoch:   3 | Step:  600 | seq_len  4 | Total images for 1 gpu  2404 | Median step time per image 432.9019 ms | Total images:  2404
+TRAIN loss: nan | Epoch:   3 | Step:  700 | seq_len  4 | Total images for 1 gpu  2804 | Median step time per image 432.9033 ms | Total images:  2804
+TRAIN loss: nan | Epoch:   3 | Step:  800 | seq_len  4 | Total images for 1 gpu  3204 | Median step time per image 432.9057 ms | Total images:  3204
+TRAIN loss: nan | Epoch:   3 | Step:  900 | seq_len  4 | Total images for 1 gpu  3604 | Median step time per image 432.9126 ms | Total images:  3604
+TRAIN loss: nan | Epoch:   3 | Step: 1000 | seq_len  4 | Total images for 1 gpu  4004 | Median step time per image 432.9196 ms | Total images:  4004
+TRAIN loss: nan | Epoch:   3 | Step: 1100 | seq_len  4 | Total images for 1 gpu  4404 | Median step time per image 432.9220 ms | Total images:  4404
+TRAIN loss: nan | Epoch:   3 | Step: 1200 | seq_len  4 | Total images for 1 gpu  4804 | Median step time per image 432.9313 ms | Total images:  4804
+TRAIN loss: nan | Epoch:   3 | Step: 1300 | seq_len  4 | Total images for 1 gpu  5204 | Median step time per image 432.9354 ms | Total images:  5204
+TRAIN loss: nan | Epoch:   3 | Step: 1400 | seq_len  4 | Total images for 1 gpu  5604 | Median step time per image 432.9396 ms | Total images:  5604
+TRAIN loss: nan | Epoch:   3 | Step: 1500 | seq_len  4 | Total images for 1 gpu  6004 | Median step time per image 432.9443 ms | Total images:  6004
+TRAIN loss: nan | Epoch:   3 | Step: 1600 | seq_len  4 | Total images for 1 gpu  6404 | Median step time per image 432.9496 ms | Total images:  6404
+TRAIN loss: nan | Epoch:   3 | Step: 1700 | seq_len  4 | Total images for 1 gpu  6804 | Median step time per image 432.9500 ms | Total images:  6804
+TRAIN loss: nan | Epoch:   3 | Step: 1800 | seq_len  4 | Total images for 1 gpu  7204 | Median step time per image 432.9500 ms | Total images:  7204
+TRAIN loss: nan | Epoch:   3 | Step: 1900 | seq_len  4 | Total images for 1 gpu  7604 | Median step time per image 432.9520 ms | Total images:  7604
+TRAIN loss: nan | Epoch:   3 | Step: 2000 | seq_len  4 | Total images for 1 gpu  8004 | Median step time per image 432.9537 ms | Total images:  8004
+TRAIN loss: nan | Epoch:   3 | Step: 2100 | seq_len  4 | Total images for 1 gpu  8404 | Median step time per image 432.9544 ms | Total images:  8404
+TRAIN loss: nan | Epoch:   3 | Step: 2200 | seq_len  4 | Total images for 1 gpu  8804 | Median step time per image 432.9559 ms | Total images:  8804
+TRAIN loss: nan | Epoch:   3 | Step: 2240 | seq_len  4 | Total images for 1 gpu  8964 | Median step time per image 432.9567 ms | Total images:  8964
+----- VALIDATE - EPOCH 3 -----
+VAL loss: nan | Epoch:   3 | Step:    0 | seq_len  4 | Total images for 1 gpu     4 | Median step time per image 330.2006 ms | Total images:     4
+VAL loss: nan | Epoch:   3 | Step:  100 | seq_len  4 | Total images for 1 gpu   404 | Median step time per image 263.4075 ms | Total images:   404
+VAL loss: nan | Epoch:   3 | Step:  200 | seq_len  4 | Total images for 1 gpu   804 | Median step time per image 263.3842 ms | Total images:   804
+VAL loss: nan | Epoch:   3 | Step:  300 | seq_len  4 | Total images for 1 gpu  1204 | Median step time per image 263.3708 ms | Total images:  1204
+VAL loss: nan | Epoch:   3 | Step:  400 | seq_len  4 | Total images for 1 gpu  1604 | Median step time per image 263.3961 ms | Total images:  1604
+VAL loss: nan | Epoch:   3 | Step:  500 | seq_len  4 | Total images for 1 gpu  2004 | Median step time per image 263.4307 ms | Total images:  2004
+VAL loss: nan | Epoch:   3 | Step:  600 | seq_len  4 | Total images for 1 gpu  2404 | Median step time per image 263.4570 ms | Total images:  2404
+VAL loss: nan | Epoch:   3 | Step:  700 | seq_len  4 | Total images for 1 gpu  2804 | Median step time per image 263.4649 ms | Total images:  2804
+VAL loss: nan | Epoch:   3 | Step:  800 | seq_len  4 | Total images for 1 gpu  3204 | Median step time per image 263.4704 ms | Total images:  3204
+VAL loss: nan | Epoch:   3 | Step:  900 | seq_len  4 | Total images for 1 gpu  3604 | Median step time per image 263.4858 ms | Total images:  3604
+VAL loss: nan | Epoch:   3 | Step:  925 | seq_len  4 | Total images for 1 gpu  3704 | Median step time per image 263.4878 ms | Total images:  3704
+PREDICTION LOW  RESOLUTION: torch.Size([1, 1, 1, 1024, 1024])
+LABELS     LOW  RESOLUTION: torch.Size([1, 1, 1, 1024, 1024])
+EPOCH on VAL set: Seq mIoU [31;1m  0.04[0m %
+mIoU(t) on VAL set: [31;1m  0.04[0m %
+Per-Class IoU (WorkRes):
+        Background : [31;1m 1.14[0m % 
+               Car : [31;1m 0.00[0m % 
+               Bus : [31;1m 0.00[0m % 
+        Motorcycle : [31;1m 0.00[0m % 
+           Bicycle : [31;1m 0.00[0m % 
+        Pedestrian : [31;1m 0.00[0m % 
+      Motorcyclist : [31;1m 0.00[0m % 
+         Bicyclist : [31;1m 0.00[0m % 
+              Cart : [31;1m 0.00[0m % 
+             Bench : [31;1m 0.00[0m % 
+          Umbrella : [31;1m 0.00[0m % 
+               Box : [31;1m 0.00[0m % 
+              Pole : [31;1m 0.00[0m % 
+       Street_lamp : [31;1m 0.00[0m % 
+     Traffic_light : [31;1m 0.00[0m % 
+      Traffic_sign : [31;1m 0.00[0m % 
+          Car_stop : [31;1m 0.00[0m % 
+        Color_cone : [31;1m 0.00[0m % 
+               Sky : [31;1m 0.00[0m % 
+              Road : [31;1m 0.00[0m % 
+          Sidewalk : [31;1m 0.00[0m % 
+              Curb : [31;1m 0.00[0m % 
+        Vegetation : [31;1m 0.00[0m % 
+           Terrain : [31;1m 0.00[0m % 
+          Building : [31;1m 0.00[0m % 
+Saving model checkpoint: save/training_base_rtmvss/checkpoint.pth.tar
+LEARNING RATE:  0.0002
+----- TRAINING - EPOCH 4 -----
+TRAIN loss: nan | Epoch:   4 | Step:    0 | seq_len  4 | Total images for 1 gpu     4 | Median step time per image 449.6115 ms | Total images:     4
+TRAIN loss: nan | Epoch:   4 | Step:  100 | seq_len  4 | Total images for 1 gpu   404 | Median step time per image 433.0731 ms | Total images:   404
+TRAIN loss: nan | Epoch:   4 | Step:  200 | seq_len  4 | Total images for 1 gpu   804 | Median step time per image 432.9849 ms | Total images:   804
+TRAIN loss: nan | Epoch:   4 | Step:  300 | seq_len  4 | Total images for 1 gpu  1204 | Median step time per image 432.9697 ms | Total images:  1204
+TRAIN loss: nan | Epoch:   4 | Step:  400 | seq_len  4 | Total images for 1 gpu  1604 | Median step time per image 433.0090 ms | Total images:  1604
+TRAIN loss: nan | Epoch:   4 | Step:  500 | seq_len  4 | Total images for 1 gpu  2004 | Median step time per image 433.0452 ms | Total images:  2004
+TRAIN loss: nan | Epoch:   4 | Step:  600 | seq_len  4 | Total images for 1 gpu  2404 | Median step time per image 433.0425 ms | Total images:  2404
+TRAIN loss: nan | Epoch:   4 | Step:  700 | seq_len  4 | Total images for 1 gpu  2804 | Median step time per image 433.0176 ms | Total images:  2804
+TRAIN loss: nan | Epoch:   4 | Step:  800 | seq_len  4 | Total images for 1 gpu  3204 | Median step time per image 433.0053 ms | Total images:  3204
+TRAIN loss: nan | Epoch:   4 | Step:  900 | seq_len  4 | Total images for 1 gpu  3604 | Median step time per image 432.9923 ms | Total images:  3604
+TRAIN loss: nan | Epoch:   4 | Step: 1000 | seq_len  4 | Total images for 1 gpu  4004 | Median step time per image 432.9830 ms | Total images:  4004
+TRAIN loss: nan | Epoch:   4 | Step: 1100 | seq_len  4 | Total images for 1 gpu  4404 | Median step time per image 432.9828 ms | Total images:  4404
+TRAIN loss: nan | Epoch:   4 | Step: 1200 | seq_len  4 | Total images for 1 gpu  4804 | Median step time per image 432.9818 ms | Total images:  4804
+TRAIN loss: nan | Epoch:   4 | Step: 1300 | seq_len  4 | Total images for 1 gpu  5204 | Median step time per image 432.9737 ms | Total images:  5204
+TRAIN loss: nan | Epoch:   4 | Step: 1400 | seq_len  4 | Total images for 1 gpu  5604 | Median step time per image 432.9722 ms | Total images:  5604
+TRAIN loss: nan | Epoch:   4 | Step: 1500 | seq_len  4 | Total images for 1 gpu  6004 | Median step time per image 432.9830 ms | Total images:  6004
+TRAIN loss: nan | Epoch:   4 | Step: 1600 | seq_len  4 | Total images for 1 gpu  6404 | Median step time per image 432.9938 ms | Total images:  6404
+TRAIN loss: nan | Epoch:   4 | Step: 1700 | seq_len  4 | Total images for 1 gpu  6804 | Median step time per image 433.0032 ms | Total images:  6804
+TRAIN loss: nan | Epoch:   4 | Step: 1800 | seq_len  4 | Total images for 1 gpu  7204 | Median step time per image 433.0168 ms | Total images:  7204
+TRAIN loss: nan | Epoch:   4 | Step: 1900 | seq_len  4 | Total images for 1 gpu  7604 | Median step time per image 433.0228 ms | Total images:  7604
+TRAIN loss: nan | Epoch:   4 | Step: 2000 | seq_len  4 | Total images for 1 gpu  8004 | Median step time per image 433.0248 ms | Total images:  8004
+TRAIN loss: nan | Epoch:   4 | Step: 2100 | seq_len  4 | Total images for 1 gpu  8404 | Median step time per image 433.0294 ms | Total images:  8404
+TRAIN loss: nan | Epoch:   4 | Step: 2200 | seq_len  4 | Total images for 1 gpu  8804 | Median step time per image 433.0249 ms | Total images:  8804
+TRAIN loss: nan | Epoch:   4 | Step: 2240 | seq_len  4 | Total images for 1 gpu  8964 | Median step time per image 433.0257 ms | Total images:  8964
+----- VALIDATE - EPOCH 4 -----
+VAL loss: nan | Epoch:   4 | Step:    0 | seq_len  4 | Total images for 1 gpu     4 | Median step time per image 362.1127 ms | Total images:     4
+VAL loss: nan | Epoch:   4 | Step:  100 | seq_len  4 | Total images for 1 gpu   404 | Median step time per image 263.3779 ms | Total images:   404
+VAL loss: nan | Epoch:   4 | Step:  200 | seq_len  4 | Total images for 1 gpu   804 | Median step time per image 263.3862 ms | Total images:   804
+VAL loss: nan | Epoch:   4 | Step:  300 | seq_len  4 | Total images for 1 gpu  1204 | Median step time per image 263.4065 ms | Total images:  1204
+VAL loss: nan | Epoch:   4 | Step:  400 | seq_len  4 | Total images for 1 gpu  1604 | Median step time per image 263.4168 ms | Total images:  1604
+VAL loss: nan | Epoch:   4 | Step:  500 | seq_len  4 | Total images for 1 gpu  2004 | Median step time per image 263.4239 ms | Total images:  2004
+VAL loss: nan | Epoch:   4 | Step:  600 | seq_len  4 | Total images for 1 gpu  2404 | Median step time per image 263.4239 ms | Total images:  2404
+VAL loss: nan | Epoch:   4 | Step:  700 | seq_len  4 | Total images for 1 gpu  2804 | Median step time per image 263.4256 ms | Total images:  2804
+VAL loss: nan | Epoch:   4 | Step:  800 | seq_len  4 | Total images for 1 gpu  3204 | Median step time per image 263.4307 ms | Total images:  3204
+VAL loss: nan | Epoch:   4 | Step:  900 | seq_len  4 | Total images for 1 gpu  3604 | Median step time per image 263.4337 ms | Total images:  3604
+VAL loss: nan | Epoch:   4 | Step:  925 | seq_len  4 | Total images for 1 gpu  3704 | Median step time per image 263.4315 ms | Total images:  3704
+PREDICTION LOW  RESOLUTION: torch.Size([1, 1, 1, 1024, 1024])
+LABELS     LOW  RESOLUTION: torch.Size([1, 1, 1, 1024, 1024])
+EPOCH on VAL set: Seq mIoU [31;1m  0.04[0m %
+mIoU(t) on VAL set: [31;1m  0.04[0m %
+Per-Class IoU (WorkRes):
+        Background : [31;1m 1.14[0m % 
+               Car : [31;1m 0.00[0m % 
+               Bus : [31;1m 0.00[0m % 
+        Motorcycle : [31;1m 0.00[0m % 
+           Bicycle : [31;1m 0.00[0m % 
+        Pedestrian : [31;1m 0.00[0m % 
+      Motorcyclist : [31;1m 0.00[0m % 
+         Bicyclist : [31;1m 0.00[0m % 
+              Cart : [31;1m 0.00[0m % 
+             Bench : [31;1m 0.00[0m % 
+          Umbrella : [31;1m 0.00[0m % 
+               Box : [31;1m 0.00[0m % 
+              Pole : [31;1m 0.00[0m % 
+       Street_lamp : [31;1m 0.00[0m % 
+     Traffic_light : [31;1m 0.00[0m % 
+      Traffic_sign : [31;1m 0.00[0m % 
+          Car_stop : [31;1m 0.00[0m % 
+        Color_cone : [31;1m 0.00[0m % 
+               Sky : [31;1m 0.00[0m % 
+              Road : [31;1m 0.00[0m % 
+          Sidewalk : [31;1m 0.00[0m % 
+              Curb : [31;1m 0.00[0m % 
+        Vegetation : [31;1m 0.00[0m % 
+           Terrain : [31;1m 0.00[0m % 
+          Building : [31;1m 0.00[0m % 
+Saving model checkpoint: save/training_base_rtmvss/checkpoint.pth.tar
+LEARNING RATE:  0.0002
+----- TRAINING - EPOCH 5 -----
+TRAIN loss: nan | Epoch:   5 | Step:    0 | seq_len  4 | Total images for 1 gpu     4 | Median step time per image 446.1976 ms | Total images:     4
+TRAIN loss: nan | Epoch:   5 | Step:  100 | seq_len  4 | Total images for 1 gpu   404 | Median step time per image 432.8822 ms | Total images:   404
+TRAIN loss: nan | Epoch:   5 | Step:  200 | seq_len  4 | Total images for 1 gpu   804 | Median step time per image 432.8510 ms | Total images:   804
+TRAIN loss: nan | Epoch:   5 | Step:  300 | seq_len  4 | Total images for 1 gpu  1204 | Median step time per image 432.8508 ms | Total images:  1204
+TRAIN loss: nan | Epoch:   5 | Step:  400 | seq_len  4 | Total images for 1 gpu  1604 | Median step time per image 432.8511 ms | Total images:  1604
+TRAIN loss: nan | Epoch:   5 | Step:  500 | seq_len  4 | Total images for 1 gpu  2004 | Median step time per image 432.8475 ms | Total images:  2004
+TRAIN loss: nan | Epoch:   5 | Step:  600 | seq_len  4 | Total images for 1 gpu  2404 | Median step time per image 432.8467 ms | Total images:  2404
+TRAIN loss: nan | Epoch:   5 | Step:  700 | seq_len  4 | Total images for 1 gpu  2804 | Median step time per image 432.8467 ms | Total images:  2804
+TRAIN loss: nan | Epoch:   5 | Step:  800 | seq_len  4 | Total images for 1 gpu  3204 | Median step time per image 432.8448 ms | Total images:  3204
+TRAIN loss: nan | Epoch:   5 | Step:  900 | seq_len  4 | Total images for 1 gpu  3604 | Median step time per image 432.8433 ms | Total images:  3604
+TRAIN loss: nan | Epoch:   5 | Step: 1000 | seq_len  4 | Total images for 1 gpu  4004 | Median step time per image 432.8403 ms | Total images:  4004
+TRAIN loss: nan | Epoch:   5 | Step: 1100 | seq_len  4 | Total images for 1 gpu  4404 | Median step time per image 432.8386 ms | Total images:  4404
+TRAIN loss: nan | Epoch:   5 | Step: 1200 | seq_len  4 | Total images for 1 gpu  4804 | Median step time per image 432.8355 ms | Total images:  4804
+TRAIN loss: nan | Epoch:   5 | Step: 1300 | seq_len  4 | Total images for 1 gpu  5204 | Median step time per image 432.8324 ms | Total images:  5204
+TRAIN loss: nan | Epoch:   5 | Step: 1400 | seq_len  4 | Total images for 1 gpu  5604 | Median step time per image 432.8299 ms | Total images:  5604
+TRAIN loss: nan | Epoch:   5 | Step: 1500 | seq_len  4 | Total images for 1 gpu  6004 | Median step time per image 432.8292 ms | Total images:  6004
+TRAIN loss: nan | Epoch:   5 | Step: 1600 | seq_len  4 | Total images for 1 gpu  6404 | Median step time per image 432.8284 ms | Total images:  6404
+TRAIN loss: nan | Epoch:   5 | Step: 1700 | seq_len  4 | Total images for 1 gpu  6804 | Median step time per image 432.8282 ms | Total images:  6804
+TRAIN loss: nan | Epoch:   5 | Step: 1800 | seq_len  4 | Total images for 1 gpu  7204 | Median step time per image 432.8277 ms | Total images:  7204
+TRAIN loss: nan | Epoch:   5 | Step: 1900 | seq_len  4 | Total images for 1 gpu  7604 | Median step time per image 432.8320 ms | Total images:  7604
+TRAIN loss: nan | Epoch:   5 | Step: 2000 | seq_len  4 | Total images for 1 gpu  8004 | Median step time per image 432.8377 ms | Total images:  8004
+TRAIN loss: nan | Epoch:   5 | Step: 2100 | seq_len  4 | Total images for 1 gpu  8404 | Median step time per image 432.8418 ms | Total images:  8404
+TRAIN loss: nan | Epoch:   5 | Step: 2200 | seq_len  4 | Total images for 1 gpu  8804 | Median step time per image 432.8467 ms | Total images:  8804
+TRAIN loss: nan | Epoch:   5 | Step: 2240 | seq_len  4 | Total images for 1 gpu  8964 | Median step time per image 432.8483 ms | Total images:  8964
+----- VALIDATE - EPOCH 5 -----
+VAL loss: nan | Epoch:   5 | Step:    0 | seq_len  4 | Total images for 1 gpu     4 | Median step time per image 326.0438 ms | Total images:     4
+VAL loss: nan | Epoch:   5 | Step:  100 | seq_len  4 | Total images for 1 gpu   404 | Median step time per image 263.7221 ms | Total images:   404
+VAL loss: nan | Epoch:   5 | Step:  200 | seq_len  4 | Total images for 1 gpu   804 | Median step time per image 263.7255 ms | Total images:   804
+VAL loss: nan | Epoch:   5 | Step:  300 | seq_len  4 | Total images for 1 gpu  1204 | Median step time per image 263.5448 ms | Total images:  1204
+VAL loss: nan | Epoch:   5 | Step:  400 | seq_len  4 | Total images for 1 gpu  1604 | Median step time per image 263.5062 ms | Total images:  1604
+VAL loss: nan | Epoch:   5 | Step:  500 | seq_len  4 | Total images for 1 gpu  2004 | Median step time per image 263.4832 ms | Total images:  2004
+VAL loss: nan | Epoch:   5 | Step:  600 | seq_len  4 | Total images for 1 gpu  2404 | Median step time per image 263.4943 ms | Total images:  2404
+VAL loss: nan | Epoch:   5 | Step:  700 | seq_len  4 | Total images for 1 gpu  2804 | Median step time per image 263.5033 ms | Total images:  2804
+VAL loss: nan | Epoch:   5 | Step:  800 | seq_len  4 | Total images for 1 gpu  3204 | Median step time per image 263.5033 ms | Total images:  3204
+VAL loss: nan | Epoch:   5 | Step:  900 | seq_len  4 | Total images for 1 gpu  3604 | Median step time per image 263.4951 ms | Total images:  3604
+VAL loss: nan | Epoch:   5 | Step:  925 | seq_len  4 | Total images for 1 gpu  3704 | Median step time per image 263.5011 ms | Total images:  3704
+PREDICTION LOW  RESOLUTION: torch.Size([1, 1, 1, 1024, 1024])
+LABELS     LOW  RESOLUTION: torch.Size([1, 1, 1, 1024, 1024])
+EPOCH on VAL set: Seq mIoU [31;1m  0.04[0m %
+mIoU(t) on VAL set: [31;1m  0.04[0m %
+Per-Class IoU (WorkRes):
+        Background : [31;1m 1.14[0m % 
+               Car : [31;1m 0.00[0m % 
+               Bus : [31;1m 0.00[0m % 
+        Motorcycle : [31;1m 0.00[0m % 
+           Bicycle : [31;1m 0.00[0m % 
+        Pedestrian : [31;1m 0.00[0m % 
+      Motorcyclist : [31;1m 0.00[0m % 
+         Bicyclist : [31;1m 0.00[0m % 
+              Cart : [31;1m 0.00[0m % 
+             Bench : [31;1m 0.00[0m % 
+          Umbrella : [31;1m 0.00[0m % 
+               Box : [31;1m 0.00[0m % 
+              Pole : [31;1m 0.00[0m % 
+       Street_lamp : [31;1m 0.00[0m % 
+     Traffic_light : [31;1m 0.00[0m % 
+      Traffic_sign : [31;1m 0.00[0m % 
+          Car_stop : [31;1m 0.00[0m % 
+        Color_cone : [31;1m 0.00[0m % 
+               Sky : [31;1m 0.00[0m % 
+              Road : [31;1m 0.00[0m % 
+          Sidewalk : [31;1m 0.00[0m % 
+              Curb : [31;1m 0.00[0m % 
+        Vegetation : [31;1m 0.00[0m % 
+           Terrain : [31;1m 0.00[0m % 
+          Building : [31;1m 0.00[0m % 
+Saving model checkpoint: save/training_base_rtmvss/checkpoint.pth.tar
+LEARNING RATE:  0.0002
+----- TRAINING - EPOCH 6 -----
+TRAIN loss: nan | Epoch:   6 | Step:    0 | seq_len  4 | Total images for 1 gpu     4 | Median step time per image 567.3323 ms | Total images:     4
+TRAIN loss: nan | Epoch:   6 | Step:  100 | seq_len  4 | Total images for 1 gpu   404 | Median step time per image 433.6761 ms | Total images:   404
+TRAIN loss: nan | Epoch:   6 | Step:  200 | seq_len  4 | Total images for 1 gpu   804 | Median step time per image 433.4394 ms | Total images:   804
+TRAIN loss: nan | Epoch:   6 | Step:  300 | seq_len  4 | Total images for 1 gpu  1204 | Median step time per image 433.1078 ms | Total images:  1204
+TRAIN loss: nan | Epoch:   6 | Step:  400 | seq_len  4 | Total images for 1 gpu  1604 | Median step time per image 433.0662 ms | Total images:  1604
+TRAIN loss: nan | Epoch:   6 | Step:  500 | seq_len  4 | Total images for 1 gpu  2004 | Median step time per image 433.0435 ms | Total images:  2004
+TRAIN loss: nan | Epoch:   6 | Step:  600 | seq_len  4 | Total images for 1 gpu  2404 | Median step time per image 433.0341 ms | Total images:  2404
+TRAIN loss: nan | Epoch:   6 | Step:  700 | seq_len  4 | Total images for 1 gpu  2804 | Median step time per image 433.0289 ms | Total images:  2804
+TRAIN loss: nan | Epoch:   6 | Step:  800 | seq_len  4 | Total images for 1 gpu  3204 | Median step time per image 433.0232 ms | Total images:  3204
+TRAIN loss: nan | Epoch:   6 | Step:  900 | seq_len  4 | Total images for 1 gpu  3604 | Median step time per image 433.0232 ms | Total images:  3604
+TRAIN loss: nan | Epoch:   6 | Step: 1000 | seq_len  4 | Total images for 1 gpu  4004 | Median step time per image 433.0219 ms | Total images:  4004
+TRAIN loss: nan | Epoch:   6 | Step: 1100 | seq_len  4 | Total images for 1 gpu  4404 | Median step time per image 433.0206 ms | Total images:  4404
+TRAIN loss: nan | Epoch:   6 | Step: 1200 | seq_len  4 | Total images for 1 gpu  4804 | Median step time per image 433.0260 ms | Total images:  4804
+TRAIN loss: nan | Epoch:   6 | Step: 1300 | seq_len  4 | Total images for 1 gpu  5204 | Median step time per image 433.0293 ms | Total images:  5204
+TRAIN loss: nan | Epoch:   6 | Step: 1400 | seq_len  4 | Total images for 1 gpu  5604 | Median step time per image 433.0280 ms | Total images:  5604
+TRAIN loss: nan | Epoch:   6 | Step: 1500 | seq_len  4 | Total images for 1 gpu  6004 | Median step time per image 433.0292 ms | Total images:  6004
+TRAIN loss: nan | Epoch:   6 | Step: 1600 | seq_len  4 | Total images for 1 gpu  6404 | Median step time per image 433.0295 ms | Total images:  6404
+TRAIN loss: nan | Epoch:   6 | Step: 1700 | seq_len  4 | Total images for 1 gpu  6804 | Median step time per image 433.0295 ms | Total images:  6804
+TRAIN loss: nan | Epoch:   6 | Step: 1800 | seq_len  4 | Total images for 1 gpu  7204 | Median step time per image 433.0311 ms | Total images:  7204
+TRAIN loss: nan | Epoch:   6 | Step: 1900 | seq_len  4 | Total images for 1 gpu  7604 | Median step time per image 433.0295 ms | Total images:  7604
+TRAIN loss: nan | Epoch:   6 | Step: 2000 | seq_len  4 | Total images for 1 gpu  8004 | Median step time per image 433.0350 ms | Total images:  8004
+TRAIN loss: nan | Epoch:   6 | Step: 2100 | seq_len  4 | Total images for 1 gpu  8404 | Median step time per image 433.0401 ms | Total images:  8404
+TRAIN loss: nan | Epoch:   6 | Step: 2200 | seq_len  4 | Total images for 1 gpu  8804 | Median step time per image 433.0451 ms | Total images:  8804
+TRAIN loss: nan | Epoch:   6 | Step: 2240 | seq_len  4 | Total images for 1 gpu  8964 | Median step time per image 433.0465 ms | Total images:  8964
+----- VALIDATE - EPOCH 6 -----
+VAL loss: nan | Epoch:   6 | Step:    0 | seq_len  4 | Total images for 1 gpu     4 | Median step time per image 342.4035 ms | Total images:     4
+VAL loss: nan | Epoch:   6 | Step:  100 | seq_len  4 | Total images for 1 gpu   404 | Median step time per image 263.5903 ms | Total images:   404
+VAL loss: nan | Epoch:   6 | Step:  200 | seq_len  4 | Total images for 1 gpu   804 | Median step time per image 263.5844 ms | Total images:   804
+VAL loss: nan | Epoch:   6 | Step:  300 | seq_len  4 | Total images for 1 gpu  1204 | Median step time per image 263.5609 ms | Total images:  1204
+VAL loss: nan | Epoch:   6 | Step:  400 | seq_len  4 | Total images for 1 gpu  1604 | Median step time per image 263.5416 ms | Total images:  1604
+VAL loss: nan | Epoch:   6 | Step:  500 | seq_len  4 | Total images for 1 gpu  2004 | Median step time per image 263.5303 ms | Total images:  2004
+VAL loss: nan | Epoch:   6 | Step:  600 | seq_len  4 | Total images for 1 gpu  2404 | Median step time per image 263.5260 ms | Total images:  2404
+VAL loss: nan | Epoch:   6 | Step:  700 | seq_len  4 | Total images for 1 gpu  2804 | Median step time per image 263.5216 ms | Total images:  2804
+VAL loss: nan | Epoch:   6 | Step:  800 | seq_len  4 | Total images for 1 gpu  3204 | Median step time per image 263.5224 ms | Total images:  3204
+VAL loss: nan | Epoch:   6 | Step:  900 | seq_len  4 | Total images for 1 gpu  3604 | Median step time per image 263.5183 ms | Total images:  3604
+VAL loss: nan | Epoch:   6 | Step:  925 | seq_len  4 | Total images for 1 gpu  3704 | Median step time per image 263.5194 ms | Total images:  3704
+PREDICTION LOW  RESOLUTION: torch.Size([1, 1, 1, 1024, 1024])
+LABELS     LOW  RESOLUTION: torch.Size([1, 1, 1, 1024, 1024])
+EPOCH on VAL set: Seq mIoU [31;1m  0.04[0m %
+mIoU(t) on VAL set: [31;1m  0.04[0m %
+Per-Class IoU (WorkRes):
+        Background : [31;1m 1.14[0m % 
+               Car : [31;1m 0.00[0m % 
+               Bus : [31;1m 0.00[0m % 
+        Motorcycle : [31;1m 0.00[0m % 
+           Bicycle : [31;1m 0.00[0m % 
+        Pedestrian : [31;1m 0.00[0m % 
+      Motorcyclist : [31;1m 0.00[0m % 
+         Bicyclist : [31;1m 0.00[0m % 
+              Cart : [31;1m 0.00[0m % 
+             Bench : [31;1m 0.00[0m % 
+          Umbrella : [31;1m 0.00[0m % 
+               Box : [31;1m 0.00[0m % 
+              Pole : [31;1m 0.00[0m % 
+       Street_lamp : [31;1m 0.00[0m % 
+     Traffic_light : [31;1m 0.00[0m % 
+      Traffic_sign : [31;1m 0.00[0m % 
+          Car_stop : [31;1m 0.00[0m % 
+        Color_cone : [31;1m 0.00[0m % 
+               Sky : [31;1m 0.00[0m % 
+              Road : [31;1m 0.00[0m % 
+          Sidewalk : [31;1m 0.00[0m % 
+              Curb : [31;1m 0.00[0m % 
+        Vegetation : [31;1m 0.00[0m % 
+           Terrain : [31;1m 0.00[0m % 
+          Building : [31;1m 0.00[0m % 
+Saving model checkpoint: save/training_base_rtmvss/checkpoint.pth.tar
+LEARNING RATE:  0.0002
+----- TRAINING - EPOCH 7 -----
+TRAIN loss: nan | Epoch:   7 | Step:    0 | seq_len  4 | Total images for 1 gpu     4 | Median step time per image 494.6898 ms | Total images:     4
+TRAIN loss: nan | Epoch:   7 | Step:  100 | seq_len  4 | Total images for 1 gpu   404 | Median step time per image 433.6607 ms | Total images:   404
+TRAIN loss: nan | Epoch:   7 | Step:  200 | seq_len  4 | Total images for 1 gpu   804 | Median step time per image 433.5091 ms | Total images:   804
+TRAIN loss: nan | Epoch:   7 | Step:  300 | seq_len  4 | Total images for 1 gpu  1204 | Median step time per image 433.4666 ms | Total images:  1204
+TRAIN loss: nan | Epoch:   7 | Step:  400 | seq_len  4 | Total images for 1 gpu  1604 | Median step time per image 433.4995 ms | Total images:  1604
+TRAIN loss: nan | Epoch:   7 | Step:  500 | seq_len  4 | Total images for 1 gpu  2004 | Median step time per image 433.5052 ms | Total images:  2004
+TRAIN loss: nan | Epoch:   7 | Step:  600 | seq_len  4 | Total images for 1 gpu  2404 | Median step time per image 433.4980 ms | Total images:  2404
+TRAIN loss: nan | Epoch:   7 | Step:  700 | seq_len  4 | Total images for 1 gpu  2804 | Median step time per image 433.4915 ms | Total images:  2804
+TRAIN loss: nan | Epoch:   7 | Step:  800 | seq_len  4 | Total images for 1 gpu  3204 | Median step time per image 433.4596 ms | Total images:  3204
+TRAIN loss: nan | Epoch:   7 | Step:  900 | seq_len  4 | Total images for 1 gpu  3604 | Median step time per image 433.4147 ms | Total images:  3604
+TRAIN loss: nan | Epoch:   7 | Step: 1000 | seq_len  4 | Total images for 1 gpu  4004 | Median step time per image 433.3937 ms | Total images:  4004
+TRAIN loss: nan | Epoch:   7 | Step: 1100 | seq_len  4 | Total images for 1 gpu  4404 | Median step time per image 433.3745 ms | Total images:  4404
+TRAIN loss: nan | Epoch:   7 | Step: 1200 | seq_len  4 | Total images for 1 gpu  4804 | Median step time per image 433.3625 ms | Total images:  4804
+TRAIN loss: nan | Epoch:   7 | Step: 1300 | seq_len  4 | Total images for 1 gpu  5204 | Median step time per image 433.3495 ms | Total images:  5204
+TRAIN loss: nan | Epoch:   7 | Step: 1400 | seq_len  4 | Total images for 1 gpu  5604 | Median step time per image 433.3408 ms | Total images:  5604
+TRAIN loss: nan | Epoch:   7 | Step: 1500 | seq_len  4 | Total images for 1 gpu  6004 | Median step time per image 433.3231 ms | Total images:  6004
+TRAIN loss: nan | Epoch:   7 | Step: 1600 | seq_len  4 | Total images for 1 gpu  6404 | Median step time per image 433.3092 ms | Total images:  6404
+TRAIN loss: nan | Epoch:   7 | Step: 1700 | seq_len  4 | Total images for 1 gpu  6804 | Median step time per image 433.2924 ms | Total images:  6804
+TRAIN loss: nan | Epoch:   7 | Step: 1800 | seq_len  4 | Total images for 1 gpu  7204 | Median step time per image 433.2807 ms | Total images:  7204
+TRAIN loss: nan | Epoch:   7 | Step: 1900 | seq_len  4 | Total images for 1 gpu  7604 | Median step time per image 433.2647 ms | Total images:  7604
+TRAIN loss: nan | Epoch:   7 | Step: 2000 | seq_len  4 | Total images for 1 gpu  8004 | Median step time per image 433.2518 ms | Total images:  8004
+TRAIN loss: nan | Epoch:   7 | Step: 2100 | seq_len  4 | Total images for 1 gpu  8404 | Median step time per image 433.2358 ms | Total images:  8404
+TRAIN loss: nan | Epoch:   7 | Step: 2200 | seq_len  4 | Total images for 1 gpu  8804 | Median step time per image 433.2277 ms | Total images:  8804
+TRAIN loss: nan | Epoch:   7 | Step: 2240 | seq_len  4 | Total images for 1 gpu  8964 | Median step time per image 433.2288 ms | Total images:  8964
+----- VALIDATE - EPOCH 7 -----
+VAL loss: nan | Epoch:   7 | Step:    0 | seq_len  4 | Total images for 1 gpu     4 | Median step time per image 407.1809 ms | Total images:     4
+VAL loss: nan | Epoch:   7 | Step:  100 | seq_len  4 | Total images for 1 gpu   404 | Median step time per image 263.6054 ms | Total images:   404
+VAL loss: nan | Epoch:   7 | Step:  200 | seq_len  4 | Total images for 1 gpu   804 | Median step time per image 263.5581 ms | Total images:   804
+VAL loss: nan | Epoch:   7 | Step:  300 | seq_len  4 | Total images for 1 gpu  1204 | Median step time per image 263.5630 ms | Total images:  1204
+VAL loss: nan | Epoch:   7 | Step:  400 | seq_len  4 | Total images for 1 gpu  1604 | Median step time per image 263.5635 ms | Total images:  1604
+VAL loss: nan | Epoch:   7 | Step:  500 | seq_len  4 | Total images for 1 gpu  2004 | Median step time per image 263.5713 ms | Total images:  2004
+VAL loss: nan | Epoch:   7 | Step:  600 | seq_len  4 | Total images for 1 gpu  2404 | Median step time per image 263.5670 ms | Total images:  2404
+VAL loss: nan | Epoch:   7 | Step:  700 | seq_len  4 | Total images for 1 gpu  2804 | Median step time per image 263.5674 ms | Total images:  2804
+VAL loss: nan | Epoch:   7 | Step:  800 | seq_len  4 | Total images for 1 gpu  3204 | Median step time per image 263.5682 ms | Total images:  3204
+VAL loss: nan | Epoch:   7 | Step:  900 | seq_len  4 | Total images for 1 gpu  3604 | Median step time per image 263.5677 ms | Total images:  3604
+VAL loss: nan | Epoch:   7 | Step:  925 | seq_len  4 | Total images for 1 gpu  3704 | Median step time per image 263.5672 ms | Total images:  3704
+PREDICTION LOW  RESOLUTION: torch.Size([1, 1, 1, 1024, 1024])
+LABELS     LOW  RESOLUTION: torch.Size([1, 1, 1, 1024, 1024])
+EPOCH on VAL set: Seq mIoU [31;1m  0.04[0m %
+mIoU(t) on VAL set: [31;1m  0.04[0m %
+Per-Class IoU (WorkRes):
+        Background : [31;1m 1.14[0m % 
+               Car : [31;1m 0.00[0m % 
+               Bus : [31;1m 0.00[0m % 
+        Motorcycle : [31;1m 0.00[0m % 
+           Bicycle : [31;1m 0.00[0m % 
+        Pedestrian : [31;1m 0.00[0m % 
+      Motorcyclist : [31;1m 0.00[0m % 
+         Bicyclist : [31;1m 0.00[0m % 
+              Cart : [31;1m 0.00[0m % 
+             Bench : [31;1m 0.00[0m % 
+          Umbrella : [31;1m 0.00[0m % 
+               Box : [31;1m 0.00[0m % 
+              Pole : [31;1m 0.00[0m % 
+       Street_lamp : [31;1m 0.00[0m % 
+     Traffic_light : [31;1m 0.00[0m % 
+      Traffic_sign : [31;1m 0.00[0m % 
+          Car_stop : [31;1m 0.00[0m % 
+        Color_cone : [31;1m 0.00[0m % 
+               Sky : [31;1m 0.00[0m % 
+              Road : [31;1m 0.00[0m % 
+          Sidewalk : [31;1m 0.00[0m % 
+              Curb : [31;1m 0.00[0m % 
+        Vegetation : [31;1m 0.00[0m % 
+           Terrain : [31;1m 0.00[0m % 
+          Building : [31;1m 0.00[0m % 
+Saving model checkpoint: save/training_base_rtmvss/checkpoint.pth.tar
+LEARNING RATE:  0.0002
+----- TRAINING - EPOCH 8 -----
+TRAIN loss: nan | Epoch:   8 | Step:    0 | seq_len  4 | Total images for 1 gpu     4 | Median step time per image 562.5218 ms | Total images:     4
+TRAIN loss: nan | Epoch:   8 | Step:  100 | seq_len  4 | Total images for 1 gpu   404 | Median step time per image 433.3922 ms | Total images:   404
+TRAIN loss: nan | Epoch:   8 | Step:  200 | seq_len  4 | Total images for 1 gpu   804 | Median step time per image 433.4242 ms | Total images:   804
+TRAIN loss: nan | Epoch:   8 | Step:  300 | seq_len  4 | Total images for 1 gpu  1204 | Median step time per image 433.4009 ms | Total images:  1204
+TRAIN loss: nan | Epoch:   8 | Step:  400 | seq_len  4 | Total images for 1 gpu  1604 | Median step time per image 433.3901 ms | Total images:  1604
+TRAIN loss: nan | Epoch:   8 | Step:  500 | seq_len  4 | Total images for 1 gpu  2004 | Median step time per image 433.3646 ms | Total images:  2004
+TRAIN loss: nan | Epoch:   8 | Step:  600 | seq_len  4 | Total images for 1 gpu  2404 | Median step time per image 433.3651 ms | Total images:  2404
+TRAIN loss: nan | Epoch:   8 | Step:  700 | seq_len  4 | Total images for 1 gpu  2804 | Median step time per image 433.3614 ms | Total images:  2804
+TRAIN loss: nan | Epoch:   8 | Step:  800 | seq_len  4 | Total images for 1 gpu  3204 | Median step time per image 433.3767 ms | Total images:  3204
+TRAIN loss: nan | Epoch:   8 | Step:  900 | seq_len  4 | Total images for 1 gpu  3604 | Median step time per image 433.3782 ms | Total images:  3604
+TRAIN loss: nan | Epoch:   8 | Step: 1000 | seq_len  4 | Total images for 1 gpu  4004 | Median step time per image 433.3798 ms | Total images:  4004
+TRAIN loss: nan | Epoch:   8 | Step: 1100 | seq_len  4 | Total images for 1 gpu  4404 | Median step time per image 433.3782 ms | Total images:  4404
+TRAIN loss: nan | Epoch:   8 | Step: 1200 | seq_len  4 | Total images for 1 gpu  4804 | Median step time per image 433.3903 ms | Total images:  4804
+TRAIN loss: nan | Epoch:   8 | Step: 1300 | seq_len  4 | Total images for 1 gpu  5204 | Median step time per image 433.3959 ms | Total images:  5204
+TRAIN loss: nan | Epoch:   8 | Step: 1400 | seq_len  4 | Total images for 1 gpu  5604 | Median step time per image 433.4224 ms | Total images:  5604
+TRAIN loss: nan | Epoch:   8 | Step: 1500 | seq_len  4 | Total images for 1 gpu  6004 | Median step time per image 433.4174 ms | Total images:  6004
+TRAIN loss: nan | Epoch:   8 | Step: 1600 | seq_len  4 | Total images for 1 gpu  6404 | Median step time per image 433.4010 ms | Total images:  6404
+TRAIN loss: nan | Epoch:   8 | Step: 1700 | seq_len  4 | Total images for 1 gpu  6804 | Median step time per image 433.3891 ms | Total images:  6804
+TRAIN loss: nan | Epoch:   8 | Step: 1800 | seq_len  4 | Total images for 1 gpu  7204 | Median step time per image 433.3909 ms | Total images:  7204
+TRAIN loss: nan | Epoch:   8 | Step: 1900 | seq_len  4 | Total images for 1 gpu  7604 | Median step time per image 433.3916 ms | Total images:  7604
+TRAIN loss: nan | Epoch:   8 | Step: 2000 | seq_len  4 | Total images for 1 gpu  8004 | Median step time per image 433.3978 ms | Total images:  8004
+TRAIN loss: nan | Epoch:   8 | Step: 2100 | seq_len  4 | Total images for 1 gpu  8404 | Median step time per image 433.4098 ms | Total images:  8404
+TRAIN loss: nan | Epoch:   8 | Step: 2200 | seq_len  4 | Total images for 1 gpu  8804 | Median step time per image 433.4113 ms | Total images:  8804
+TRAIN loss: nan | Epoch:   8 | Step: 2240 | seq_len  4 | Total images for 1 gpu  8964 | Median step time per image 433.4163 ms | Total images:  8964
+----- VALIDATE - EPOCH 8 -----
+VAL loss: nan | Epoch:   8 | Step:    0 | seq_len  4 | Total images for 1 gpu     4 | Median step time per image 364.5734 ms | Total images:     4
+VAL loss: nan | Epoch:   8 | Step:  100 | seq_len  4 | Total images for 1 gpu   404 | Median step time per image 263.4475 ms | Total images:   404
+VAL loss: nan | Epoch:   8 | Step:  200 | seq_len  4 | Total images for 1 gpu   804 | Median step time per image 263.4736 ms | Total images:   804
+VAL loss: nan | Epoch:   8 | Step:  300 | seq_len  4 | Total images for 1 gpu  1204 | Median step time per image 263.5236 ms | Total images:  1204
+VAL loss: nan | Epoch:   8 | Step:  400 | seq_len  4 | Total images for 1 gpu  1604 | Median step time per image 263.5586 ms | Total images:  1604
+VAL loss: nan | Epoch:   8 | Step:  500 | seq_len  4 | Total images for 1 gpu  2004 | Median step time per image 263.5632 ms | Total images:  2004
+VAL loss: nan | Epoch:   8 | Step:  600 | seq_len  4 | Total images for 1 gpu  2404 | Median step time per image 263.5660 ms | Total images:  2404
+VAL loss: nan | Epoch:   8 | Step:  700 | seq_len  4 | Total images for 1 gpu  2804 | Median step time per image 263.5658 ms | Total images:  2804
+VAL loss: nan | Epoch:   8 | Step:  800 | seq_len  4 | Total images for 1 gpu  3204 | Median step time per image 263.5648 ms | Total images:  3204
+VAL loss: nan | Epoch:   8 | Step:  900 | seq_len  4 | Total images for 1 gpu  3604 | Median step time per image 263.5623 ms | Total images:  3604
+VAL loss: nan | Epoch:   8 | Step:  925 | seq_len  4 | Total images for 1 gpu  3704 | Median step time per image 263.5637 ms | Total images:  3704
+PREDICTION LOW  RESOLUTION: torch.Size([1, 1, 1, 1024, 1024])
+LABELS     LOW  RESOLUTION: torch.Size([1, 1, 1, 1024, 1024])
+EPOCH on VAL set: Seq mIoU [31;1m  0.04[0m %
+mIoU(t) on VAL set: [31;1m  0.04[0m %
+Per-Class IoU (WorkRes):
+        Background : [31;1m 1.14[0m % 
+               Car : [31;1m 0.00[0m % 
+               Bus : [31;1m 0.00[0m % 
+        Motorcycle : [31;1m 0.00[0m % 
+           Bicycle : [31;1m 0.00[0m % 
+        Pedestrian : [31;1m 0.00[0m % 
+      Motorcyclist : [31;1m 0.00[0m % 
+         Bicyclist : [31;1m 0.00[0m % 
+              Cart : [31;1m 0.00[0m % 
+             Bench : [31;1m 0.00[0m % 
+          Umbrella : [31;1m 0.00[0m % 
+               Box : [31;1m 0.00[0m % 
+              Pole : [31;1m 0.00[0m % 
+       Street_lamp : [31;1m 0.00[0m % 
+     Traffic_light : [31;1m 0.00[0m % 
+      Traffic_sign : [31;1m 0.00[0m % 
+          Car_stop : [31;1m 0.00[0m % 
+        Color_cone : [31;1m 0.00[0m % 
+               Sky : [31;1m 0.00[0m % 
+              Road : [31;1m 0.00[0m % 
+          Sidewalk : [31;1m 0.00[0m % 
+              Curb : [31;1m 0.00[0m % 
+        Vegetation : [31;1m 0.00[0m % 
+           Terrain : [31;1m 0.00[0m % 
+          Building : [31;1m 0.00[0m % 
+Saving model checkpoint: save/training_base_rtmvss/checkpoint.pth.tar
+LEARNING RATE:  0.0002
+----- TRAINING - EPOCH 9 -----
+TRAIN loss: nan | Epoch:   9 | Step:    0 | seq_len  4 | Total images for 1 gpu     4 | Median step time per image 464.1390 ms | Total images:     4
+TRAIN loss: nan | Epoch:   9 | Step:  100 | seq_len  4 | Total images for 1 gpu   404 | Median step time per image 433.6579 ms | Total images:   404
+TRAIN loss: nan | Epoch:   9 | Step:  200 | seq_len  4 | Total images for 1 gpu   804 | Median step time per image 433.5378 ms | Total images:   804
+TRAIN loss: nan | Epoch:   9 | Step:  300 | seq_len  4 | Total images for 1 gpu  1204 | Median step time per image 433.5164 ms | Total images:  1204
+TRAIN loss: nan | Epoch:   9 | Step:  400 | seq_len  4 | Total images for 1 gpu  1604 | Median step time per image 433.4950 ms | Total images:  1604
+TRAIN loss: nan | Epoch:   9 | Step:  500 | seq_len  4 | Total images for 1 gpu  2004 | Median step time per image 433.4641 ms | Total images:  2004
+TRAIN loss: nan | Epoch:   9 | Step:  600 | seq_len  4 | Total images for 1 gpu  2404 | Median step time per image 433.4746 ms | Total images:  2404
+TRAIN loss: nan | Epoch:   9 | Step:  700 | seq_len  4 | Total images for 1 gpu  2804 | Median step time per image 433.4715 ms | Total images:  2804
+TRAIN loss: nan | Epoch:   9 | Step:  800 | seq_len  4 | Total images for 1 gpu  3204 | Median step time per image 433.4370 ms | Total images:  3204
+TRAIN loss: nan | Epoch:   9 | Step:  900 | seq_len  4 | Total images for 1 gpu  3604 | Median step time per image 433.4229 ms | Total images:  3604
+TRAIN loss: nan | Epoch:   9 | Step: 1000 | seq_len  4 | Total images for 1 gpu  4004 | Median step time per image 433.4567 ms | Total images:  4004
+TRAIN loss: nan | Epoch:   9 | Step: 1100 | seq_len  4 | Total images for 1 gpu  4404 | Median step time per image 433.4463 ms | Total images:  4404
+TRAIN loss: nan | Epoch:   9 | Step: 1200 | seq_len  4 | Total images for 1 gpu  4804 | Median step time per image 433.4715 ms | Total images:  4804
+TRAIN loss: nan | Epoch:   9 | Step: 1300 | seq_len  4 | Total images for 1 gpu  5204 | Median step time per image 433.4822 ms | Total images:  5204
+TRAIN loss: nan | Epoch:   9 | Step: 1400 | seq_len  4 | Total images for 1 gpu  5604 | Median step time per image 433.4673 ms | Total images:  5604
+TRAIN loss: nan | Epoch:   9 | Step: 1500 | seq_len  4 | Total images for 1 gpu  6004 | Median step time per image 433.4412 ms | Total images:  6004
+TRAIN loss: nan | Epoch:   9 | Step: 1600 | seq_len  4 | Total images for 1 gpu  6404 | Median step time per image 433.4124 ms | Total images:  6404
+TRAIN loss: nan | Epoch:   9 | Step: 1700 | seq_len  4 | Total images for 1 gpu  6804 | Median step time per image 433.4010 ms | Total images:  6804
+TRAIN loss: nan | Epoch:   9 | Step: 1800 | seq_len  4 | Total images for 1 gpu  7204 | Median step time per image 433.3811 ms | Total images:  7204
+TRAIN loss: nan | Epoch:   9 | Step: 1900 | seq_len  4 | Total images for 1 gpu  7604 | Median step time per image 433.3598 ms | Total images:  7604
+TRAIN loss: nan | Epoch:   9 | Step: 2000 | seq_len  4 | Total images for 1 gpu  8004 | Median step time per image 433.3445 ms | Total images:  8004
+TRAIN loss: nan | Epoch:   9 | Step: 2100 | seq_len  4 | Total images for 1 gpu  8404 | Median step time per image 433.3259 ms | Total images:  8404
+TRAIN loss: nan | Epoch:   9 | Step: 2200 | seq_len  4 | Total images for 1 gpu  8804 | Median step time per image 433.3116 ms | Total images:  8804
+TRAIN loss: nan | Epoch:   9 | Step: 2240 | seq_len  4 | Total images for 1 gpu  8964 | Median step time per image 433.3065 ms | Total images:  8964
+----- VALIDATE - EPOCH 9 -----
+VAL loss: nan | Epoch:   9 | Step:    0 | seq_len  4 | Total images for 1 gpu     4 | Median step time per image 316.0731 ms | Total images:     4
+VAL loss: nan | Epoch:   9 | Step:  100 | seq_len  4 | Total images for 1 gpu   404 | Median step time per image 264.2361 ms | Total images:   404
+VAL loss: nan | Epoch:   9 | Step:  200 | seq_len  4 | Total images for 1 gpu   804 | Median step time per image 264.1757 ms | Total images:   804
+VAL loss: nan | Epoch:   9 | Step:  300 | seq_len  4 | Total images for 1 gpu  1204 | Median step time per image 264.1698 ms | Total images:  1204
+VAL loss: nan | Epoch:   9 | Step:  400 | seq_len  4 | Total images for 1 gpu  1604 | Median step time per image 264.1698 ms | Total images:  1604
+VAL loss: nan | Epoch:   9 | Step:  500 | seq_len  4 | Total images for 1 gpu  2004 | Median step time per image 264.1678 ms | Total images:  2004
+VAL loss: nan | Epoch:   9 | Step:  600 | seq_len  4 | Total images for 1 gpu  2404 | Median step time per image 264.1662 ms | Total images:  2404
+VAL loss: nan | Epoch:   9 | Step:  700 | seq_len  4 | Total images for 1 gpu  2804 | Median step time per image 264.1417 ms | Total images:  2804
+VAL loss: nan | Epoch:   9 | Step:  800 | seq_len  4 | Total images for 1 gpu  3204 | Median step time per image 264.1246 ms | Total images:  3204
+VAL loss: nan | Epoch:   9 | Step:  900 | seq_len  4 | Total images for 1 gpu  3604 | Median step time per image 264.0960 ms | Total images:  3604
+VAL loss: nan | Epoch:   9 | Step:  925 | seq_len  4 | Total images for 1 gpu  3704 | Median step time per image 264.0922 ms | Total images:  3704
+PREDICTION LOW  RESOLUTION: torch.Size([1, 1, 1, 1024, 1024])
+LABELS     LOW  RESOLUTION: torch.Size([1, 1, 1, 1024, 1024])
+EPOCH on VAL set: Seq mIoU [31;1m  0.04[0m %
+mIoU(t) on VAL set: [31;1m  0.04[0m %
+Per-Class IoU (WorkRes):
+        Background : [31;1m 1.14[0m % 
+               Car : [31;1m 0.00[0m % 
+               Bus : [31;1m 0.00[0m % 
+        Motorcycle : [31;1m 0.00[0m % 
+           Bicycle : [31;1m 0.00[0m % 
+        Pedestrian : [31;1m 0.00[0m % 
+      Motorcyclist : [31;1m 0.00[0m % 
+         Bicyclist : [31;1m 0.00[0m % 
+              Cart : [31;1m 0.00[0m % 
+             Bench : [31;1m 0.00[0m % 
+          Umbrella : [31;1m 0.00[0m % 
+               Box : [31;1m 0.00[0m % 
+              Pole : [31;1m 0.00[0m % 
+       Street_lamp : [31;1m 0.00[0m % 
+     Traffic_light : [31;1m 0.00[0m % 
+      Traffic_sign : [31;1m 0.00[0m % 
+          Car_stop : [31;1m 0.00[0m % 
+        Color_cone : [31;1m 0.00[0m % 
+               Sky : [31;1m 0.00[0m % 
+              Road : [31;1m 0.00[0m % 
+          Sidewalk : [31;1m 0.00[0m % 
+              Curb : [31;1m 0.00[0m % 
+        Vegetation : [31;1m 0.00[0m % 
+           Terrain : [31;1m 0.00[0m % 
+          Building : [31;1m 0.00[0m % 
+Saving model checkpoint: save/training_base_rtmvss/checkpoint.pth.tar
+LEARNING RATE:  0.0002
+----- TRAINING - EPOCH 10 -----
+TRAIN loss: nan | Epoch:  10 | Step:    0 | seq_len  4 | Total images for 1 gpu     4 | Median step time per image 447.6363 ms | Total images:     4
+TRAIN loss: nan | Epoch:  10 | Step:  100 | seq_len  4 | Total images for 1 gpu   404 | Median step time per image 432.9256 ms | Total images:   404
+TRAIN loss: nan | Epoch:  10 | Step:  200 | seq_len  4 | Total images for 1 gpu   804 | Median step time per image 432.8883 ms | Total images:   804
+TRAIN loss: nan | Epoch:  10 | Step:  300 | seq_len  4 | Total images for 1 gpu  1204 | Median step time per image 432.8749 ms | Total images:  1204
+TRAIN loss: nan | Epoch:  10 | Step:  400 | seq_len  4 | Total images for 1 gpu  1604 | Median step time per image 432.8600 ms | Total images:  1604
+TRAIN loss: nan | Epoch:  10 | Step:  500 | seq_len  4 | Total images for 1 gpu  2004 | Median step time per image 432.8521 ms | Total images:  2004
+TRAIN loss: nan | Epoch:  10 | Step:  600 | seq_len  4 | Total images for 1 gpu  2404 | Median step time per image 432.8437 ms | Total images:  2404
+TRAIN loss: nan | Epoch:  10 | Step:  700 | seq_len  4 | Total images for 1 gpu  2804 | Median step time per image 432.8375 ms | Total images:  2804
+TRAIN loss: nan | Epoch:  10 | Step:  800 | seq_len  4 | Total images for 1 gpu  3204 | Median step time per image 432.8299 ms | Total images:  3204
+TRAIN loss: nan | Epoch:  10 | Step:  900 | seq_len  4 | Total images for 1 gpu  3604 | Median step time per image 432.8213 ms | Total images:  3604
+TRAIN loss: nan | Epoch:  10 | Step: 1000 | seq_len  4 | Total images for 1 gpu  4004 | Median step time per image 432.8148 ms | Total images:  4004
+TRAIN loss: nan | Epoch:  10 | Step: 1100 | seq_len  4 | Total images for 1 gpu  4404 | Median step time per image 432.8110 ms | Total images:  4404
+TRAIN loss: nan | Epoch:  10 | Step: 1200 | seq_len  4 | Total images for 1 gpu  4804 | Median step time per image 432.8063 ms | Total images:  4804
+TRAIN loss: nan | Epoch:  10 | Step: 1300 | seq_len  4 | Total images for 1 gpu  5204 | Median step time per image 432.8026 ms | Total images:  5204
+TRAIN loss: nan | Epoch:  10 | Step: 1400 | seq_len  4 | Total images for 1 gpu  5604 | Median step time per image 432.7992 ms | Total images:  5604
+TRAIN loss: nan | Epoch:  10 | Step: 1500 | seq_len  4 | Total images for 1 gpu  6004 | Median step time per image 432.7937 ms | Total images:  6004
+TRAIN loss: nan | Epoch:  10 | Step: 1600 | seq_len  4 | Total images for 1 gpu  6404 | Median step time per image 432.7903 ms | Total images:  6404
+TRAIN loss: nan | Epoch:  10 | Step: 1700 | seq_len  4 | Total images for 1 gpu  6804 | Median step time per image 432.7884 ms | Total images:  6804
+TRAIN loss: nan | Epoch:  10 | Step: 1800 | seq_len  4 | Total images for 1 gpu  7204 | Median step time per image 432.7855 ms | Total images:  7204
+TRAIN loss: nan | Epoch:  10 | Step: 1900 | seq_len  4 | Total images for 1 gpu  7604 | Median step time per image 432.7842 ms | Total images:  7604
+TRAIN loss: nan | Epoch:  10 | Step: 2000 | seq_len  4 | Total images for 1 gpu  8004 | Median step time per image 432.7826 ms | Total images:  8004
+TRAIN loss: nan | Epoch:  10 | Step: 2100 | seq_len  4 | Total images for 1 gpu  8404 | Median step time per image 432.7819 ms | Total images:  8404
+TRAIN loss: nan | Epoch:  10 | Step: 2200 | seq_len  4 | Total images for 1 gpu  8804 | Median step time per image 432.7811 ms | Total images:  8804
+TRAIN loss: nan | Epoch:  10 | Step: 2240 | seq_len  4 | Total images for 1 gpu  8964 | Median step time per image 432.7805 ms | Total images:  8964
+----- VALIDATE - EPOCH 10 -----
+VAL loss: nan | Epoch:  10 | Step:    0 | seq_len  4 | Total images for 1 gpu     4 | Median step time per image 272.2619 ms | Total images:     4
+VAL loss: nan | Epoch:  10 | Step:  100 | seq_len  4 | Total images for 1 gpu   404 | Median step time per image 263.4584 ms | Total images:   404
+VAL loss: nan | Epoch:  10 | Step:  200 | seq_len  4 | Total images for 1 gpu   804 | Median step time per image 263.4087 ms | Total images:   804
+VAL loss: nan | Epoch:  10 | Step:  300 | seq_len  4 | Total images for 1 gpu  1204 | Median step time per image 263.3908 ms | Total images:  1204
+VAL loss: nan | Epoch:  10 | Step:  400 | seq_len  4 | Total images for 1 gpu  1604 | Median step time per image 263.3705 ms | Total images:  1604
+VAL loss: nan | Epoch:  10 | Step:  500 | seq_len  4 | Total images for 1 gpu  2004 | Median step time per image 263.3604 ms | Total images:  2004
+VAL loss: nan | Epoch:  10 | Step:  600 | seq_len  4 | Total images for 1 gpu  2404 | Median step time per image 263.3512 ms | Total images:  2404
+VAL loss: nan | Epoch:  10 | Step:  700 | seq_len  4 | Total images for 1 gpu  2804 | Median step time per image 263.3584 ms | Total images:  2804
+VAL loss: nan | Epoch:  10 | Step:  800 | seq_len  4 | Total images for 1 gpu  3204 | Median step time per image 263.3584 ms | Total images:  3204
+VAL loss: nan | Epoch:  10 | Step:  900 | seq_len  4 | Total images for 1 gpu  3604 | Median step time per image 263.3560 ms | Total images:  3604
+VAL loss: nan | Epoch:  10 | Step:  925 | seq_len  4 | Total images for 1 gpu  3704 | Median step time per image 263.3530 ms | Total images:  3704
+PREDICTION LOW  RESOLUTION: torch.Size([1, 1, 1, 1024, 1024])
+LABELS     LOW  RESOLUTION: torch.Size([1, 1, 1, 1024, 1024])
+EPOCH on VAL set: Seq mIoU [31;1m  0.04[0m %
+mIoU(t) on VAL set: [31;1m  0.04[0m %
+Per-Class IoU (WorkRes):
+        Background : [31;1m 1.14[0m % 
+               Car : [31;1m 0.00[0m % 
+               Bus : [31;1m 0.00[0m % 
+        Motorcycle : [31;1m 0.00[0m % 
+           Bicycle : [31;1m 0.00[0m % 
+        Pedestrian : [31;1m 0.00[0m % 
+      Motorcyclist : [31;1m 0.00[0m % 
+         Bicyclist : [31;1m 0.00[0m % 
+              Cart : [31;1m 0.00[0m % 
+             Bench : [31;1m 0.00[0m % 
+          Umbrella : [31;1m 0.00[0m % 
+               Box : [31;1m 0.00[0m % 
+              Pole : [31;1m 0.00[0m % 
+       Street_lamp : [31;1m 0.00[0m % 
+     Traffic_light : [31;1m 0.00[0m % 
+      Traffic_sign : [31;1m 0.00[0m % 
+          Car_stop : [31;1m 0.00[0m % 
+        Color_cone : [31;1m 0.00[0m % 
+               Sky : [31;1m 0.00[0m % 
+              Road : [31;1m 0.00[0m % 
+          Sidewalk : [31;1m 0.00[0m % 
+              Curb : [31;1m 0.00[0m % 
+        Vegetation : [31;1m 0.00[0m % 
+           Terrain : [31;1m 0.00[0m % 
+          Building : [31;1m 0.00[0m % 
+Saving model checkpoint: save/training_base_rtmvss/checkpoint.pth.tar
+LEARNING RATE:  0.0002
+----- TRAINING - EPOCH 11 -----
+TRAIN loss: nan | Epoch:  11 | Step:    0 | seq_len  4 | Total images for 1 gpu     4 | Median step time per image 440.4072 ms | Total images:     4
+TRAIN loss: nan | Epoch:  11 | Step:  100 | seq_len  4 | Total images for 1 gpu   404 | Median step time per image 432.9422 ms | Total images:   404
+TRAIN loss: nan | Epoch:  11 | Step:  200 | seq_len  4 | Total images for 1 gpu   804 | Median step time per image 433.0115 ms | Total images:   804
+TRAIN loss: nan | Epoch:  11 | Step:  300 | seq_len  4 | Total images for 1 gpu  1204 | Median step time per image 433.0122 ms | Total images:  1204
+TRAIN loss: nan | Epoch:  11 | Step:  400 | seq_len  4 | Total images for 1 gpu  1604 | Median step time per image 432.9677 ms | Total images:  1604
+TRAIN loss: nan | Epoch:  11 | Step:  500 | seq_len  4 | Total images for 1 gpu  2004 | Median step time per image 432.9377 ms | Total images:  2004
+TRAIN loss: nan | Epoch:  11 | Step:  600 | seq_len  4 | Total images for 1 gpu  2404 | Median step time per image 432.9211 ms | Total images:  2404
+TRAIN loss: nan | Epoch:  11 | Step:  700 | seq_len  4 | Total images for 1 gpu  2804 | Median step time per image 432.9094 ms | Total images:  2804
+TRAIN loss: nan | Epoch:  11 | Step:  800 | seq_len  4 | Total images for 1 gpu  3204 | Median step time per image 432.9022 ms | Total images:  3204
+TRAIN loss: nan | Epoch:  11 | Step:  900 | seq_len  4 | Total images for 1 gpu  3604 | Median step time per image 432.9011 ms | Total images:  3604
+TRAIN loss: nan | Epoch:  11 | Step: 1000 | seq_len  4 | Total images for 1 gpu  4004 | Median step time per image 432.8987 ms | Total images:  4004
+TRAIN loss: nan | Epoch:  11 | Step: 1100 | seq_len  4 | Total images for 1 gpu  4404 | Median step time per image 432.8958 ms | Total images:  4404
+TRAIN loss: nan | Epoch:  11 | Step: 1200 | seq_len  4 | Total images for 1 gpu  4804 | Median step time per image 432.8939 ms | Total images:  4804
+TRAIN loss: nan | Epoch:  11 | Step: 1300 | seq_len  4 | Total images for 1 gpu  5204 | Median step time per image 432.8926 ms | Total images:  5204
+TRAIN loss: nan | Epoch:  11 | Step: 1400 | seq_len  4 | Total images for 1 gpu  5604 | Median step time per image 432.8922 ms | Total images:  5604
+TRAIN loss: nan | Epoch:  11 | Step: 1500 | seq_len  4 | Total images for 1 gpu  6004 | Median step time per image 432.8905 ms | Total images:  6004
+TRAIN loss: nan | Epoch:  11 | Step: 1600 | seq_len  4 | Total images for 1 gpu  6404 | Median step time per image 432.8901 ms | Total images:  6404
+TRAIN loss: nan | Epoch:  11 | Step: 1700 | seq_len  4 | Total images for 1 gpu  6804 | Median step time per image 432.8895 ms | Total images:  6804
+TRAIN loss: nan | Epoch:  11 | Step: 1800 | seq_len  4 | Total images for 1 gpu  7204 | Median step time per image 432.8900 ms | Total images:  7204
+TRAIN loss: nan | Epoch:  11 | Step: 1900 | seq_len  4 | Total images for 1 gpu  7604 | Median step time per image 432.8879 ms | Total images:  7604
+TRAIN loss: nan | Epoch:  11 | Step: 2000 | seq_len  4 | Total images for 1 gpu  8004 | Median step time per image 432.8876 ms | Total images:  8004
+TRAIN loss: nan | Epoch:  11 | Step: 2100 | seq_len  4 | Total images for 1 gpu  8404 | Median step time per image 432.8876 ms | Total images:  8404
+TRAIN loss: nan | Epoch:  11 | Step: 2200 | seq_len  4 | Total images for 1 gpu  8804 | Median step time per image 432.8878 ms | Total images:  8804
+TRAIN loss: nan | Epoch:  11 | Step: 2240 | seq_len  4 | Total images for 1 gpu  8964 | Median step time per image 432.8878 ms | Total images:  8964
+----- VALIDATE - EPOCH 11 -----
+VAL loss: nan | Epoch:  11 | Step:    0 | seq_len  4 | Total images for 1 gpu     4 | Median step time per image 347.5681 ms | Total images:     4
+VAL loss: nan | Epoch:  11 | Step:  100 | seq_len  4 | Total images for 1 gpu   404 | Median step time per image 263.6830 ms | Total images:   404
+VAL loss: nan | Epoch:  11 | Step:  200 | seq_len  4 | Total images for 1 gpu   804 | Median step time per image 263.7817 ms | Total images:   804
+VAL loss: nan | Epoch:  11 | Step:  300 | seq_len  4 | Total images for 1 gpu  1204 | Median step time per image 263.8074 ms | Total images:  1204
+VAL loss: nan | Epoch:  11 | Step:  400 | seq_len  4 | Total images for 1 gpu  1604 | Median step time per image 263.7819 ms | Total images:  1604
+VAL loss: nan | Epoch:  11 | Step:  500 | seq_len  4 | Total images for 1 gpu  2004 | Median step time per image 263.7597 ms | Total images:  2004
+VAL loss: nan | Epoch:  11 | Step:  600 | seq_len  4 | Total images for 1 gpu  2404 | Median step time per image 263.7339 ms | Total images:  2404
+VAL loss: nan | Epoch:  11 | Step:  700 | seq_len  4 | Total images for 1 gpu  2804 | Median step time per image 263.7123 ms | Total images:  2804
+VAL loss: nan | Epoch:  11 | Step:  800 | seq_len  4 | Total images for 1 gpu  3204 | Median step time per image 263.6922 ms | Total images:  3204
+VAL loss: nan | Epoch:  11 | Step:  900 | seq_len  4 | Total images for 1 gpu  3604 | Median step time per image 263.6600 ms | Total images:  3604
+VAL loss: nan | Epoch:  11 | Step:  925 | seq_len  4 | Total images for 1 gpu  3704 | Median step time per image 263.6580 ms | Total images:  3704
+PREDICTION LOW  RESOLUTION: torch.Size([1, 1, 1, 1024, 1024])
+LABELS     LOW  RESOLUTION: torch.Size([1, 1, 1, 1024, 1024])
+EPOCH on VAL set: Seq mIoU [31;1m  0.04[0m %
+mIoU(t) on VAL set: [31;1m  0.04[0m %
+Per-Class IoU (WorkRes):
+        Background : [31;1m 1.14[0m % 
+               Car : [31;1m 0.00[0m % 
+               Bus : [31;1m 0.00[0m % 
+        Motorcycle : [31;1m 0.00[0m % 
+           Bicycle : [31;1m 0.00[0m % 
+        Pedestrian : [31;1m 0.00[0m % 
+      Motorcyclist : [31;1m 0.00[0m % 
+         Bicyclist : [31;1m 0.00[0m % 
+              Cart : [31;1m 0.00[0m % 
+             Bench : [31;1m 0.00[0m % 
+          Umbrella : [31;1m 0.00[0m % 
+               Box : [31;1m 0.00[0m % 
+              Pole : [31;1m 0.00[0m % 
+       Street_lamp : [31;1m 0.00[0m % 
+     Traffic_light : [31;1m 0.00[0m % 
+      Traffic_sign : [31;1m 0.00[0m % 
+          Car_stop : [31;1m 0.00[0m % 
+        Color_cone : [31;1m 0.00[0m % 
+               Sky : [31;1m 0.00[0m % 
+              Road : [31;1m 0.00[0m % 
+          Sidewalk : [31;1m 0.00[0m % 
+              Curb : [31;1m 0.00[0m % 
+        Vegetation : [31;1m 0.00[0m % 
+           Terrain : [31;1m 0.00[0m % 
+          Building : [31;1m 0.00[0m % 
+Saving model checkpoint: save/training_base_rtmvss/checkpoint.pth.tar
+LEARNING RATE:  0.00016
+----- TRAINING - EPOCH 12 -----
+TRAIN loss: nan | Epoch:  12 | Step:    0 | seq_len  4 | Total images for 1 gpu     4 | Median step time per image 488.7343 ms | Total images:     4
+TRAIN loss: nan | Epoch:  12 | Step:  100 | seq_len  4 | Total images for 1 gpu   404 | Median step time per image 432.8828 ms | Total images:   404
+TRAIN loss: nan | Epoch:  12 | Step:  200 | seq_len  4 | Total images for 1 gpu   804 | Median step time per image 432.8442 ms | Total images:   804
+TRAIN loss: nan | Epoch:  12 | Step:  300 | seq_len  4 | Total images for 1 gpu  1204 | Median step time per image 432.8349 ms | Total images:  1204
+TRAIN loss: nan | Epoch:  12 | Step:  400 | seq_len  4 | Total images for 1 gpu  1604 | Median step time per image 432.8312 ms | Total images:  1604
+TRAIN loss: nan | Epoch:  12 | Step:  500 | seq_len  4 | Total images for 1 gpu  2004 | Median step time per image 432.8259 ms | Total images:  2004
+TRAIN loss: nan | Epoch:  12 | Step:  600 | seq_len  4 | Total images for 1 gpu  2404 | Median step time per image 432.8282 ms | Total images:  2404
+TRAIN loss: nan | Epoch:  12 | Step:  700 | seq_len  4 | Total images for 1 gpu  2804 | Median step time per image 432.8267 ms | Total images:  2804
+TRAIN loss: nan | Epoch:  12 | Step:  800 | seq_len  4 | Total images for 1 gpu  3204 | Median step time per image 432.8268 ms | Total images:  3204
+TRAIN loss: nan | Epoch:  12 | Step:  900 | seq_len  4 | Total images for 1 gpu  3604 | Median step time per image 432.8250 ms | Total images:  3604
+TRAIN loss: nan | Epoch:  12 | Step: 1000 | seq_len  4 | Total images for 1 gpu  4004 | Median step time per image 432.8238 ms | Total images:  4004
+TRAIN loss: nan | Epoch:  12 | Step: 1100 | seq_len  4 | Total images for 1 gpu  4404 | Median step time per image 432.8268 ms | Total images:  4404
+TRAIN loss: nan | Epoch:  12 | Step: 1200 | seq_len  4 | Total images for 1 gpu  4804 | Median step time per image 432.8287 ms | Total images:  4804
+TRAIN loss: nan | Epoch:  12 | Step: 1300 | seq_len  4 | Total images for 1 gpu  5204 | Median step time per image 432.8287 ms | Total images:  5204
+TRAIN loss: nan | Epoch:  12 | Step: 1400 | seq_len  4 | Total images for 1 gpu  5604 | Median step time per image 432.8291 ms | Total images:  5604
+TRAIN loss: nan | Epoch:  12 | Step: 1500 | seq_len  4 | Total images for 1 gpu  6004 | Median step time per image 432.8294 ms | Total images:  6004
+TRAIN loss: nan | Epoch:  12 | Step: 1600 | seq_len  4 | Total images for 1 gpu  6404 | Median step time per image 432.8295 ms | Total images:  6404
+TRAIN loss: nan | Epoch:  12 | Step: 1700 | seq_len  4 | Total images for 1 gpu  6804 | Median step time per image 432.8303 ms | Total images:  6804
+TRAIN loss: nan | Epoch:  12 | Step: 1800 | seq_len  4 | Total images for 1 gpu  7204 | Median step time per image 432.8302 ms | Total images:  7204
+TRAIN loss: nan | Epoch:  12 | Step: 1900 | seq_len  4 | Total images for 1 gpu  7604 | Median step time per image 432.8296 ms | Total images:  7604
+TRAIN loss: nan | Epoch:  12 | Step: 2000 | seq_len  4 | Total images for 1 gpu  8004 | Median step time per image 432.8304 ms | Total images:  8004
+TRAIN loss: nan | Epoch:  12 | Step: 2100 | seq_len  4 | Total images for 1 gpu  8404 | Median step time per image 432.8305 ms | Total images:  8404
+TRAIN loss: nan | Epoch:  12 | Step: 2200 | seq_len  4 | Total images for 1 gpu  8804 | Median step time per image 432.8325 ms | Total images:  8804
+TRAIN loss: nan | Epoch:  12 | Step: 2240 | seq_len  4 | Total images for 1 gpu  8964 | Median step time per image 432.8332 ms | Total images:  8964
+----- VALIDATE - EPOCH 12 -----
+VAL loss: nan | Epoch:  12 | Step:    0 | seq_len  4 | Total images for 1 gpu     4 | Median step time per image 324.4361 ms | Total images:     4
+VAL loss: nan | Epoch:  12 | Step:  100 | seq_len  4 | Total images for 1 gpu   404 | Median step time per image 263.3211 ms | Total images:   404
+VAL loss: nan | Epoch:  12 | Step:  200 | seq_len  4 | Total images for 1 gpu   804 | Median step time per image 263.3076 ms | Total images:   804
+VAL loss: nan | Epoch:  12 | Step:  300 | seq_len  4 | Total images for 1 gpu  1204 | Median step time per image 263.3508 ms | Total images:  1204
+VAL loss: nan | Epoch:  12 | Step:  400 | seq_len  4 | Total images for 1 gpu  1604 | Median step time per image 263.3648 ms | Total images:  1604
+VAL loss: nan | Epoch:  12 | Step:  500 | seq_len  4 | Total images for 1 gpu  2004 | Median step time per image 263.3675 ms | Total images:  2004
+VAL loss: nan | Epoch:  12 | Step:  600 | seq_len  4 | Total images for 1 gpu  2404 | Median step time per image 263.3641 ms | Total images:  2404
+VAL loss: nan | Epoch:  12 | Step:  700 | seq_len  4 | Total images for 1 gpu  2804 | Median step time per image 263.3665 ms | Total images:  2804
+VAL loss: nan | Epoch:  12 | Step:  800 | seq_len  4 | Total images for 1 gpu  3204 | Median step time per image 263.3646 ms | Total images:  3204
+VAL loss: nan | Epoch:  12 | Step:  900 | seq_len  4 | Total images for 1 gpu  3604 | Median step time per image 263.3605 ms | Total images:  3604
+VAL loss: nan | Epoch:  12 | Step:  925 | seq_len  4 | Total images for 1 gpu  3704 | Median step time per image 263.3579 ms | Total images:  3704
+PREDICTION LOW  RESOLUTION: torch.Size([1, 1, 1, 1024, 1024])
+LABELS     LOW  RESOLUTION: torch.Size([1, 1, 1, 1024, 1024])
+EPOCH on VAL set: Seq mIoU [31;1m  0.04[0m %
+mIoU(t) on VAL set: [31;1m  0.04[0m %
+Per-Class IoU (WorkRes):
+        Background : [31;1m 1.14[0m % 
+               Car : [31;1m 0.00[0m % 
+               Bus : [31;1m 0.00[0m % 
+        Motorcycle : [31;1m 0.00[0m % 
+           Bicycle : [31;1m 0.00[0m % 
+        Pedestrian : [31;1m 0.00[0m % 
+      Motorcyclist : [31;1m 0.00[0m % 
+         Bicyclist : [31;1m 0.00[0m % 
+              Cart : [31;1m 0.00[0m % 
+             Bench : [31;1m 0.00[0m % 
+          Umbrella : [31;1m 0.00[0m % 
+               Box : [31;1m 0.00[0m % 
+              Pole : [31;1m 0.00[0m % 
+       Street_lamp : [31;1m 0.00[0m % 
+     Traffic_light : [31;1m 0.00[0m % 
+      Traffic_sign : [31;1m 0.00[0m % 
+          Car_stop : [31;1m 0.00[0m % 
+        Color_cone : [31;1m 0.00[0m % 
+               Sky : [31;1m 0.00[0m % 
+              Road : [31;1m 0.00[0m % 
+          Sidewalk : [31;1m 0.00[0m % 
+              Curb : [31;1m 0.00[0m % 
+        Vegetation : [31;1m 0.00[0m % 
+           Terrain : [31;1m 0.00[0m % 
+          Building : [31;1m 0.00[0m % 
+Saving model checkpoint: save/training_base_rtmvss/checkpoint.pth.tar
+LEARNING RATE:  0.00016
+----- TRAINING - EPOCH 13 -----
+TRAIN loss: nan | Epoch:  13 | Step:    0 | seq_len  4 | Total images for 1 gpu     4 | Median step time per image 439.1342 ms | Total images:     4
+TRAIN loss: nan | Epoch:  13 | Step:  100 | seq_len  4 | Total images for 1 gpu   404 | Median step time per image 432.9073 ms | Total images:   404
+TRAIN loss: nan | Epoch:  13 | Step:  200 | seq_len  4 | Total images for 1 gpu   804 | Median step time per image 432.8834 ms | Total images:   804
+TRAIN loss: nan | Epoch:  13 | Step:  300 | seq_len  4 | Total images for 1 gpu  1204 | Median step time per image 432.8655 ms | Total images:  1204
+TRAIN loss: nan | Epoch:  13 | Step:  400 | seq_len  4 | Total images for 1 gpu  1604 | Median step time per image 432.8560 ms | Total images:  1604
+TRAIN loss: nan | Epoch:  13 | Step:  500 | seq_len  4 | Total images for 1 gpu  2004 | Median step time per image 432.8499 ms | Total images:  2004
+TRAIN loss: nan | Epoch:  13 | Step:  600 | seq_len  4 | Total images for 1 gpu  2404 | Median step time per image 432.8421 ms | Total images:  2404
+TRAIN loss: nan | Epoch:  13 | Step:  700 | seq_len  4 | Total images for 1 gpu  2804 | Median step time per image 432.8369 ms | Total images:  2804
+TRAIN loss: nan | Epoch:  13 | Step:  800 | seq_len  4 | Total images for 1 gpu  3204 | Median step time per image 432.8317 ms | Total images:  3204
+TRAIN loss: nan | Epoch:  13 | Step:  900 | seq_len  4 | Total images for 1 gpu  3604 | Median step time per image 432.8274 ms | Total images:  3604
+TRAIN loss: nan | Epoch:  13 | Step: 1000 | seq_len  4 | Total images for 1 gpu  4004 | Median step time per image 432.8235 ms | Total images:  4004
+TRAIN loss: nan | Epoch:  13 | Step: 1100 | seq_len  4 | Total images for 1 gpu  4404 | Median step time per image 432.8194 ms | Total images:  4404
+TRAIN loss: nan | Epoch:  13 | Step: 1200 | seq_len  4 | Total images for 1 gpu  4804 | Median step time per image 432.8145 ms | Total images:  4804
+TRAIN loss: nan | Epoch:  13 | Step: 1300 | seq_len  4 | Total images for 1 gpu  5204 | Median step time per image 432.8098 ms | Total images:  5204
+TRAIN loss: nan | Epoch:  13 | Step: 1400 | seq_len  4 | Total images for 1 gpu  5604 | Median step time per image 432.8046 ms | Total images:  5604
+TRAIN loss: nan | Epoch:  13 | Step: 1500 | seq_len  4 | Total images for 1 gpu  6004 | Median step time per image 432.8012 ms | Total images:  6004
+TRAIN loss: nan | Epoch:  13 | Step: 1600 | seq_len  4 | Total images for 1 gpu  6404 | Median step time per image 432.7980 ms | Total images:  6404
+TRAIN loss: nan | Epoch:  13 | Step: 1700 | seq_len  4 | Total images for 1 gpu  6804 | Median step time per image 432.7940 ms | Total images:  6804
+TRAIN loss: nan | Epoch:  13 | Step: 1800 | seq_len  4 | Total images for 1 gpu  7204 | Median step time per image 432.7901 ms | Total images:  7204
+TRAIN loss: nan | Epoch:  13 | Step: 1900 | seq_len  4 | Total images for 1 gpu  7604 | Median step time per image 432.7865 ms | Total images:  7604
+TRAIN loss: nan | Epoch:  13 | Step: 2000 | seq_len  4 | Total images for 1 gpu  8004 | Median step time per image 432.7835 ms | Total images:  8004
+TRAIN loss: nan | Epoch:  13 | Step: 2100 | seq_len  4 | Total images for 1 gpu  8404 | Median step time per image 432.7863 ms | Total images:  8404
+TRAIN loss: nan | Epoch:  13 | Step: 2200 | seq_len  4 | Total images for 1 gpu  8804 | Median step time per image 432.7901 ms | Total images:  8804
+TRAIN loss: nan | Epoch:  13 | Step: 2240 | seq_len  4 | Total images for 1 gpu  8964 | Median step time per image 432.7921 ms | Total images:  8964
+----- VALIDATE - EPOCH 13 -----
+VAL loss: nan | Epoch:  13 | Step:    0 | seq_len  4 | Total images for 1 gpu     4 | Median step time per image 327.4679 ms | Total images:     4
+VAL loss: nan | Epoch:  13 | Step:  100 | seq_len  4 | Total images for 1 gpu   404 | Median step time per image 263.2781 ms | Total images:   404
+VAL loss: nan | Epoch:  13 | Step:  200 | seq_len  4 | Total images for 1 gpu   804 | Median step time per image 263.2759 ms | Total images:   804
+VAL loss: nan | Epoch:  13 | Step:  300 | seq_len  4 | Total images for 1 gpu  1204 | Median step time per image 263.2784 ms | Total images:  1204
+VAL loss: nan | Epoch:  13 | Step:  400 | seq_len  4 | Total images for 1 gpu  1604 | Median step time per image 263.2757 ms | Total images:  1604
+VAL loss: nan | Epoch:  13 | Step:  500 | seq_len  4 | Total images for 1 gpu  2004 | Median step time per image 263.2749 ms | Total images:  2004
+VAL loss: nan | Epoch:  13 | Step:  600 | seq_len  4 | Total images for 1 gpu  2404 | Median step time per image 263.2732 ms | Total images:  2404
+VAL loss: nan | Epoch:  13 | Step:  700 | seq_len  4 | Total images for 1 gpu  2804 | Median step time per image 263.2758 ms | Total images:  2804
+VAL loss: nan | Epoch:  13 | Step:  800 | seq_len  4 | Total images for 1 gpu  3204 | Median step time per image 263.2835 ms | Total images:  3204
+VAL loss: nan | Epoch:  13 | Step:  900 | seq_len  4 | Total images for 1 gpu  3604 | Median step time per image 263.2838 ms | Total images:  3604
+VAL loss: nan | Epoch:  13 | Step:  925 | seq_len  4 | Total images for 1 gpu  3704 | Median step time per image 263.2843 ms | Total images:  3704
+PREDICTION LOW  RESOLUTION: torch.Size([1, 1, 1, 1024, 1024])
+LABELS     LOW  RESOLUTION: torch.Size([1, 1, 1, 1024, 1024])
+EPOCH on VAL set: Seq mIoU [31;1m  0.04[0m %
+mIoU(t) on VAL set: [31;1m  0.04[0m %
+Per-Class IoU (WorkRes):
+        Background : [31;1m 1.14[0m % 
+               Car : [31;1m 0.00[0m % 
+               Bus : [31;1m 0.00[0m % 
+        Motorcycle : [31;1m 0.00[0m % 
+           Bicycle : [31;1m 0.00[0m % 
+        Pedestrian : [31;1m 0.00[0m % 
+      Motorcyclist : [31;1m 0.00[0m % 
+         Bicyclist : [31;1m 0.00[0m % 
+              Cart : [31;1m 0.00[0m % 
+             Bench : [31;1m 0.00[0m % 
+          Umbrella : [31;1m 0.00[0m % 
+               Box : [31;1m 0.00[0m % 
+              Pole : [31;1m 0.00[0m % 
+       Street_lamp : [31;1m 0.00[0m % 
+     Traffic_light : [31;1m 0.00[0m % 
+      Traffic_sign : [31;1m 0.00[0m % 
+          Car_stop : [31;1m 0.00[0m % 
+        Color_cone : [31;1m 0.00[0m % 
+               Sky : [31;1m 0.00[0m % 
+              Road : [31;1m 0.00[0m % 
+          Sidewalk : [31;1m 0.00[0m % 
+              Curb : [31;1m 0.00[0m % 
+        Vegetation : [31;1m 0.00[0m % 
+           Terrain : [31;1m 0.00[0m % 
+          Building : [31;1m 0.00[0m % 
+Saving model checkpoint: save/training_base_rtmvss/checkpoint.pth.tar
+LEARNING RATE:  0.00016
+----- TRAINING - EPOCH 14 -----
+TRAIN loss: nan | Epoch:  14 | Step:    0 | seq_len  4 | Total images for 1 gpu     4 | Median step time per image 440.7225 ms | Total images:     4
+TRAIN loss: nan | Epoch:  14 | Step:  100 | seq_len  4 | Total images for 1 gpu   404 | Median step time per image 432.9425 ms | Total images:   404
+TRAIN loss: nan | Epoch:  14 | Step:  200 | seq_len  4 | Total images for 1 gpu   804 | Median step time per image 432.9189 ms | Total images:   804
+TRAIN loss: nan | Epoch:  14 | Step:  300 | seq_len  4 | Total images for 1 gpu  1204 | Median step time per image 432.9169 ms | Total images:  1204
+TRAIN loss: nan | Epoch:  14 | Step:  400 | seq_len  4 | Total images for 1 gpu  1604 | Median step time per image 432.9354 ms | Total images:  1604
+TRAIN loss: nan | Epoch:  14 | Step:  500 | seq_len  4 | Total images for 1 gpu  2004 | Median step time per image 432.9431 ms | Total images:  2004
+TRAIN loss: nan | Epoch:  14 | Step:  600 | seq_len  4 | Total images for 1 gpu  2404 | Median step time per image 432.9513 ms | Total images:  2404
+TRAIN loss: nan | Epoch:  14 | Step:  700 | seq_len  4 | Total images for 1 gpu  2804 | Median step time per image 432.9513 ms | Total images:  2804
+TRAIN loss: nan | Epoch:  14 | Step:  800 | seq_len  4 | Total images for 1 gpu  3204 | Median step time per image 432.9457 ms | Total images:  3204
+TRAIN loss: nan | Epoch:  14 | Step:  900 | seq_len  4 | Total images for 1 gpu  3604 | Median step time per image 432.9405 ms | Total images:  3604
+TRAIN loss: nan | Epoch:  14 | Step: 1000 | seq_len  4 | Total images for 1 gpu  4004 | Median step time per image 432.9369 ms | Total images:  4004
+TRAIN loss: nan | Epoch:  14 | Step: 1100 | seq_len  4 | Total images for 1 gpu  4404 | Median step time per image 432.9354 ms | Total images:  4404
+TRAIN loss: nan | Epoch:  14 | Step: 1200 | seq_len  4 | Total images for 1 gpu  4804 | Median step time per image 432.9348 ms | Total images:  4804
+TRAIN loss: nan | Epoch:  14 | Step: 1300 | seq_len  4 | Total images for 1 gpu  5204 | Median step time per image 432.9324 ms | Total images:  5204
+TRAIN loss: nan | Epoch:  14 | Step: 1400 | seq_len  4 | Total images for 1 gpu  5604 | Median step time per image 432.9289 ms | Total images:  5604
+TRAIN loss: nan | Epoch:  14 | Step: 1500 | seq_len  4 | Total images for 1 gpu  6004 | Median step time per image 432.9280 ms | Total images:  6004
+TRAIN loss: nan | Epoch:  14 | Step: 1600 | seq_len  4 | Total images for 1 gpu  6404 | Median step time per image 432.9270 ms | Total images:  6404
+TRAIN loss: nan | Epoch:  14 | Step: 1700 | seq_len  4 | Total images for 1 gpu  6804 | Median step time per image 432.9264 ms | Total images:  6804
+TRAIN loss: nan | Epoch:  14 | Step: 1800 | seq_len  4 | Total images for 1 gpu  7204 | Median step time per image 432.9258 ms | Total images:  7204
+TRAIN loss: nan | Epoch:  14 | Step: 1900 | seq_len  4 | Total images for 1 gpu  7604 | Median step time per image 432.9265 ms | Total images:  7604
+TRAIN loss: nan | Epoch:  14 | Step: 2000 | seq_len  4 | Total images for 1 gpu  8004 | Median step time per image 432.9293 ms | Total images:  8004
+TRAIN loss: nan | Epoch:  14 | Step: 2100 | seq_len  4 | Total images for 1 gpu  8404 | Median step time per image 432.9305 ms | Total images:  8404
+TRAIN loss: nan | Epoch:  14 | Step: 2200 | seq_len  4 | Total images for 1 gpu  8804 | Median step time per image 432.9329 ms | Total images:  8804
+TRAIN loss: nan | Epoch:  14 | Step: 2240 | seq_len  4 | Total images for 1 gpu  8964 | Median step time per image 432.9327 ms | Total images:  8964
+----- VALIDATE - EPOCH 14 -----
+VAL loss: nan | Epoch:  14 | Step:    0 | seq_len  4 | Total images for 1 gpu     4 | Median step time per image 324.8072 ms | Total images:     4
+VAL loss: nan | Epoch:  14 | Step:  100 | seq_len  4 | Total images for 1 gpu   404 | Median step time per image 263.4065 ms | Total images:   404
+VAL loss: nan | Epoch:  14 | Step:  200 | seq_len  4 | Total images for 1 gpu   804 | Median step time per image 263.3751 ms | Total images:   804
+VAL loss: nan | Epoch:  14 | Step:  300 | seq_len  4 | Total images for 1 gpu  1204 | Median step time per image 263.3479 ms | Total images:  1204
+VAL loss: nan | Epoch:  14 | Step:  400 | seq_len  4 | Total images for 1 gpu  1604 | Median step time per image 263.3551 ms | Total images:  1604
+VAL loss: nan | Epoch:  14 | Step:  500 | seq_len  4 | Total images for 1 gpu  2004 | Median step time per image 263.3501 ms | Total images:  2004
+VAL loss: nan | Epoch:  14 | Step:  600 | seq_len  4 | Total images for 1 gpu  2404 | Median step time per image 263.3574 ms | Total images:  2404
+VAL loss: nan | Epoch:  14 | Step:  700 | seq_len  4 | Total images for 1 gpu  2804 | Median step time per image 263.3694 ms | Total images:  2804
+VAL loss: nan | Epoch:  14 | Step:  800 | seq_len  4 | Total images for 1 gpu  3204 | Median step time per image 263.3717 ms | Total images:  3204
+VAL loss: nan | Epoch:  14 | Step:  900 | seq_len  4 | Total images for 1 gpu  3604 | Median step time per image 263.3652 ms | Total images:  3604
+VAL loss: nan | Epoch:  14 | Step:  925 | seq_len  4 | Total images for 1 gpu  3704 | Median step time per image 263.3611 ms | Total images:  3704
+PREDICTION LOW  RESOLUTION: torch.Size([1, 1, 1, 1024, 1024])
+LABELS     LOW  RESOLUTION: torch.Size([1, 1, 1, 1024, 1024])
+EPOCH on VAL set: Seq mIoU [31;1m  0.04[0m %
+mIoU(t) on VAL set: [31;1m  0.04[0m %
+Per-Class IoU (WorkRes):
+        Background : [31;1m 1.14[0m % 
+               Car : [31;1m 0.00[0m % 
+               Bus : [31;1m 0.00[0m % 
+        Motorcycle : [31;1m 0.00[0m % 
+           Bicycle : [31;1m 0.00[0m % 
+        Pedestrian : [31;1m 0.00[0m % 
+      Motorcyclist : [31;1m 0.00[0m % 
+         Bicyclist : [31;1m 0.00[0m % 
+              Cart : [31;1m 0.00[0m % 
+             Bench : [31;1m 0.00[0m % 
+          Umbrella : [31;1m 0.00[0m % 
+               Box : [31;1m 0.00[0m % 
+              Pole : [31;1m 0.00[0m % 
+       Street_lamp : [31;1m 0.00[0m % 
+     Traffic_light : [31;1m 0.00[0m % 
+      Traffic_sign : [31;1m 0.00[0m % 
+          Car_stop : [31;1m 0.00[0m % 
+        Color_cone : [31;1m 0.00[0m % 
+               Sky : [31;1m 0.00[0m % 
+              Road : [31;1m 0.00[0m % 
+          Sidewalk : [31;1m 0.00[0m % 
+              Curb : [31;1m 0.00[0m % 
+        Vegetation : [31;1m 0.00[0m % 
+           Terrain : [31;1m 0.00[0m % 
+          Building : [31;1m 0.00[0m % 
+Saving model checkpoint: save/training_base_rtmvss/checkpoint.pth.tar
+LEARNING RATE:  0.00016
+----- TRAINING - EPOCH 15 -----
+TRAIN loss: nan | Epoch:  15 | Step:    0 | seq_len  4 | Total images for 1 gpu     4 | Median step time per image 440.1231 ms | Total images:     4
+TRAIN loss: nan | Epoch:  15 | Step:  100 | seq_len  4 | Total images for 1 gpu   404 | Median step time per image 432.9438 ms | Total images:   404
+TRAIN loss: nan | Epoch:  15 | Step:  200 | seq_len  4 | Total images for 1 gpu   804 | Median step time per image 432.9396 ms | Total images:   804
+TRAIN loss: nan | Epoch:  15 | Step:  300 | seq_len  4 | Total images for 1 gpu  1204 | Median step time per image 432.9315 ms | Total images:  1204
+TRAIN loss: nan | Epoch:  15 | Step:  400 | seq_len  4 | Total images for 1 gpu  1604 | Median step time per image 432.9252 ms | Total images:  1604
+TRAIN loss: nan | Epoch:  15 | Step:  500 | seq_len  4 | Total images for 1 gpu  2004 | Median step time per image 432.9175 ms | Total images:  2004
+TRAIN loss: nan | Epoch:  15 | Step:  600 | seq_len  4 | Total images for 1 gpu  2404 | Median step time per image 432.9138 ms | Total images:  2404
+TRAIN loss: nan | Epoch:  15 | Step:  700 | seq_len  4 | Total images for 1 gpu  2804 | Median step time per image 432.9157 ms | Total images:  2804
+TRAIN loss: nan | Epoch:  15 | Step:  800 | seq_len  4 | Total images for 1 gpu  3204 | Median step time per image 432.9151 ms | Total images:  3204
+TRAIN loss: nan | Epoch:  15 | Step:  900 | seq_len  4 | Total images for 1 gpu  3604 | Median step time per image 432.9151 ms | Total images:  3604
+TRAIN loss: nan | Epoch:  15 | Step: 1000 | seq_len  4 | Total images for 1 gpu  4004 | Median step time per image 432.9174 ms | Total images:  4004
+TRAIN loss: nan | Epoch:  15 | Step: 1100 | seq_len  4 | Total images for 1 gpu  4404 | Median step time per image 432.9164 ms | Total images:  4404
+TRAIN loss: nan | Epoch:  15 | Step: 1200 | seq_len  4 | Total images for 1 gpu  4804 | Median step time per image 432.9114 ms | Total images:  4804
+TRAIN loss: nan | Epoch:  15 | Step: 1300 | seq_len  4 | Total images for 1 gpu  5204 | Median step time per image 432.9069 ms | Total images:  5204
+TRAIN loss: nan | Epoch:  15 | Step: 1400 | seq_len  4 | Total images for 1 gpu  5604 | Median step time per image 432.9048 ms | Total images:  5604
+TRAIN loss: nan | Epoch:  15 | Step: 1500 | seq_len  4 | Total images for 1 gpu  6004 | Median step time per image 432.9027 ms | Total images:  6004
+TRAIN loss: nan | Epoch:  15 | Step: 1600 | seq_len  4 | Total images for 1 gpu  6404 | Median step time per image 432.8995 ms | Total images:  6404
+TRAIN loss: nan | Epoch:  15 | Step: 1700 | seq_len  4 | Total images for 1 gpu  6804 | Median step time per image 432.8963 ms | Total images:  6804
+TRAIN loss: nan | Epoch:  15 | Step: 1800 | seq_len  4 | Total images for 1 gpu  7204 | Median step time per image 432.8942 ms | Total images:  7204
+TRAIN loss: nan | Epoch:  15 | Step: 1900 | seq_len  4 | Total images for 1 gpu  7604 | Median step time per image 432.8926 ms | Total images:  7604
+TRAIN loss: nan | Epoch:  15 | Step: 2000 | seq_len  4 | Total images for 1 gpu  8004 | Median step time per image 432.8918 ms | Total images:  8004
+TRAIN loss: nan | Epoch:  15 | Step: 2100 | seq_len  4 | Total images for 1 gpu  8404 | Median step time per image 432.8906 ms | Total images:  8404
+TRAIN loss: nan | Epoch:  15 | Step: 2200 | seq_len  4 | Total images for 1 gpu  8804 | Median step time per image 432.8903 ms | Total images:  8804
+TRAIN loss: nan | Epoch:  15 | Step: 2240 | seq_len  4 | Total images for 1 gpu  8964 | Median step time per image 432.8900 ms | Total images:  8964
+----- VALIDATE - EPOCH 15 -----
+VAL loss: nan | Epoch:  15 | Step:    0 | seq_len  4 | Total images for 1 gpu     4 | Median step time per image 344.7202 ms | Total images:     4
+VAL loss: nan | Epoch:  15 | Step:  100 | seq_len  4 | Total images for 1 gpu   404 | Median step time per image 263.3901 ms | Total images:   404
+VAL loss: nan | Epoch:  15 | Step:  200 | seq_len  4 | Total images for 1 gpu   804 | Median step time per image 263.3616 ms | Total images:   804
+VAL loss: nan | Epoch:  15 | Step:  300 | seq_len  4 | Total images for 1 gpu  1204 | Median step time per image 263.3483 ms | Total images:  1204
+VAL loss: nan | Epoch:  15 | Step:  400 | seq_len  4 | Total images for 1 gpu  1604 | Median step time per image 263.3425 ms | Total images:  1604
+VAL loss: nan | Epoch:  15 | Step:  500 | seq_len  4 | Total images for 1 gpu  2004 | Median step time per image 263.3207 ms | Total images:  2004
+VAL loss: nan | Epoch:  15 | Step:  600 | seq_len  4 | Total images for 1 gpu  2404 | Median step time per image 263.3131 ms | Total images:  2404
+VAL loss: nan | Epoch:  15 | Step:  700 | seq_len  4 | Total images for 1 gpu  2804 | Median step time per image 263.3104 ms | Total images:  2804
+VAL loss: nan | Epoch:  15 | Step:  800 | seq_len  4 | Total images for 1 gpu  3204 | Median step time per image 263.3095 ms | Total images:  3204
+VAL loss: nan | Epoch:  15 | Step:  900 | seq_len  4 | Total images for 1 gpu  3604 | Median step time per image 263.3104 ms | Total images:  3604
+VAL loss: nan | Epoch:  15 | Step:  925 | seq_len  4 | Total images for 1 gpu  3704 | Median step time per image 263.3107 ms | Total images:  3704
+PREDICTION LOW  RESOLUTION: torch.Size([1, 1, 1, 1024, 1024])
+LABELS     LOW  RESOLUTION: torch.Size([1, 1, 1, 1024, 1024])
+EPOCH on VAL set: Seq mIoU [31;1m  0.04[0m %
+mIoU(t) on VAL set: [31;1m  0.04[0m %
+Per-Class IoU (WorkRes):
+        Background : [31;1m 1.14[0m % 
+               Car : [31;1m 0.00[0m % 
+               Bus : [31;1m 0.00[0m % 
+        Motorcycle : [31;1m 0.00[0m % 
+           Bicycle : [31;1m 0.00[0m % 
+        Pedestrian : [31;1m 0.00[0m % 
+      Motorcyclist : [31;1m 0.00[0m % 
+         Bicyclist : [31;1m 0.00[0m % 
+              Cart : [31;1m 0.00[0m % 
+             Bench : [31;1m 0.00[0m % 
+          Umbrella : [31;1m 0.00[0m % 
+               Box : [31;1m 0.00[0m % 
+              Pole : [31;1m 0.00[0m % 
+       Street_lamp : [31;1m 0.00[0m % 
+     Traffic_light : [31;1m 0.00[0m % 
+      Traffic_sign : [31;1m 0.00[0m % 
+          Car_stop : [31;1m 0.00[0m % 
+        Color_cone : [31;1m 0.00[0m % 
+               Sky : [31;1m 0.00[0m % 
+              Road : [31;1m 0.00[0m % 
+          Sidewalk : [31;1m 0.00[0m % 
+              Curb : [31;1m 0.00[0m % 
+        Vegetation : [31;1m 0.00[0m % 
+           Terrain : [31;1m 0.00[0m % 
+          Building : [31;1m 0.00[0m % 
+Saving model checkpoint: save/training_base_rtmvss/checkpoint.pth.tar
+LEARNING RATE:  0.00016
+----- TRAINING - EPOCH 16 -----
+TRAIN loss: nan | Epoch:  16 | Step:    0 | seq_len  4 | Total images for 1 gpu     4 | Median step time per image 439.7159 ms | Total images:     4
+TRAIN loss: nan | Epoch:  16 | Step:  100 | seq_len  4 | Total images for 1 gpu   404 | Median step time per image 433.1052 ms | Total images:   404
+TRAIN loss: nan | Epoch:  16 | Step:  200 | seq_len  4 | Total images for 1 gpu   804 | Median step time per image 432.9869 ms | Total images:   804
+TRAIN loss: nan | Epoch:  16 | Step:  300 | seq_len  4 | Total images for 1 gpu  1204 | Median step time per image 432.9606 ms | Total images:  1204
+TRAIN loss: nan | Epoch:  16 | Step:  400 | seq_len  4 | Total images for 1 gpu  1604 | Median step time per image 432.9481 ms | Total images:  1604
+TRAIN loss: nan | Epoch:  16 | Step:  500 | seq_len  4 | Total images for 1 gpu  2004 | Median step time per image 432.9402 ms | Total images:  2004
+TRAIN loss: nan | Epoch:  16 | Step:  600 | seq_len  4 | Total images for 1 gpu  2404 | Median step time per image 432.9403 ms | Total images:  2404
+TRAIN loss: nan | Epoch:  16 | Step:  700 | seq_len  4 | Total images for 1 gpu  2804 | Median step time per image 432.9397 ms | Total images:  2804
+TRAIN loss: nan | Epoch:  16 | Step:  800 | seq_len  4 | Total images for 1 gpu  3204 | Median step time per image 432.9382 ms | Total images:  3204
+TRAIN loss: nan | Epoch:  16 | Step:  900 | seq_len  4 | Total images for 1 gpu  3604 | Median step time per image 432.9367 ms | Total images:  3604
+TRAIN loss: nan | Epoch:  16 | Step: 1000 | seq_len  4 | Total images for 1 gpu  4004 | Median step time per image 432.9354 ms | Total images:  4004
+TRAIN loss: nan | Epoch:  16 | Step: 1100 | seq_len  4 | Total images for 1 gpu  4404 | Median step time per image 432.9334 ms | Total images:  4404
+TRAIN loss: nan | Epoch:  16 | Step: 1200 | seq_len  4 | Total images for 1 gpu  4804 | Median step time per image 432.9350 ms | Total images:  4804
+TRAIN loss: nan | Epoch:  16 | Step: 1300 | seq_len  4 | Total images for 1 gpu  5204 | Median step time per image 432.9349 ms | Total images:  5204
+TRAIN loss: nan | Epoch:  16 | Step: 1400 | seq_len  4 | Total images for 1 gpu  5604 | Median step time per image 432.9359 ms | Total images:  5604
+TRAIN loss: nan | Epoch:  16 | Step: 1500 | seq_len  4 | Total images for 1 gpu  6004 | Median step time per image 432.9365 ms | Total images:  6004
+TRAIN loss: nan | Epoch:  16 | Step: 1600 | seq_len  4 | Total images for 1 gpu  6404 | Median step time per image 432.9367 ms | Total images:  6404
+TRAIN loss: nan | Epoch:  16 | Step: 1700 | seq_len  4 | Total images for 1 gpu  6804 | Median step time per image 432.9371 ms | Total images:  6804
+TRAIN loss: nan | Epoch:  16 | Step: 1800 | seq_len  4 | Total images for 1 gpu  7204 | Median step time per image 432.9377 ms | Total images:  7204
+TRAIN loss: nan | Epoch:  16 | Step: 1900 | seq_len  4 | Total images for 1 gpu  7604 | Median step time per image 432.9377 ms | Total images:  7604
+TRAIN loss: nan | Epoch:  16 | Step: 2000 | seq_len  4 | Total images for 1 gpu  8004 | Median step time per image 432.9381 ms | Total images:  8004
+TRAIN loss: nan | Epoch:  16 | Step: 2100 | seq_len  4 | Total images for 1 gpu  8404 | Median step time per image 432.9378 ms | Total images:  8404
+TRAIN loss: nan | Epoch:  16 | Step: 2200 | seq_len  4 | Total images for 1 gpu  8804 | Median step time per image 432.9370 ms | Total images:  8804
+TRAIN loss: nan | Epoch:  16 | Step: 2240 | seq_len  4 | Total images for 1 gpu  8964 | Median step time per image 432.9365 ms | Total images:  8964
+----- VALIDATE - EPOCH 16 -----
+VAL loss: nan | Epoch:  16 | Step:    0 | seq_len  4 | Total images for 1 gpu     4 | Median step time per image 332.3826 ms | Total images:     4
+VAL loss: nan | Epoch:  16 | Step:  100 | seq_len  4 | Total images for 1 gpu   404 | Median step time per image 263.4502 ms | Total images:   404
+VAL loss: nan | Epoch:  16 | Step:  200 | seq_len  4 | Total images for 1 gpu   804 | Median step time per image 263.4201 ms | Total images:   804
+VAL loss: nan | Epoch:  16 | Step:  300 | seq_len  4 | Total images for 1 gpu  1204 | Median step time per image 263.3901 ms | Total images:  1204
+VAL loss: nan | Epoch:  16 | Step:  400 | seq_len  4 | Total images for 1 gpu  1604 | Median step time per image 263.3768 ms | Total images:  1604
+VAL loss: nan | Epoch:  16 | Step:  500 | seq_len  4 | Total images for 1 gpu  2004 | Median step time per image 263.3768 ms | Total images:  2004
+VAL loss: nan | Epoch:  16 | Step:  600 | seq_len  4 | Total images for 1 gpu  2404 | Median step time per image 263.3768 ms | Total images:  2404
+VAL loss: nan | Epoch:  16 | Step:  700 | seq_len  4 | Total images for 1 gpu  2804 | Median step time per image 263.3747 ms | Total images:  2804
+VAL loss: nan | Epoch:  16 | Step:  800 | seq_len  4 | Total images for 1 gpu  3204 | Median step time per image 263.3718 ms | Total images:  3204
+VAL loss: nan | Epoch:  16 | Step:  900 | seq_len  4 | Total images for 1 gpu  3604 | Median step time per image 263.3718 ms | Total images:  3604
+VAL loss: nan | Epoch:  16 | Step:  925 | seq_len  4 | Total images for 1 gpu  3704 | Median step time per image 263.3706 ms | Total images:  3704
+PREDICTION LOW  RESOLUTION: torch.Size([1, 1, 1, 1024, 1024])
+LABELS     LOW  RESOLUTION: torch.Size([1, 1, 1, 1024, 1024])
+EPOCH on VAL set: Seq mIoU [31;1m  0.04[0m %
+mIoU(t) on VAL set: [31;1m  0.04[0m %
+Per-Class IoU (WorkRes):
+        Background : [31;1m 1.14[0m % 
+               Car : [31;1m 0.00[0m % 
+               Bus : [31;1m 0.00[0m % 
+        Motorcycle : [31;1m 0.00[0m % 
+           Bicycle : [31;1m 0.00[0m % 
+        Pedestrian : [31;1m 0.00[0m % 
+      Motorcyclist : [31;1m 0.00[0m % 
+         Bicyclist : [31;1m 0.00[0m % 
+              Cart : [31;1m 0.00[0m % 
+             Bench : [31;1m 0.00[0m % 
+          Umbrella : [31;1m 0.00[0m % 
+               Box : [31;1m 0.00[0m % 
+              Pole : [31;1m 0.00[0m % 
+       Street_lamp : [31;1m 0.00[0m % 
+     Traffic_light : [31;1m 0.00[0m % 
+      Traffic_sign : [31;1m 0.00[0m % 
+          Car_stop : [31;1m 0.00[0m % 
+        Color_cone : [31;1m 0.00[0m % 
+               Sky : [31;1m 0.00[0m % 
+              Road : [31;1m 0.00[0m % 
+          Sidewalk : [31;1m 0.00[0m % 
+              Curb : [31;1m 0.00[0m % 
+        Vegetation : [31;1m 0.00[0m % 
+           Terrain : [31;1m 0.00[0m % 
+          Building : [31;1m 0.00[0m % 
+Saving model checkpoint: save/training_base_rtmvss/checkpoint.pth.tar
+LEARNING RATE:  0.00016
+----- TRAINING - EPOCH 17 -----

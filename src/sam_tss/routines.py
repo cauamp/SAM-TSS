@@ -96,6 +96,16 @@ def epoch_routine(args, epoch, model, loader, optimizer,
         if is_train:
             optimizer.zero_grad()
             loss = criterion(probabilities, labels, probabilities_aux, probabilities_thermal, probabilities_fusion, total_feas)
+            
+            # Check for NaN in loss before backward
+            if torch.isnan(loss) or torch.isinf(loss):
+                print(f"\nWARNING: NaN/Inf detected in loss at step {step}!")
+                print(f"Probabilities - min: {probabilities.min():.4f}, max: {probabilities.max():.4f}, mean: {probabilities.mean():.4f}")
+                if probabilities_fusion is not None:
+                    print(f"Probabilities_fusion - min: {probabilities_fusion.min():.4f}, max: {probabilities_fusion.max():.4f}, mean: {probabilities_fusion.mean():.4f}")
+                # Skip this batch to avoid corrupting the model
+                continue
+            
             loss.backward()
             # Clip gradients to prevent explosion/NaN
             torch.nn.utils.clip_grad_norm_(model.parameters(), max_norm=1.0)

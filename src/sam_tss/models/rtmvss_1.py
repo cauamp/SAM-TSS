@@ -172,7 +172,7 @@ class rtmvss(nn.Module):
         d_proj = self.encoder_adapter0(depths)
         # d_proj = depths.repeat(1, 3, 1, 1)
         feats_img, feats_d = self.sam2_image_encoder(imgs, d_proj)
-        print(f"Encoder output feature shapes: {[feat.shape for feat in feats_img]}")  # Debug print
+        # print(f"Encoder output feature shapes: {[feat.shape for feat in feats_img]}")  # Debug print
         #resize imgs and depths to 512x512 
         imgs = F.interpolate(imgs, size=(512, 512), mode='bilinear', align_corners=False)
         depths = F.interpolate(depths, size=(512, 512), mode='bilinear', align_corners=False)
@@ -236,12 +236,6 @@ class rtmvss(nn.Module):
                     "bqc,bchw->bqhw", video_query_embeddings, feats_img[-1][:, ti]
                 ).contiguous()
                 # dense_embeddings = self.dense_embed(video_embed_with_current_feat)
-                
-                # Dynamically reinitialize sparse_embed if input dimension doesn't match
-                spatial_dim = video_embed_with_current_feat.shape[-1] * video_embed_with_current_feat.shape[-2]
-                expected_input_dim = self.sparse_embed.in_features
-                if spatial_dim != expected_input_dim:
-                    self.sparse_embed = nn.Linear(spatial_dim, 256).to(self.device)
                 
                 if is_mem:
                     sparse_embeddings = self.sparse_embed(
@@ -361,10 +355,11 @@ class rtmvss(nn.Module):
                 # Expand to num_classes
                 aux_fusion_expanded = aux_fusion_upsampled.unsqueeze(2).expand(-1, -1, self.num_classes, -1, -1)  # [bsz, 1, num_classes, h, w]
             
-            # Convert mixer output (probabilities) to logits since MVNet expects logits
-            epsilon = 1e-7
+            # Convert mixer output (probabilities) to logits with better numerical stability
+            # Use logit function: log(p / (1-p)), but clamp more aggressively
+            epsilon = 1e-6
             aux_fusion_clamped = torch.clamp(aux_fusion_expanded, epsilon, 1 - epsilon)
-            aux_fusion_logits = torch.log(aux_fusion_clamped / (1 - aux_fusion_clamped))
+            aux_fusion_logits = torch.log(aux_fusion_clamped) - torch.log(1 - aux_fusion_clamped)
             
             # Return 5-tuple: (main, aux_rgb, aux_thermal, aux_fusion, features)
             return main_pred_logits, None, None, aux_fusion_logits, None
@@ -405,12 +400,6 @@ class rtmvss(nn.Module):
                 "bqc,bchw->bqhw", video_query_embeddings, feats_img[-1][:, 0]
             ).contiguous()
             # dense_embeddings = self.dense_embed(video_embed_with_current_feat)
-            
-            # Dynamically reinitialize sparse_embed if input dimension doesn't match
-            spatial_dim = video_embed_with_current_feat.shape[-1] * video_embed_with_current_feat.shape[-2]
-            expected_input_dim = self.sparse_embed.in_features
-            if spatial_dim != expected_input_dim:
-                self.sparse_embed = nn.Linear(spatial_dim, 256).to(self.device)
             
             if is_mem:
                 sparse_embeddings = self.sparse_embed(

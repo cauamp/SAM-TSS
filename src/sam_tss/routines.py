@@ -97,6 +97,8 @@ def epoch_routine(args, epoch, model, loader, optimizer,
             optimizer.zero_grad()
             loss = criterion(probabilities, labels, probabilities_aux, probabilities_thermal, probabilities_fusion, total_feas)
             loss.backward()
+            # Clip gradients to prevent explosion/NaN
+            torch.nn.utils.clip_grad_norm_(model.parameters(), max_norm=1.0)
             optimizer.step()
         else:
             loss = criterion(probabilities, labels, probabilities_aux, probabilities_thermal, probabilities_fusion, total_feas)

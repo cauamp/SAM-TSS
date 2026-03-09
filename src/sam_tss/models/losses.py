@@ -199,19 +199,44 @@ class TrainingLoss(torch.nn.Module):
         for t in range(self.idx_start, self.win_size, self.loss_idx_step):
             label_idx = 0 if self.last_frame_loss else t
             probs_idx = 0 if not self.always_decode else t
-            losses.append(self.losses[t - self.idx_start]
-                          (F.log_softmax(probs[:,probs_idx,:,:,:], dim=softmax_dim), labels[:,label_idx,0,:,:]))
+            
+            # Check main probs
+            main_probs = probs[:,probs_idx,:,:,:]
+            print(f"[DEBUG forward] t={t}: main_probs has NaN: {torch.isnan(main_probs).any()}, min: {main_probs.min().item()}, max: {main_probs.max().item()}")
+            main_log_softmax = F.log_softmax(main_probs, dim=softmax_dim)
+            print(f"[DEBUG forward] t={t}: main_log_softmax has NaN: {torch.isnan(main_log_softmax).any()}")
+            main_loss = self.losses[t - self.idx_start](main_log_softmax, labels[:,label_idx,0,:,:])
+            print(f"[DEBUG forward] t={t}: main_loss: {main_loss.item()}, has NaN: {torch.isnan(main_loss).any()}")
+            losses.append(main_loss)
 
             if probs_aux_rgb is not None:
-                losses.append(self.losses[t - self.idx_start + 1]
-                           (F.log_softmax(probs_aux_rgb[:,probs_idx,:,:,:],dim=softmax_dim),labels[:,label_idx,0,:,:]))
+                aux_probs = probs_aux_rgb[:,probs_idx,:,:,:]
+                print(f"[DEBUG forward] t={t}: aux_rgb_probs has NaN: {torch.isnan(aux_probs).any()}, min: {aux_probs.min().item()}, max: {aux_probs.max().item()}")
+                aux_log_softmax = F.log_softmax(aux_probs, dim=softmax_dim)
+                print(f"[DEBUG forward] t={t}: aux_rgb_log_softmax has NaN: {torch.isnan(aux_log_softmax).any()}")
+                aux_loss = self.losses[t - self.idx_start + 1](aux_log_softmax, labels[:,label_idx,0,:,:])
+                print(f"[DEBUG forward] t={t}: aux_rgb_loss: {aux_loss.item()}, has NaN: {torch.isnan(aux_loss).any()}")
+                losses.append(aux_loss)
+                
             if probs_thermal is not None:
-                losses.append(self.losses[t - self.idx_start + 2]
-                           (F.log_softmax(probs_thermal[:,probs_idx,:,:,:],dim=softmax_dim),labels[:,label_idx,0,:,:]))
+                thermal_probs = probs_thermal[:,probs_idx,:,:,:]
+                print(f"[DEBUG forward] t={t}: thermal_probs has NaN: {torch.isnan(thermal_probs).any()}, min: {thermal_probs.min().item()}, max: {thermal_probs.max().item()}")
+                thermal_log_softmax = F.log_softmax(thermal_probs, dim=softmax_dim)
+                print(f"[DEBUG forward] t={t}: thermal_log_softmax has NaN: {torch.isnan(thermal_log_softmax).any()}")
+                thermal_loss = self.losses[t - self.idx_start + 2](thermal_log_softmax, labels[:,label_idx,0,:,:])
+                print(f"[DEBUG forward] t={t}: thermal_loss: {thermal_loss.item()}, has NaN: {torch.isnan(thermal_loss).any()}")
+                losses.append(thermal_loss)
+                
             if probs_fusion is not None:
-                losses.append(self.losses[t - self.idx_start + 3]
-                           (F.log_softmax(probs_fusion[:,probs_idx,:,:,:],dim=softmax_dim),labels[:,label_idx,0,:,:]))
+                fusion_probs = probs_fusion[:,probs_idx,:,:,:]
+                print(f"[DEBUG forward] t={t}: fusion_probs has NaN: {torch.isnan(fusion_probs).any()}, min: {fusion_probs.min().item()}, max: {fusion_probs.max().item()}")
+                fusion_log_softmax = F.log_softmax(fusion_probs, dim=softmax_dim)
+                print(f"[DEBUG forward] t={t}: fusion_log_softmax has NaN: {torch.isnan(fusion_log_softmax).any()}")
+                fusion_loss = self.losses[t - self.idx_start + 3](fusion_log_softmax, labels[:,label_idx,0,:,:])
+                print(f"[DEBUG forward] t={t}: fusion_loss: {fusion_loss.item()}, has NaN: {torch.isnan(fusion_loss).any()}")
+                losses.append(fusion_loss)
 
+        print(f"[DEBUG forward] Individual losses: {[l.item() for l in losses]}")
         loss_ce = sum(losses) / len(losses)
         print(f"[DEBUG forward] loss_ce: {loss_ce.item()}, has NaN: {torch.isnan(loss_ce).any()}")
 

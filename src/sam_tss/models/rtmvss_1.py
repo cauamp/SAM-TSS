@@ -169,8 +169,37 @@ class rtmvss(nn.Module):
             depths = depths[:, :, 0:1, :, :]  # Take only first channel if 3-channel
         depths = depths.view(-1, 1, h, w).contiguous()
 
-        d_proj = self.encoder_adapter0(depths)
-        print(f"[DEBUG rtmvss] d_proj has NaN: {torch.isnan(d_proj).any()}, min: {d_proj.min()}, max: {d_proj.max()}")
+        print(f"[DEBUG rtmvss] depths (input to encoder_adapter0) has NaN: {torch.isnan(depths).any()}, min: {depths.min()}, max: {depths.max()}, shape: {depths.shape}")
+        if torch.isnan(depths).any():
+            print(f"[DEBUG rtmvss] WARNING: Input depths contains NaN!")
+            print(f"[DEBUG rtmvss] Number of NaN values: {torch.isnan(depths).sum().item()}")
+        
+        # Check for inf values
+        if torch.isinf(depths).any():
+            print(f"[DEBUG rtmvss] WARNING: Input depths contains Inf!")
+            print(f"[DEBUG rtmvss] Number of Inf values: {torch.isinf(depths).sum().item()}")
+        
+        # Manually step through encoder_adapter0 to identify which layer produces NaN
+        # encoder_adapter0 = nn.Sequential(Conv2d(1,3), ReLU(), Conv2d(3,3,1))
+        d_temp = self.encoder_adapter0[0](depths)  # First conv
+        print(f"[DEBUG rtmvss] After encoder_adapter0[0] (Conv2d 1->3) has NaN: {torch.isnan(d_temp).any()}, min: {d_temp.min()}, max: {d_temp.max()}")
+        if torch.isnan(d_temp).any():
+            # Check conv weights
+            print(f"[DEBUG rtmvss] encoder_adapter0[0].weight has NaN: {torch.isnan(self.encoder_adapter0[0].weight).any()}")
+            print(f"[DEBUG rtmvss] encoder_adapter0[0].bias has NaN: {torch.isnan(self.encoder_adapter0[0].bias).any()}")
+        
+        d_temp = self.encoder_adapter0[1](d_temp)  # ReLU
+        print(f"[DEBUG rtmvss] After encoder_adapter0[1] (ReLU) has NaN: {torch.isnan(d_temp).any()}, min: {d_temp.min()}, max: {d_temp.max()}")
+        
+        d_proj = self.encoder_adapter0[2](d_temp)  # Second conv
+        print(f"[DEBUG rtmvss] After encoder_adapter0[2] (Conv2d 3->3) has NaN: {torch.isnan(d_proj).any()}, min: {d_proj.min()}, max: {d_proj.max()}")
+        if torch.isnan(d_proj).any():
+            # Check conv weights
+            print(f"[DEBUG rtmvss] encoder_adapter0[2].weight has NaN: {torch.isnan(self.encoder_adapter0[2].weight).any()}")
+            print(f"[DEBUG rtmvss] encoder_adapter0[2].bias has NaN: {torch.isnan(self.encoder_adapter0[2].bias).any()}")
+        
+        # d_proj = self.encoder_adapter0(depths)
+        print(f"[DEBUG rtmvss] d_proj (final) has NaN: {torch.isnan(d_proj).any()}, min: {d_proj.min()}, max: {d_proj.max()}")
         # d_proj = depths.repeat(1, 3, 1, 1)
         feats_img, feats_d = self.sam2_image_encoder(imgs, d_proj)
         print(f"[DEBUG rtmvss] Encoder outputs - feats_img has NaN: {[torch.isnan(f).any().item() for f in feats_img]}")

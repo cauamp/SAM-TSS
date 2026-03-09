@@ -87,6 +87,20 @@ def epoch_routine(args, epoch, model, loader, optimizer,
         step_img_count = images.size(1) * images.size(0)        # batch_size * seq_length
         total_img_count += step_img_count
 
+        # Check model parameters for NaN before forward pass
+        if is_train and step % 1 == 0:  # Check every step during training
+            has_nan_params = False
+            nan_param_names = []
+            for name, param in model.named_parameters():
+                if torch.isnan(param).any():
+                    has_nan_params = True
+                    nan_param_names.append(name)
+            if has_nan_params:
+                print(f"\n[DEBUG] WARNING: Model parameters contain NaN at step {step}!")
+                print(f"[DEBUG] Parameters with NaN: {nan_param_names[:10]}")  # Show first 10
+                print(f"[DEBUG] This likely occurred from previous backward pass")
+                exit(1)
+
         with grad_context:
             model.module.reset_hidden_state()
             probabilities, probabilities_aux, probabilities_thermal, probabilities_fusion, total_feas = \
@@ -111,6 +125,22 @@ def epoch_routine(args, epoch, model, loader, optimizer,
             loss.backward()
             # Clip gradients to prevent explosion/NaN
             torch.nn.utils.clip_grad_norm_(model.parameters(), max_norm=1.0)
+            
+            # Check for NaN gradients after clipping
+            has_nan_grads = False
+            nan_grad_names = []
+            for name, param in model.named_parameters():
+                if param.grad is not None and torch.isnan(param.grad).any():
+                    has_nan_grads = True
+                    nan_grad_names.append(name)
+            
+            if has_nan_grads:
+                print(f"\n[DEBUG] WARNING: NaN detected in gradients at step {step}!")
+                print(f"[DEBUG] Parameters with NaN gradients: {nan_grad_names[:10]}")  # Show first 10
+                print(f"[DEBUG] Skipping optimizer step to prevent model corruption")
+                optimizer.zero_grad()  # Clear the bad gradients
+                continue  # Skip this batch
+            
             optimizer.step()
         else:
             loss = criterion(probabilities, labels, probabilities_aux, probabilities_thermal, probabilities_fusion, total_feas)

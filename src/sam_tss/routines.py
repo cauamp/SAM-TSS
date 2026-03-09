@@ -104,7 +104,9 @@ def epoch_routine(args, epoch, model, loader, optimizer,
                 if probabilities_fusion is not None:
                     print(f"Probabilities_fusion - min: {probabilities_fusion.min():.4f}, max: {probabilities_fusion.max():.4f}, mean: {probabilities_fusion.mean():.4f}")
                 # Skip this batch to avoid corrupting the model
-                continue
+                # continue
+                # Exiting to prevent further issues. 
+                exit(1)
             
             loss.backward()
             # Clip gradients to prevent explosion/NaN

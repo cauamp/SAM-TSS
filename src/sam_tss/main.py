@@ -132,6 +132,7 @@ if __name__ == '__main__':
     parser.add_argument('--resume', action='store_true')
     parser.add_argument('--num-epochs', type=int, default=150)
     parser.add_argument('--batch-size', type=int, default=6)
+    parser.add_argument('--accumulation-steps', type=int, default=4, help='Number of gradient accumulation steps (simulates larger batch size)')
     parser.add_argument('--steps-loss', type=int, default=100)
     parser.add_argument('--steps-plot', type=int, default=50)
     parser.add_argument('--epochs-save', type=int, default=0)

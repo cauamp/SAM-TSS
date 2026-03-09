@@ -108,7 +108,10 @@ def epoch_routine(args, epoch, model, loader, optimizer,
             assert(probabilities.size(2) == dataset.num_classes)    # batch, seq_len, num_classes, h, w
 
         if is_train:
-            optimizer.zero_grad()
+            # Zero gradients only at the start of accumulation cycle
+            if step % args.accumulation_steps == 0:
+                optimizer.zero_grad()
+            
             loss = criterion(probabilities, labels, probabilities_aux, probabilities_thermal, probabilities_fusion, total_feas)
             
             # Check for NaN in loss before backward
@@ -122,27 +125,33 @@ def epoch_routine(args, epoch, model, loader, optimizer,
                 # Exiting to prevent further issues. 
                 exit(1)
             
-            loss.backward()
-            # Clip gradients to prevent explosion/NaN
-            torch.nn.utils.clip_grad_norm_(model.parameters(), max_norm=1.0)
+            # Scale loss by accumulation steps for backward pass
+            scaled_loss = loss / args.accumulation_steps
+            scaled_loss.backward()
             
-            # Check for NaN gradients after clipping
-            has_nan_grads = False
-            nan_grad_names = []
-            for name, param in model.named_parameters():
-                if param.grad is not None and torch.isnan(param.grad).any():
-                    has_nan_grads = True
-                    nan_grad_names.append(name)
-            
-            if has_nan_grads:
-                print(f"\n[DEBUG] WARNING: NaN detected in gradients at step {step}!")
-                print(f"[DEBUG] Parameters with NaN gradients: {nan_grad_names[:10]}")  # Show first 10
-                print(f"[DEBUG] Skipping optimizer step to prevent model corruption")
-                optimizer.zero_grad()  # Clear the bad gradients
-                exit(1)
-                continue  # Skip this batch
-            
-            optimizer.step()
+            # Only perform optimizer step after accumulating gradients
+            if (step + 1) % args.accumulation_steps == 0 or (step + 1) == len(loader):
+                # Clip gradients to prevent explosion/NaN
+                torch.nn.utils.clip_grad_norm_(model.parameters(), max_norm=5.0)
+                
+                # Check for NaN gradients after clipping
+                has_nan_grads = False
+                nan_grad_names = []
+                for name, param in model.named_parameters():
+                    if param.grad is not None and torch.isnan(param.grad).any():
+                        has_nan_grads = True
+                        nan_grad_names.append(name)
+                
+                if has_nan_grads:
+                    print(f"\n[DEBUG] WARNING: NaN detected in gradients at step {step}!")
+                    print(f"[DEBUG] Parameters with NaN gradients: {nan_grad_names[:10]}")  # Show first 10
+                    print(f"[DEBUG] Skipping optimizer step to prevent model corruption")
+                    optimizer.zero_grad()  # Clear the bad gradients
+                    exit(1)
+                    continue  # Skip this batch
+                
+                optimizer.step()
+                optimizer.zero_grad()  # Reset gradients after optimizer step
         else:
             loss = criterion(probabilities, labels, probabilities_aux, probabilities_thermal, probabilities_fusion, total_feas)
             # bs x classes x h x w | bs x h x w
@@ -266,6 +275,11 @@ def train(args, board, saver, model, device, rank, checkpoint):
     scheduler = scheduler_generator(args, optimizer)
 
     end_epoch = args.num_epochs + 1
+    
+    if print_all_logs:
+        effective_batch_size = args.batch_size * args.accumulation_steps * (args.world_size if args.distributed else 1)
+        print(f"Training configuration: batch_size={args.batch_size}, accumulation_steps={args.accumulation_steps}, " 
+              f"gpus={args.world_size if args.distributed else 1}, effective_batch_size={effective_batch_size}")
 
     if args.distributed:
         dist.barrier()

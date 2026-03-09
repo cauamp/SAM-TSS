@@ -1,7 +1,7 @@
 # Model Training
 
 # Stage1: Training Warm-up for RTMVSS model
-CUDA_VISIBLE_DEVICES=0 uv run src/sam_tss/main.py \
+CUDA_LAUNCH_BLOCKING=1 CUDA_VISIBLE_DEVICES=0 uv run src/sam_tss/main.py \
   --model rtmvss_1.py \
   --sam2-config sam2.1_hiera_l.yaml \
   --sam2-ckpt ./src/sam_tss/models/sam2/sam2.1_hiera_large.pt \
@@ -17,6 +17,7 @@ CUDA_VISIBLE_DEVICES=0 uv run src/sam_tss/main.py \
   --lr-strategy plateau_08 \
   --num-epochs 150 \
   --batch-size 1 \
+  --accumulation-steps 4 \
   --stm-queue-size 3 \
   --sample-rate 3 \
   --savedir save/training_base_rtmvss
@@ -37,6 +38,7 @@ CUDA_VISIBLE_DEVICES=0 uv run src/sam_tss/main.py \
 #   --lr-strategy plateau_08 \
 #   --num-epochs 200 \
 #   --batch-size 2 \
+#   --accumulation-steps 2 \
 #   --stm-queue-size 3 \
 #   --sample-rate 3 \
 #   --savedir save/training_msa_rtmvss

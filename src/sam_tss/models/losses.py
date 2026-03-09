@@ -138,7 +138,7 @@ class TrainingLoss(torch.nn.Module):
                 print(f"[DEBUG metric_learning] batch {i}: neg_logits has NaN: {torch.isnan(neg_logits).any()}")
                 print(f"[DEBUG metric_learning] batch {i}: neg_logits min/max: {neg_logits.min()}/{neg_logits.max()}")
 
-            mean_log_prob_pos = (mask * log_prob).sum(1) / mask.sum(1)
+            mean_log_prob_pos = (mask * log_prob).sum(1) / (mask.sum(1) + 1e-8)
             print(f"[DEBUG metric_learning] batch {i}: mean_log_prob_pos has NaN: {torch.isnan(mean_log_prob_pos).any()}")
             print(f"[DEBUG metric_learning] batch {i}: mask.sum(1) min: {mask.sum(1).min()}")
             loss = - mean_log_prob_pos

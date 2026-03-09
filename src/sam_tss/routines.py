@@ -228,6 +228,7 @@ def epoch_routine(args, epoch, model, loader, optimizer,
     return step, epoch_miou, mean_loss
 
 def train(args, board, saver, model, device, rank, checkpoint):
+    torch.autograd.set_detect_anomaly(True)
 
     print_all_logs = (rank == 0 or not args.distributed)
 

@@ -5,8 +5,8 @@ from PIL import Image
 from torch.utils.data import Dataset
 from torchvision.transforms import ToTensor, Resize, InterpolationMode
 
-from datasets.transform import MyCoTransform, Colorize
-import utils.visualize
+from .transform import MyCoTransform, Colorize
+import sam_tss.utils.visualize
 
 
 def root_check(path):
@@ -62,7 +62,7 @@ class GenericDataset(Dataset):
             self.co_transform = MyCoTransform(self.target_transform, shallow_dec, augment=self.augment,
                                               work_res=self.work_res, random_crop=self.random_crop)
         if print_all_logs:
-            utils.visualize.print_summary(self.__dict__, self.__class__.__name__)
+            sam_tss.utils.visualize.print_summary(self.__dict__, self.__class__.__name__)
 
     def __getitem__(self, index):
         file_path = self.filenames[index]

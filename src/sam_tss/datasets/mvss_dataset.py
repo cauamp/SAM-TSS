@@ -3,8 +3,8 @@ import numpy as np
 
 from torchvision.transforms import Compose, Normalize
 
-from datasets.generic import GenericDataset
-from datasets.transform import Relabel, ToLabel
+from .generic import GenericDataset
+from .transform import Relabel, ToLabel
 
 ###############################################################################################
 # Sets the dataset path

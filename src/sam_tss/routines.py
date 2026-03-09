@@ -47,7 +47,7 @@ def scheduler_generator(args, optimizer):
     return scheduler
 
 def epoch_routine(args, epoch, model, loader, optimizer,
-                  criterion, is_train, shallow_dec, board, dataset, print_all_logs=True, gpu=None):
+                  criterion, is_train, shallow_dec, board, dataset, print_all_logs=True, device=None):
 
     epoch_loss = []
     times = []
@@ -81,9 +81,9 @@ def epoch_routine(args, epoch, model, loader, optimizer,
         step_time_start = time.time()
         seq_len = images.size(1)
         assert(seq_len == args.win_size)
-        images = images.cuda(gpu)                               # images: batch, seq_len, channels, h, w
-        thermals=thermals.cuda(gpu)
-        labels = labels.cuda(gpu)                               # labels: batch, 1, channels, h, w
+        images = images.to(device)                               # images: batch, seq_len, channels, h, w
+        thermals = thermals.to(device)
+        labels = labels.to(device)                               # labels: batch, 1, channels, h, w
         step_img_count = images.size(1) * images.size(0)        # batch_size * seq_length
         total_img_count += step_img_count
 
@@ -126,7 +126,7 @@ def epoch_routine(args, epoch, model, loader, optimizer,
         if args.use_orig_res:
             pred_labels_numpy = probabilities.max(dim=2, keepdim=True)[1].data.cpu()
             pred_labels_full_res = scipy.ndimage.zoom(pred_labels_numpy, [1,1,1,2,2], order=0)
-            pred_labels_full_res = torch.tensor(pred_labels_full_res).cuda()
+            pred_labels_full_res = torch.tensor(pred_labels_full_res).to(device)
 
         if args.always_decode:
             assert(pred_labels.size(1) == seq_len)
@@ -185,24 +185,29 @@ def epoch_routine(args, epoch, model, loader, optimizer,
 
     return step, epoch_miou, mean_loss
 
-def train(args, board, saver, model, gpu, rank, checkpoint):
+def train(args, board, saver, model, device, rank, checkpoint):
 
-    print_all_logs = gpu == 0
+    print_all_logs = (rank == 0 or not args.distributed)
 
     interval = [args.win_size - 1, 0]   # interval = [3, 0], where args.win_size = 4.
     shallow_dec = args.shallow_dec
     dataset_train = DATASETS_DICT[args.dataset](args, 'train',
                                                 co_transform=True, shallow_dec=shallow_dec, augment=True, interval=interval, print_all_logs=print_all_logs)
     ################################################################
-    train_sampler = torch.utils.data.distributed.DistributedSampler(
-        dataset_train,
-        num_replicas=args.world_size,
-        rank=rank
-    )
+    if args.distributed:
+        train_sampler = torch.utils.data.distributed.DistributedSampler(
+            dataset_train,
+            num_replicas=args.world_size,
+            rank=rank
+        )
+        shuffle = False
+    else:
+        train_sampler = None
+        shuffle = True
     ################################################################
 
 
-    loader = DataLoader(dataset_train, num_workers=args.num_workers, batch_size=args.batch_size, shuffle=False, sampler=train_sampler, pin_memory=True)
+    loader = DataLoader(dataset_train, num_workers=args.num_workers, batch_size=args.batch_size, shuffle=shuffle, sampler=train_sampler, pin_memory=True)
 
     if print_all_logs:
         dataset_val = DATASETS_DICT[args.dataset](args, 'test',
@@ -210,8 +215,8 @@ def train(args, board, saver, model, gpu, rank, checkpoint):
 
         loader_val = DataLoader(dataset_val, num_workers=args.num_workers, batch_size=args.batch_size, shuffle=False)
 
-    criterion = TrainingLoss(args, gpu)
-    criterion.cuda(gpu)
+    criterion = TrainingLoss(args, device)
+    criterion.to(device)
 
     optimizer = Adam(filter(lambda p: p.requires_grad, model.parameters()), float(args.lr_start), (0.9, 0.999), eps=1e-08, weight_decay=1e-4)
 
@@ -229,10 +234,12 @@ def train(args, board, saver, model, gpu, rank, checkpoint):
 
     end_epoch = args.num_epochs + 1
 
-    dist.barrier()
+    if args.distributed:
+        dist.barrier()
 
     for epoch in range(start_epoch, end_epoch):
-        train_sampler.set_epoch(epoch)
+        if args.distributed and train_sampler is not None:
+            train_sampler.set_epoch(epoch)
         used_lr = 0
         for param_group in optimizer.param_groups:
             used_lr = float(param_group['lr'])
@@ -241,14 +248,15 @@ def train(args, board, saver, model, gpu, rank, checkpoint):
 
         step, mean_iou_train, mean_loss_train = epoch_routine(
             args, epoch, model, loader, optimizer, criterion,
-            is_train=True, shallow_dec=shallow_dec, board=board, dataset=dataset_train, print_all_logs=print_all_logs, gpu=gpu)
+            is_train=True, shallow_dec=shallow_dec, board=board, dataset=dataset_train, print_all_logs=print_all_logs, device=device)
 
-        dist.barrier()
+        if args.distributed:
+            dist.barrier()
         if print_all_logs:
             # Validate on 500 val images after each epoch of training
             step, mean_iou_val, mean_loss_val = epoch_routine(
                 args, epoch, model, loader_val, optimizer, criterion,
-                is_train=False, shallow_dec=shallow_dec, board=board, dataset=dataset_val, gpu=gpu)
+                is_train=False, shallow_dec=shallow_dec, board=board, dataset=dataset_val, device=device)
 
             # Remember best valIoU and save checkpoint
             if mean_iou_val == 0:
@@ -280,7 +288,7 @@ def train(args, board, saver, model, gpu, rank, checkpoint):
 
 
 def epoch_routine_test(args, epoch, model, loader, optimizer,
-                  criterion, is_train, shallow_dec, board, dataset, print_all_logs=True, gpu=None):
+                  criterion, is_train, shallow_dec, board, dataset, print_all_logs=True, device=None):
 
     epoch_loss = []
     times = []
@@ -312,9 +320,9 @@ def epoch_routine_test(args, epoch, model, loader, optimizer,
         step_time_start = time.time()
         seq_len = images.size(1)
         assert(seq_len == args.win_size)
-        images = images.cuda(gpu)                               # images: batch, seq_len, channels, h, w
-        thermals=thermals.cuda(gpu)
-        labels = labels.cuda(gpu)                               # labels: batch, 1, channels, h, w
+        images = images.to(device)                               # images: batch, seq_len, channels, h, w
+        thermals = thermals.to(device)
+        labels = labels.to(device)                               # labels: batch, 1, channels, h, w
         step_img_count = images.size(1) * images.size(0)        # batch_size * seq_length
         total_img_count += step_img_count
 
@@ -340,7 +348,7 @@ def epoch_routine_test(args, epoch, model, loader, optimizer,
         if args.use_orig_res:
             pred_labels_numpy = probabilities.max(dim=2, keepdim=True)[1].data.cpu()
             pred_labels_full_res = scipy.ndimage.zoom(pred_labels_numpy, [1,1,1,2,2], order=0)
-            pred_labels_full_res = torch.tensor(pred_labels_full_res).cuda()
+            pred_labels_full_res = torch.tensor(pred_labels_full_res).to(device)
 
         if args.always_decode:
             assert(pred_labels.size(1) == seq_len)
@@ -456,9 +464,9 @@ def epoch_routine_test(args, epoch, model, loader, optimizer,
     return step, epoch_miou, mean_loss
 
 
-def eval(args, board, saver, model, gpu, rank):
+def eval(args, board, saver, model, device, rank):
 
-    print_all_logs = gpu == 0
+    print_all_logs = (rank == 0 or not args.distributed)
 
     interval = [args.win_size - 1, 0]
     shallow_dec = args.shallow_dec
@@ -470,11 +478,11 @@ def eval(args, board, saver, model, gpu, rank):
                                               co_transform=False, shallow_dec=shallow_dec, augment=False, interval=interval, print_all_logs=print_all_logs)
 
     loader_val = DataLoader(dataset_val, num_workers=args.num_workers, batch_size=args.batch_size, shuffle=False)
-    criterion = TrainingLoss(args, gpu)
-    criterion.cuda(gpu)
+    criterion = TrainingLoss(args, device)
+    criterion.to(device)
 
     step, mean_iou_eval, mean_loss_eval = epoch_routine_test(
         args, args.num_epochs, model, loader_val, None, criterion,
-        is_train=False, shallow_dec=shallow_dec, board=board, dataset=dataset_val, gpu=gpu)
+        is_train=False, shallow_dec=shallow_dec, board=board, dataset=dataset_val, device=device)
 
 

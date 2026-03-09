@@ -9,7 +9,7 @@ from shutil import copyfile
 
 from visdom import Visdom
 import torch
-import utils.visdom_helpers as vis_helpers
+import sam_tss.utils.visdom_helpers as vis_helpers
 
 class Dashboard:
 

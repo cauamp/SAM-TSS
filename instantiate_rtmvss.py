@@ -2,6 +2,7 @@ import torch
 import torch.nn.functional as F
 import argparse
 from sam_tss.models.rtmvss_1 import rtmvss
+# from sam_tss.models.mvnet import MVNet as rtmvss
 
 def create_args():
     """Create arguments object with required parameters"""
@@ -16,8 +17,14 @@ def create_args():
     args.num_frame_queries = 30
     args.num_video_queries = 5
     args.enable_memory = True
-    
+    args.dataset = "MVSeg"
+    args.model_struct = "original"
+    args.baseline_mode = False  # Set to True to test baseline (no memory, only last frame)
     # Number of classes for segmentation (matching train.sh - MVNet has 26 classes)
+    args.memory_strategy = "all"
+    args.stm_queue_size = 3
+    args.sample_rate = 3
+    args.backbone = "deeplab50"  # Use SAM-based backbone for testing
     args.num_classes = 26
     
     # Training parameters (matching train.sh)
@@ -43,7 +50,7 @@ def main():
     print(f"Model parameters: {sum(p.numel() for p in model.parameters()):,}")
     
     # Training parameters from train.sh
-    batch_size = 1  # train.sh uses 2
+    batch_size = 2  # train.sh uses 2
     num_frames = 2  # train.sh uses 3 (stm_queue_size)
     # IMPORTANT: Use 1024x1024 to match SAM2's positional encoding configuration
     # SAM2 was configured for image_size=1024, producing 64x64 main features
@@ -52,7 +59,7 @@ def main():
     
     # Create dummy RGB and thermal images
     dummy_imgs = torch.randn(batch_size, num_frames, 3, height, width, requires_grad=True).to(device)
-    dummy_thermal = torch.randn(batch_size, num_frames, 1, height, width, requires_grad=True).to(device)
+    dummy_thermal = torch.randn(batch_size, num_frames, 3, height, width, requires_grad=True).to(device)
     
     # Create dummy ground truth labels
     dummy_labels = torch.randint(0, args.num_classes, (batch_size, 1, height, width)).to(device)  # [B, 1, H, W]
@@ -71,11 +78,12 @@ def main():
     
     print(f"\nForward outputs:")
     print(f"  Main predictions (logits): {main_pred.shape}")
-    print(f"  Aux RGB: {aux_rgb}")
-    print(f"  Aux thermal: {aux_thermal}")
+    print(f"  Aux RGB: {aux_rgb.shape if aux_rgb is not None else None}")
+    print(f"  Aux thermal: {aux_thermal.shape if aux_thermal is not None else None}")
     print(f"  Aux fusion (logits): {aux_fusion.shape if aux_fusion is not None else None}")
-    print(f"  Features: {features}")
+    print(f"  Features: {features.shape if features is not None else None}")
     
+    exit()
     # Backward pass
     print(f"\n{'='*80}")
     print("BACKWARD PASS")

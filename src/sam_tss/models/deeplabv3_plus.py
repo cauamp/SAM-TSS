@@ -2,7 +2,7 @@ import torch
 from torch import nn
 import torch.nn.functional as F
 
-import models.resnet
+import sam_tss.models.resnet as resnet_models
 
 # DeepLabV3+.
 class DeepLabv3plus_backbone(nn.Module):
@@ -12,14 +12,14 @@ class DeepLabv3plus_backbone(nn.Module):
         # Encoder part
         assert(layers in [50, 101, 152])
         if layers == 50:
-            resnet = models.resnet.resnet50(pretrained=pretrained)
-            resnet_thermal = models.resnet.resnet50(pretrained=pretrained)
+            resnet = resnet_models.resnet50(pretrained=pretrained)
+            resnet_thermal = resnet_models.resnet50(pretrained=pretrained)
         elif layers == 101:
-            resnet = models.resnet.resnet101(pretrained=pretrained)
-            resnet_thermal = models.resnet.resnet101(pretrained=pretrained)
+            resnet = resnet_models.resnet101(pretrained=pretrained)
+            resnet_thermal = resnet_models.resnet101(pretrained=pretrained)
         else:
-            resnet = models.resnet.resnet152(pretrained=pretrained)
-            resnet_thermal = models.resnet.resnet152(pretrained=pretrained)
+            resnet = resnet_models.resnet152(pretrained=pretrained)
+            resnet_thermal = resnet_models.resnet152(pretrained=pretrained)
         # RGB stream
         self.layer0 = nn.Sequential(resnet.conv1, resnet.bn1, resnet.relu, resnet.conv2, resnet.bn2, resnet.relu,
                                     resnet.conv3, resnet.bn3, resnet.relu, resnet.maxpool)

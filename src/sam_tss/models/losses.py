@@ -6,10 +6,10 @@ import torch.nn.functional as F
 
 class TrainingLoss(torch.nn.Module):
 
-    def __init__(self, args, gpu):
+    def __init__(self, args, device):
         super().__init__()
 
-        weights = classes_weights(DATASETS_CLASSES_DICT[args.dataset], args.shallow_dec, gpu)
+        weights = classes_weights(DATASETS_CLASSES_DICT[args.dataset], args.shallow_dec, device)
 
         self.win_size = args.win_size
         self.always_decode = args.always_decode

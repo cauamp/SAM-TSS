@@ -11,20 +11,22 @@ models = {
 }
 
 
-def load_model_from_file(args, model_path, board, gpu, checkpoint):
+def load_model_from_file(args, model_path, board, device, checkpoint):
 
     if not os.path.exists(model_path):
         print("Could not load model, file does not exist: ", model_path)
         exit(1)
 
-    print_all_logs = gpu == 0
+    # Determine if this is rank 0 or single device
+    print_all_logs = (not args.distributed or device == args.device or 
+                      (isinstance(device, str) and ('cuda:0' in device or device in ['mps', 'cpu'])))
 
     model_name = str(os.path.basename(model_path).split('.')[0])
     
     # Handle different model constructors
     if model_name in ["rtmvss_1", "rtmvss"]:
         # rtmvss models take (args, device) as constructor arguments
-        model = models[model_name](args, device=gpu)
+        model = models[model_name](args, device=device)
     else:
         # MVNet and other models take (args, print_all_logs, board)
         model = models[model_name](args, print_all_logs=print_all_logs, board=board)
@@ -32,12 +34,25 @@ def load_model_from_file(args, model_path, board, gpu, checkpoint):
     if print_all_logs:
         print("Loaded model file: ", model_path)
 
-    torch.cuda.set_device(gpu)
-    model.cuda(gpu)
+    # Move model to device
+    model = model.to(device)
 
-    model = torch.nn.parallel.DistributedDataParallel(model, device_ids=[gpu], find_unused_parameters=True)
-    if args.gpus > 1:
-        model = torch.nn.SyncBatchNorm.convert_sync_batchnorm(model)
+    # Only use DistributedDataParallel for multi-GPU CUDA training
+    if args.distributed and args.device_type == 'cuda':
+        # Extract GPU id from device string for DDP
+        gpu_id = int(device.split(':')[1]) if isinstance(device, str) and ':' in device else device
+        model = torch.nn.parallel.DistributedDataParallel(model, device_ids=[gpu_id], find_unused_parameters=True)
+        if args.gpus > 1:
+            model = torch.nn.SyncBatchNorm.convert_sync_batchnorm(model)
+    else:
+        # Wrap in a simple wrapper to maintain .module attribute for compatibility
+        class SimpleWrapper(torch.nn.Module):
+            def __init__(self, module):
+                super().__init__()
+                self.module = module
+            def forward(self, *args, **kwargs):
+                return self.module(*args, **kwargs)
+        model = SimpleWrapper(model)
 
     # Handle weight loading
     if model_name in ["rtmvss_1", "rtmvss"]:

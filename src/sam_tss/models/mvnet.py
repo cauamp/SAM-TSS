@@ -3,11 +3,11 @@ import torch.nn as nn
 import torch.nn.functional as F
 import math
 import random
-import utils.visualize
+import sam_tss.utils.visualize
 
-from models.deeplabv3_plus import DeepLabPredict
-from models.deeplabv3_plus import DeepLabv3plus_backbone
-from datasets.helpers import DATASETS_NUM_CLASSES
+from .deeplabv3_plus import DeepLabPredict
+from .deeplabv3_plus import DeepLabv3plus_backbone
+from sam_tss.datasets.helpers import DATASETS_NUM_CLASSES
 
 
 class MemoryCrossmodality(nn.Module):
@@ -134,7 +134,7 @@ class MVNet(nn.Module):
 
 
         if print_all_logs:
-            utils.visualize.print_summary(self.__dict__, self.__class__.__name__)
+            sam_tss.utils.visualize.print_summary(self.__dict__, self.__class__.__name__)
 
     def gen_prototypes(self, feat, logit, cls_num):
         n, c, h, w = feat.shape

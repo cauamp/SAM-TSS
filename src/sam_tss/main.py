@@ -16,15 +16,37 @@ from utils.loading import load_model_from_file, load_checkpoint
 
 def process(gpu, args):
 
+    # Determine device type
+    if torch.cuda.is_available() and args.device == 'cuda':
+        device = f'cuda:{gpu}'
+        device_type = 'cuda'
+    elif torch.backends.mps.is_available() and args.device == 'mps':
+        device = 'mps'
+        device_type = 'mps'
+        gpu = 0  # MPS doesn't use gpu index
+    else:
+        device = 'cpu'
+        device_type = 'cpu'
+        gpu = 0
+    
+    args.device_type = device_type
+    args.device = device
+    
     ############################################################
-    rank = args.nr * args.gpus + gpu
-    os.environ['MASTER_PORT'] = '12355'
-    dist.init_process_group(
-        backend='nccl',
-        init_method='env://',
-        world_size=args.world_size,
-        rank=rank
-    )
+    # Only use distributed training for multi-GPU CUDA setups
+    if args.world_size > 1 and device_type == 'cuda':
+        rank = args.nr * args.gpus + gpu
+        os.environ['MASTER_PORT'] = '12355'
+        dist.init_process_group(
+            backend='nccl',
+            init_method='env://',
+            world_size=args.world_size,
+            rank=rank
+        )
+        args.distributed = True
+    else:
+        rank = 0
+        args.distributed = False
     ############################################################
 
     torch.manual_seed(0)
@@ -41,7 +63,7 @@ def process(gpu, args):
         checkpoint = load_checkpoint(saver.save_dir, args.shallow_dec)
 
     model_path = os.path.join("src/sam_tss/models", args.model)     # Loading Model file, i.e., mvnet.py
-    model = load_model_from_file(args, model_path, board, gpu, checkpoint)
+    model = load_model_from_file(args, model_path, board, device, checkpoint)
 
     if gpu == 0:
         # Load Model and save a copy of it for reference
@@ -51,13 +73,16 @@ def process(gpu, args):
 
     # Use that model for training and/or inference
     if args.training:
-        routines.train(args, board, saver, model, gpu, rank, checkpoint)
+        routines.train(args, board, saver, model, device, rank, checkpoint)
     else:
-        routines.eval(args, board, saver, model, gpu, rank)
+        routines.eval(args, board, saver, model, device, rank)
 
 def main(args):
-
-    mp.spawn(process, nprocs=args.gpus, args=(args, ))
+    # For single GPU or MPS, run directly without multiprocessing spawn
+    if args.gpus == 1 or args.device in ['mps', 'cpu']:
+        process(0, args)
+    else:
+        mp.spawn(process, nprocs=args.gpus, args=(args, ))
 
     print("========== PROCESSING FINISHED ===========")
 
@@ -119,6 +144,8 @@ if __name__ == '__main__':
     parser.add_argument('--gpus', default=1, type=int, help='number of gpus per node')
     parser.add_argument('--nr', default=0, type=int, help='ranking within the nodes')
     parser.add_argument('--mport', type=str, default="8888")
+    parser.add_argument('--device', type=str, default='cuda', choices=['cuda', 'mps', 'cpu'],
+                        help='Device to use: cuda, mps (Apple Silicon), or cpu')
 
     # Debug output / Visdom options
     parser.add_argument('--savedir', required=True)

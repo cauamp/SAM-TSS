@@ -10,10 +10,9 @@ from .transform import Relabel, ToLabel
 # Sets the dataset path
 if os.path.exists("/Users/cauamp/Documents/MVSeg_Dataset"):
     MVSeg_ROOT = "/Users/cauamp/Documents/MVSeg_Dataset"
-#elif os.path.exists("~/projects/def-vislearn/datasets/MVSeg_Dataset/"):
-MVSeg_ROOT = "./dataset/"
-#else:
-#    raise ValueError("MVSeg dataset path not found")
+else:
+    MVSeg_ROOT = "./dataset/"
+
 
 ###############################################################################################
 

@@ -230,7 +230,9 @@ class TrainingLoss(torch.nn.Module):
             if probs_fusion is not None:
                 fusion_probs = probs_fusion[:,probs_idx,:,:,:]
                 print(f"[DEBUG forward] t={t}: fusion_probs has NaN: {torch.isnan(fusion_probs).any()}, min: {fusion_probs.min().item()}, max: {fusion_probs.max().item()}")
-                fusion_log_softmax = F.log_softmax(fusion_probs, dim=softmax_dim)
+                # Clamp logits to prevent extreme values that cause NaN gradients
+                fusion_probs_clamped = torch.clamp(fusion_probs, min=-20.0, max=20.0)
+                fusion_log_softmax = F.log_softmax(fusion_probs_clamped, dim=softmax_dim)
                 print(f"[DEBUG forward] t={t}: fusion_log_softmax has NaN: {torch.isnan(fusion_log_softmax).any()}")
                 fusion_loss = self.losses[t - self.idx_start + 3](fusion_log_softmax, labels[:,label_idx,0,:,:])
                 print(f"[DEBUG forward] t={t}: fusion_loss: {fusion_loss.item()}, has NaN: {torch.isnan(fusion_loss).any()}")

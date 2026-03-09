@@ -139,6 +139,7 @@ def epoch_routine(args, epoch, model, loader, optimizer,
                 print(f"[DEBUG] Parameters with NaN gradients: {nan_grad_names[:10]}")  # Show first 10
                 print(f"[DEBUG] Skipping optimizer step to prevent model corruption")
                 optimizer.zero_grad()  # Clear the bad gradients
+                exit(1)
                 continue  # Skip this batch
             
             optimizer.step()

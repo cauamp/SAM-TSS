@@ -120,7 +120,8 @@ class rtmvss(nn.Module):
         self.num_classes = args.num_classes
         
         self.class_query = nn.Parameter(torch.empty(self.num_classes, 256))
-        nn.init.xavier_uniform_(self.class_query)
+        # Use smaller initialization to prevent gradient explosion
+        nn.init.normal_(self.class_query, mean=0.0, std=0.01)
         
         self.sparse_embed_for_class = nn.Linear(512, 256) #fuse class query and sparse embedding for classification
         
@@ -765,7 +766,11 @@ class cross_attention(nn.Module):
 
         scores = torch.matmul(query, key.transpose(-2, -1)) / math.sqrt(query.shape[-1])
 
-        output = torch.matmul(F.softmax(scores, dim=-1), value)
+        scores = scores - scores.amax(dim=-1, keepdim=True)  # stabilize
+
+        attn = F.softmax(scores, dim=-1)
+
+        output = torch.matmul(attn, value)        
         # print(output.shape)
         # exit(0)
         if dim == 4:

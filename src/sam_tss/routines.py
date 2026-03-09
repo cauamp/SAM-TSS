@@ -229,6 +229,11 @@ def epoch_routine(args, epoch, model, loader, optimizer,
 
 def train(args, board, saver, model, device, rank, checkpoint):
     torch.autograd.set_detect_anomaly(True)
+    # Force the stable math SDPA kernel. Flash/memory-efficient kernels require
+    # float16/bfloat16; with float32 inputs they either fail or produce NaN in backward.
+    torch.backends.cuda.enable_flash_sdp(False)
+    torch.backends.cuda.enable_mem_efficient_sdp(False)
+    torch.backends.cuda.enable_math_sdp(True)
 
     print_all_logs = (rank == 0 or not args.distributed)
 

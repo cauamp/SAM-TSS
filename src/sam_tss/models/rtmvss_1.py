@@ -170,8 +170,11 @@ class rtmvss(nn.Module):
         depths = depths.view(-1, 1, h, w).contiguous()
 
         d_proj = self.encoder_adapter0(depths)
+        print(f"[DEBUG rtmvss] d_proj has NaN: {torch.isnan(d_proj).any()}, min: {d_proj.min()}, max: {d_proj.max()}")
         # d_proj = depths.repeat(1, 3, 1, 1)
         feats_img, feats_d = self.sam2_image_encoder(imgs, d_proj)
+        print(f"[DEBUG rtmvss] Encoder outputs - feats_img has NaN: {[torch.isnan(f).any().item() for f in feats_img]}")
+        print(f"[DEBUG rtmvss] Encoder outputs - feats_d has NaN: {[torch.isnan(f).any().item() for f in feats_d]}")
         # print(f"Encoder output feature shapes: {[feat.shape for feat in feats_img]}")  # Debug print
         #resize imgs and depths to 512x512 
         imgs = F.interpolate(imgs, size=(512, 512), mode='bilinear', align_corners=False)
@@ -183,6 +186,7 @@ class rtmvss(nn.Module):
         # auxiliary supervision
         if is_training:
             intermediate_mask_stage2 = self.mixer2(feats_img[2])  # [bsz*frames, 1, H, W]
+            print(f"[DEBUG rtmvss] intermediate_mask_stage2 has NaN: {torch.isnan(intermediate_mask_stage2).any()}, min: {intermediate_mask_stage2.min()}, max: {intermediate_mask_stage2.max()}")
             intermediate_mask_stage2 = intermediate_mask_stage2.squeeze(1)  # [bsz*frames, H, W]
             # Infer actual spatial dimensions from tensor shape
             spatial_h, spatial_w = intermediate_mask_stage2.shape[1], intermediate_mask_stage2.shape[2]
@@ -235,6 +239,8 @@ class rtmvss(nn.Module):
                 video_embed_with_current_feat = torch.einsum(
                     "bqc,bchw->bqhw", video_query_embeddings, feats_img[-1][:, ti]
                 ).contiguous()
+                print(f"[DEBUG rtmvss] ti={ti}, video_embed_with_current_feat has NaN: {torch.isnan(video_embed_with_current_feat).any()}")
+                print(f"[DEBUG rtmvss] ti={ti}, video_query_embeddings has NaN: {torch.isnan(video_query_embeddings).any()}")
                 # dense_embeddings = self.dense_embed(video_embed_with_current_feat)
                 
                 if is_mem:
@@ -286,6 +292,13 @@ class rtmvss(nn.Module):
                 ]
 
                 # Run mask decoder once for all classes
+                print(f"[DEBUG rtmvss] ti={ti}, Before decoder - image_embeddings_expanded has NaN: {torch.isnan(image_embeddings_expanded).any()}")
+                print(f"[DEBUG rtmvss] ti={ti}, Before decoder - sparse_embeddings_for_class has NaN: {torch.isnan(sparse_embeddings_for_class).any()}")
+                print(f"[DEBUG rtmvss] ti={ti}, Before decoder - dense_embeddings_expanded has NaN: {torch.isnan(dense_embeddings_expanded).any()}")
+                
+                for idx,data  in enumerate(high_res_features_expanded):
+                    print(f"Before decoder - high_res_features_expanded[{idx}] has NaN: {torch.isnan(high_res_features_expanded[idx]).any()}")
+                    
                 low_res_multimasks, _, _, _ = self.sam2.sam_mask_decoder(
                     image_embeddings=image_embeddings_expanded,
                     image_pe=self.sam2.sam_prompt_encoder.get_dense_pe(),
@@ -297,28 +310,37 @@ class rtmvss(nn.Module):
                 )
 
                 low_res_multimasks = low_res_multimasks.float()
+                print(f"[DEBUG rtmvss] ti={ti}, low_res_multimasks has NaN: {torch.isnan(low_res_multimasks).any()}, shape: {low_res_multimasks.shape}")
+                if torch.isnan(low_res_multimasks).any():
+                    print(f"[DEBUG rtmvss] low_res_multimasks min: {low_res_multimasks.min()}, max: {low_res_multimasks.max()}")
+                
                 sam_high_mask = F.interpolate(
                     low_res_multimasks,
                     size=(h, w),
                     mode="bilinear",
                     align_corners=False,
                 )
+                print(f"[DEBUG rtmvss] ti={ti}, sam_high_mask (after interpolate) has NaN: {torch.isnan(sam_high_mask).any()}")
                 # Keep raw logits - no sigmoid needed since MVNet expects logits
                 
                 # Squeeze channel dimension: [bsz*num_classes, 1, h, w] -> [bsz*num_classes, h, w]
                 sam_high_mask = sam_high_mask.squeeze(1)
                 # Reshape back: [bsz*num_classes, h, w] -> [bsz, num_classes, h, w]
                 sam_high_masks_logits = sam_high_mask.view(bsz, self.num_classes, h, w).contiguous()
+                print(f"[DEBUG rtmvss] ti={ti}, sam_high_masks_logits has NaN: {torch.isnan(sam_high_masks_logits).any()}, min: {sam_high_masks_logits.min()}, max: {sam_high_masks_logits.max()}")
 
                 if is_mem:
                     # update video queries based on aggregated foreground mask (excluding background)
                     # Aggregate all foreground classes (classes 1+) using max pooling
                     masks_probs = torch.sigmoid(sam_high_masks_logits)  # [bsz, num_classes, h, w]
+                    print(f"[DEBUG rtmvss] ti={ti}, masks_probs has NaN: {torch.isnan(masks_probs).any()}")
                     # Aggregate foreground only (skip class 0 which is background)
                     foreground_mask = masks_probs[:, 1:, :, :].max(dim=1, keepdim=True)[0]  # [bsz, 1, h, w]
+                    print(f"[DEBUG rtmvss] ti={ti}, foreground_mask has NaN: {torch.isnan(foreground_mask).any()}")
                     # Use non-expanded features for memory update
                     self.update_video_queries(feats_img[-1][:, ti], foreground_mask)
                     
+                print(f"[DEBUG rtmvss] ti={ti}, Appending sam_high_masks_logits with NaN: {torch.isnan(sam_high_masks_logits).any()}")
                 frames_pred.append(sam_high_masks_logits)
 
             # Convert to MVNet-compatible output format
@@ -358,8 +380,11 @@ class rtmvss(nn.Module):
             # Convert mixer output (probabilities) to logits with better numerical stability
             # Use logit function: log(p / (1-p)), but clamp more aggressively
             epsilon = 1e-6
+            print(f"[DEBUG rtmvss] aux_fusion_expanded has NaN: {torch.isnan(aux_fusion_expanded).any()}, min: {aux_fusion_expanded.min()}, max: {aux_fusion_expanded.max()}")
             aux_fusion_clamped = torch.clamp(aux_fusion_expanded, epsilon, 1 - epsilon)
             aux_fusion_logits = torch.log(aux_fusion_clamped) - torch.log(1 - aux_fusion_clamped)
+            print(f"[DEBUG rtmvss] aux_fusion_logits has NaN: {torch.isnan(aux_fusion_logits).any()}, min: {aux_fusion_logits.min()}, max: {aux_fusion_logits.max()}")
+            print(f"[DEBUG rtmvss] main_pred_logits has NaN: {torch.isnan(main_pred_logits).any()}, min: {main_pred_logits.min()}, max: {main_pred_logits.max()}")
             
             # Return 5-tuple: (main, aux_rgb, aux_thermal, aux_fusion, features)
             return main_pred_logits, None, None, aux_fusion_logits, None
@@ -488,23 +513,38 @@ class rtmvss(nn.Module):
 
     def update_video_queries(self, pix_feat, pred_masks_high_res, alpha=0.1):
         
+        print(f"[DEBUG update_video_queries] Input pix_feat has NaN: {torch.isnan(pix_feat).any()}, min: {pix_feat.min()}, max: {pix_feat.max()}")
+        print(f"[DEBUG update_video_queries] Input pred_masks_high_res has NaN: {torch.isnan(pred_masks_high_res).any()}, min: {pred_masks_high_res.min()}, max: {pred_masks_high_res.max()}")
         maskmem_out = self.sam2.memory_encoder(
             pix_feat,
             pred_masks_high_res,
             skip_mask_sigmoid=True,  # sigmoid already applied
         )
         maskmem_feature = maskmem_out["vision_features"]  # bsz, 64, 28, 28
+        print(f"[DEBUG update_video_queries] maskmem_feature has NaN: {torch.isnan(maskmem_feature).any()}")
         maskmem_feature = self.memory_proj(maskmem_feature.flatten(2).permute(0, 2, 1).contiguous())
 
+        print(f"[DEBUG update_video_queries] After memory_proj has NaN: {torch.isnan(maskmem_feature).any()}")
+
+        # self.video_query_weight [num, bsz, hidden_dim]
+        print(f"[DEBUG update_video_queries] Before transformer - video_query_weight has NaN: {torch.isnan(self.video_query_weight).any()}, min: {self.video_query_weight.min()}, max: {self.video_query_weight.max()}")
+        
         # self.video_query_weight [num, bsz, hidden_dim]
         query_feat = self.transformer_cross_attention(
             self.video_query_weight.permute(1, 2, 0).contiguous(), maskmem_feature.permute(0, 2, 1).contiguous()
         )
+        print(f"[DEBUG update_video_queries] After cross_attention has NaN: {torch.isnan(query_feat).any()}")
         query_feat = self.transformer_self_attention(query_feat, query_feat)
+        print(f"[DEBUG update_video_queries] After self_attention has NaN: {torch.isnan(query_feat).any()}")
 
         query_feat = self.transformer_ffn(query_feat.permute(0, 2, 1).contiguous())
+        
+        print(f"[DEBUG update_video_queries] After FFN has NaN: {torch.isnan(query_feat).any()}")
+        
         self.video_query_weight = self.video_query_weight * alpha + query_feat.permute(1, 0, 2).contiguous()
 
+        print(f"[DEBUG update_video_queries] Updated video_query_weight has NaN: {torch.isnan(self.video_query_weight).any()}, min: {self.video_query_weight.min()}, max: {self.video_query_weight.max()}")
+      
         return
 
     """

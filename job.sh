@@ -1,7 +1,7 @@
 #!/bin/bash
 
 export MODEL="rtmvss_2"
-
+export GPUS = 4
 #SBATCH --time=48:00:00          # Time limit (HH:MM:SS) - 48 hours for full training
 #SBATCH --output=run_%j/result.out   # Output file name 
 #SBATCH --error=run_%j/log.err
@@ -11,7 +11,7 @@ export MODEL="rtmvss_2"
 
 #SBATCH --mem=128G               # Request 128GB of memory
 #SBATCH --cpus-per-task=16       # Request 16 CPU cores
-#SBATCH --gpus-per-node=4        # Request 1 GPU per node (adjust for multi-GPU)
+#SBATCH --gpus-per-node=$GPUS       
 
 module --force purge # Clear all loaded modules
 

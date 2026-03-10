@@ -20,7 +20,7 @@ uv run src/sam_tss/main.py \
   --enable-memory \
   --training \
   --baseline-mode \
-  --gpus 4 \
+  --gpus $GPUS   \
   --lr-start 2e-4 \
   --lr-strategy plateau_08 \
   --num-epochs 150 \
@@ -41,7 +41,7 @@ uv run src/sam_tss/main.py \
 #   --num-video-queries 8 \
 #   --enable-memory \
 #   --training \
-#   --gpus 2 \
+#   --gpus $GPUS \
 #   --lr-start 2e-4 \
 #   --lr-strategy plateau_08 \
 #   --num-epochs 200 \

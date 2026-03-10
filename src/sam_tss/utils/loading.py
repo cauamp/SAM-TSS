@@ -3,11 +3,11 @@ import os
 
 from models.mvnet import MVNet
 from models.rtmvss_1 import rtmvss
-
+from models.rtmvss_2 import rtmvss as rtmvss2
 models = {
     "mvnet": MVNet,
     "rtmvss_1": rtmvss,
-    "rtmvss": rtmvss
+    "rtmvss_2": rtmvss2
 }
 
 
@@ -24,7 +24,7 @@ def load_model_from_file(args, model_path, board, device, checkpoint):
     model_name = str(os.path.basename(model_path).split('.')[0])
     
     # Handle different model constructors
-    if model_name in ["rtmvss_1", "rtmvss"]:
+    if 'rtmvss'in model_name :
         # rtmvss models take (args, device) as constructor arguments
         model = models[model_name](args, device=device)
     else:

@@ -183,7 +183,7 @@ class rtmvss(nn.Module):
         
         # auxiliary supervision
         if is_training:
-            intermediate_mask_stage2 = self.mixer2(feats_img[2])  # [bsz*frames, num_classes, H, W]
+            intermediate_mask_stage2 = self.mixer2(feats_img[2])  
     
             intermediate_mask_stage2 = intermediate_mask_stage2.squeeze(1)  # [bsz*frames, H, W]
             # Infer actual spatial dimensions from tensor shape
@@ -243,9 +243,6 @@ class rtmvss(nn.Module):
                 
                 if is_mem:
                     embed = video_embed_with_current_feat.view(bsz, self.num_video_queries, -1).contiguous()
-                    sparse_embeddings = self.sparse_embed(
-                        
-                    )
                 else:
                     embed = video_embed_with_current_feat.view(bsz, self.num_frame_queries, -1).contiguous()
                 
@@ -264,7 +261,7 @@ class rtmvss(nn.Module):
                 class_queries_expanded = class_queries.expand(-1, Q, -1)  
                 
                 sparse_embeddings = self.sparse_embed(
-                        torch.cat([embed, class_queries_expanded], dim=2) 
+                        torch.cat([sparse_embeddings_expanded, class_queries_expanded], dim=2) 
                     )# [B*C, Q, 256]
                 
                 # Expand other inputs for all classes
@@ -389,9 +386,6 @@ class rtmvss(nn.Module):
                             
             if is_mem:
                     embed = video_embed_with_current_feat.view(bsz, self.num_video_queries, -1).contiguous()
-                    sparse_embeddings = self.sparse_embed(
-                        
-                    )
             else:
                     embed = video_embed_with_current_feat.view(bsz, self.num_frame_queries, -1).contiguous()
                 
@@ -410,7 +404,7 @@ class rtmvss(nn.Module):
             class_queries_expanded = class_queries.expand(-1, Q, -1)  
                 
             sparse_embeddings = self.sparse_embed(
-                    torch.cat([embed, class_queries_expanded], dim=2) 
+                    torch.cat([sparse_embeddings_expanded, class_queries_expanded], dim=2) 
                     )# [B*C, Q, 256]
                 
             # Expand other inputs for all classes

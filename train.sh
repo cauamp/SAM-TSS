@@ -20,7 +20,7 @@ CUDA_LAUNCH_BLOCKING=1  uv run src/sam_tss/main.py \
   --accumulation-steps 4 \
   --stm-queue-size 3 \
   --sample-rate 3 \
-  --savedir save/training_base_rtmvss
+  --savedir ${SAVEDIR:-save/training_base_rtmvss}
 
 # Stage2: Training with memory (uncomment after Stage1 completes)
 # CUDA_VISIBLE_DEVICES=0,1 python src/sam_tss/main.py \
@@ -41,4 +41,4 @@ CUDA_LAUNCH_BLOCKING=1  uv run src/sam_tss/main.py \
 #   --accumulation-steps 2 \
 #   --stm-queue-size 3 \
 #   --sample-rate 3 \
-#   --savedir save/training_msa_rtmvss
+#   --savedir ${SAVEDIR:-save/training_msa_rtmvss}

@@ -82,6 +82,8 @@ class rtmvss(nn.Module):
         self.sam2 = build_sam2_video_predictor(
             config_file=args.sam2_config, ckpt_path=args.sam2_ckpt, device=device, mode="train"
         )
+        for param in self.sam2.image_encoder.trunk.parameters():
+            param.requires_grad = False
 
         self.hidden_dim = 64
         self.num_frame_queries = args.num_frame_queries
@@ -545,15 +547,15 @@ class rtmvss(nn.Module):
         """
         # add encoder adapter to the last block of each level of features
         with torch.no_grad():
-            feat_rgb_0 = self.sam2.image_encoder.trunk(rgb, 0)
-            feat_d_0 = self.sam2.image_encoder.trunk(d, 0)
+            feat_rgb_0 = self.sam2.image_encoder.trunk(rgb, 0).contiguous()
+            feat_d_0 = self.sam2.image_encoder.trunk(d, 0).contiguous()
 
         feat_d_0_skip = self.encoder_adapter0_(F.interpolate(d, size=feat_d_0.shape[-2:], mode="bilinear"))
         feat_d_0 = feat_d_0 + feat_d_0_skip
 
         with torch.no_grad():
-            feat_rgb_1 = self.sam2.image_encoder.trunk(feat_rgb_0, 1)
-            feat_d_1 = self.sam2.image_encoder.trunk(feat_d_0, 1)
+            feat_rgb_1 = self.sam2.image_encoder.trunk(feat_rgb_0, 1).contiguous()
+            feat_d_1 = self.sam2.image_encoder.trunk(feat_d_0, 1).contiguous()
 
         # parallel adapter
         feat_rgb_0_skip, feat_d_0_skip = self.encoder_adapter1(feat_rgb_0, feat_d_0)  # parallel adapter
@@ -563,8 +565,8 @@ class rtmvss(nn.Module):
         feat_d_1 = feat_d_1 + feat_d_0_skip
 
         with torch.no_grad():
-            feat_rgb_2 = self.sam2.image_encoder.trunk(feat_rgb_1, 2)
-            feat_d_2 = self.sam2.image_encoder.trunk(feat_d_1, 2)
+            feat_rgb_2 = self.sam2.image_encoder.trunk(feat_rgb_1, 2).contiguous()
+            feat_d_2 = self.sam2.image_encoder.trunk(feat_d_1, 2).contiguous()
 
         # parallel adapter
         feat_rgb_1_skip, feat_d_1_skip = self.encoder_adapter2(feat_rgb_1, feat_d_1)  # parallel adapter
@@ -574,8 +576,8 @@ class rtmvss(nn.Module):
         feat_d_2 = feat_d_2 + feat_d_1_skip
 
         with torch.no_grad():
-            feat_rgb_3 = self.sam2.image_encoder.trunk(feat_rgb_2, 3)
-            feat_d_3 = self.sam2.image_encoder.trunk(feat_d_2, 3)
+            feat_rgb_3 = self.sam2.image_encoder.trunk(feat_rgb_2, 3).contiguous()
+            feat_d_3 = self.sam2.image_encoder.trunk(feat_d_2, 3).contiguous()
 
         # parallel adapter
         feat_rgb_2_skip, feat_d_2_skip = self.encoder_adapter3(feat_rgb_2, feat_d_2)  # parallel adapter

@@ -17,3 +17,5 @@ wheels/
 
 
 run_*/
+*.out
+*.err

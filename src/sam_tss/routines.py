@@ -306,6 +306,10 @@ def train(args, board, saver, model, device, rank, checkpoint):
             saver.save_checkpoint(checkpoint_state_dict, is_best, shallow_dec)
             saver.save_model(model, shallow_dec, is_best, epoch, step, mean_iou_val)
             saver.save_epoch_report(shallow_dec, epoch, mean_loss_train, mean_loss_val, mean_iou_train, mean_iou_val, used_lr)
+        
+        # Synchronize all ranks after validation (rank 0 only) completes
+        if args.distributed:
+            dist.barrier()
 
             if args.visualize:
                 board.update_graphs(shallow_dec, epoch, float(mean_loss_train), float(mean_loss_val),

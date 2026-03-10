@@ -36,12 +36,15 @@ def process(gpu, args):
     # Only use distributed training for multi-GPU CUDA setups
     if args.world_size > 1 and device_type == 'cuda':
         rank = args.nr * args.gpus + gpu
+        # Set the current CUDA device BEFORE initializing process group
+        torch.cuda.set_device(gpu)
         os.environ['MASTER_PORT'] = '12355'
         dist.init_process_group(
             backend='nccl',
             init_method='env://',
             world_size=args.world_size,
-            rank=rank
+            rank=rank,
+            device_id=torch.device(device)
         )
         args.distributed = True
     else:

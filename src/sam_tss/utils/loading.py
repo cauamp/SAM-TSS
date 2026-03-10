@@ -84,6 +84,9 @@ def load_model_from_file(args, model_path, board, device, checkpoint):
                 has_module_prefix = sample_key.startswith("module.")
                 
                 for k, v in checkpoint_weights.items():
+                    if 'mixer2.4.' in k:
+                        print("Skipping loading weights for key: ", k)
+                        continue
                     if has_module_prefix:
                         # Keys already have module prefix, use as-is
                         new_state_dict[k] = v

@@ -15,6 +15,7 @@ from .sam2.build_sam import build_sam2_video_predictor
 class rtmvss(nn.Module):
     def __init__(self, args, device):
         super().__init__()
+        self.num_classes = args.num_classes
 
         self.pix_feat = None
         self.device = device
@@ -115,9 +116,7 @@ class rtmvss(nn.Module):
             )
 
         self.sparse_embed = nn.Linear(self._bb_feat_sizes[-1][0] * self._bb_feat_sizes[-1][1], 256)
-        
-        self.num_classes = args.num_classes
-        
+                
         self.class_query = nn.Parameter(torch.empty(self.num_classes, 256))
 
         nn.init.trunc_normal_(self.class_query, std=0.02)

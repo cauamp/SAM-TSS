@@ -102,14 +102,14 @@ def epoch_routine(args, epoch, model, loader, optimizer,
             
             # Check for NaN in loss before backward
             if torch.isnan(loss) or torch.isinf(loss):
-                print(f"\nWARNING: NaN/Inf detected in loss at step {step}!")
-                print(f"Probabilities - min: {probabilities.min():.4f}, max: {probabilities.max():.4f}, mean: {probabilities.mean():.4f}")
-                if probabilities_fusion is not None:
-                    print(f"Probabilities_fusion - min: {probabilities_fusion.min():.4f}, max: {probabilities_fusion.max():.4f}, mean: {probabilities_fusion.mean():.4f}")
-                # Skip this batch to avoid corrupting the model
-                # continue
-                # Exiting to prevent further issues. 
-                exit(1)
+                if print_all_logs:
+                    print(f"\nWARNING: NaN/Inf detected in loss at step {step}! Skipping batch.")
+                    print(f"Probabilities - min: {probabilities.min():.4f}, max: {probabilities.max():.4f}, mean: {probabilities.mean():.4f}")
+                    if probabilities_fusion is not None:
+                        print(f"Probabilities_fusion - min: {probabilities_fusion.min():.4f}, max: {probabilities_fusion.max():.4f}, mean: {probabilities_fusion.mean():.4f}")
+                # Skip this batch AND reset gradients to avoid corrupting the model
+                optimizer.zero_grad()
+                continue
             
             # Scale loss by accumulation steps for backward pass
             scaled_loss = loss / args.accumulation_steps
@@ -260,20 +260,28 @@ def train(args, board, saver, model, device, rank, checkpoint):
         dist.barrier()
 
     for epoch in range(start_epoch, end_epoch):
-        if args.distributed and train_sampler is not None:
-            train_sampler.set_epoch(epoch)
-        used_lr = 0
-        for param_group in optimizer.param_groups:
-            used_lr = float(param_group['lr'])
+        try:
+            if args.distributed and train_sampler is not None:
+                train_sampler.set_epoch(epoch)
+            used_lr = 0
+            for param_group in optimizer.param_groups:
+                used_lr = float(param_group['lr'])
+                if print_all_logs:
+                    print("LEARNING RATE: ", used_lr)
+
+            step, mean_iou_train, mean_loss_train = epoch_routine(
+                args, epoch, model, loader, optimizer, criterion,
+                is_train=True, shallow_dec=shallow_dec, board=board, dataset=dataset_train, print_all_logs=print_all_logs, device=device)
+
+            if args.distributed:
+                dist.barrier()
+        except Exception as e:
             if print_all_logs:
-                print("LEARNING RATE: ", used_lr)
-
-        step, mean_iou_train, mean_loss_train = epoch_routine(
-            args, epoch, model, loader, optimizer, criterion,
-            is_train=True, shallow_dec=shallow_dec, board=board, dataset=dataset_train, print_all_logs=print_all_logs, device=device)
-
-        if args.distributed:
-            dist.barrier()
+                print(f"\nError in epoch {epoch}: {e}")
+            # Ensure all ranks exit together on error
+            if args.distributed:
+                dist.destroy_process_group()
+            raise
         if print_all_logs:
             # Validate on 500 val images after each epoch of training
             step, mean_iou_val, mean_loss_val = epoch_routine(

@@ -1,7 +1,15 @@
 # Model Training
 
 # Stage1: Training Warm-up for RTMVSS model
-CUDA_LAUNCH_BLOCKING=1  uv run src/sam_tss/main.py \
+# Enable NCCL debugging and extend timeout for slower operations
+export NCCL_DEBUG=INFO
+export NCCL_TIMEOUT=1800
+export TORCH_NCCL_TRACE_BUFFER_SIZE=10000
+export TORCH_DISTRIBUTED_DEBUG=DETAIL
+# Uncomment below for production runs (disables detailed debugging)
+# CUDA_LAUNCH_BLOCKING=1
+
+uv run src/sam_tss/main.py \
   --model rtmvss_1.py \
   --sam2-config sam2.1_hiera_l.yaml \
   --sam2-ckpt ./src/sam_tss/models/sam2/sam2.1_hiera_large.pt \

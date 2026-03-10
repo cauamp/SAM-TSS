@@ -8,7 +8,7 @@
 
 #SBATCH --mem=128G               # Request 128GB of memory
 #SBATCH --cpus-per-task=16       # Request 16 CPU cores
-#SBATCH --gpus-per-node=$GPUS       
+#SBATCH --gpus-per-node=4      
 
 export MODEL="rtmvss_2"
 export GPUS = 4

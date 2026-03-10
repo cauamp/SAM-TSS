@@ -10,7 +10,7 @@ export TORCH_DISTRIBUTED_DEBUG=DETAIL
 # CUDA_LAUNCH_BLOCKING=1
 
 uv run src/sam_tss/main.py \
-  --model rtmvss_1.py \
+  --model ${MODEL:-.py} \
   --sam2-config sam2.1_hiera_l.yaml \
   --sam2-ckpt ./src/sam_tss/models/sam2/sam2.1_hiera_large.pt \
   --load ./src/sam_tss/weights/dvisal.pt \

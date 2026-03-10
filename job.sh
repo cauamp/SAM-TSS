@@ -15,8 +15,8 @@ module --force purge # Clear all loaded modules
 # Prevent PyTorch from trying to load Level Zero (Intel GPU backend)
 export TORCH_USE_RTLD_GLOBAL=1
 export PYTORCH_IGNORE_LEVEL_ZERO=1
+export MODEL="rtmvss_2"
 export SAVEDIR="run_$SLURM_JOB_ID"
-
 # Load required modules
 module load StdEnv/2023 gcc/12.3
 module load opencv/4.13.0

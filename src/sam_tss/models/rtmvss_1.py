@@ -75,9 +75,8 @@ class rtmvss(nn.Module):
             nn.ReLU(),
             nn.Conv2d(128, 32, (3, 3), padding=(1, 1), bias=True),
             nn.ReLU(),
-            nn.Conv2d(32, 1, (1, 1), bias=True),
-            nn.Sigmoid(),
-        )
+            nn.Conv2d(32, self.num_classes, (1, 1), bias=True),
+            )
 
         self.sam2 = build_sam2_video_predictor(
             config_file=args.sam2_config, ckpt_path=args.sam2_ckpt, device=device, mode="train"
@@ -120,8 +119,8 @@ class rtmvss(nn.Module):
         self.num_classes = args.num_classes
         
         self.class_query = nn.Parameter(torch.empty(self.num_classes, 256))
-        # Use smaller initialization to prevent gradient explosion
-        nn.init.normal_(self.class_query, mean=0.0, std=0.01)
+
+        nn.init.trunc_normal_(self.class_query, std=0.02)
         
         self.sparse_embed_for_class = nn.Linear(512, 256) #fuse class query and sparse embedding for classification
         
@@ -184,12 +183,12 @@ class rtmvss(nn.Module):
         
         # auxiliary supervision
         if is_training:
-            intermediate_mask_stage2 = self.mixer2(feats_img[2])  # [bsz*frames, 1, H, W]
+            intermediate_mask_stage2 = self.mixer2(feats_img[2])  # [bsz*frames, num_classes, H, W]
     
             intermediate_mask_stage2 = intermediate_mask_stage2.squeeze(1)  # [bsz*frames, H, W]
             # Infer actual spatial dimensions from tensor shape
-            spatial_h, spatial_w = intermediate_mask_stage2.shape[1], intermediate_mask_stage2.shape[2]
-            intermediate_mask_stage2 = intermediate_mask_stage2.reshape(bsz, frames, spatial_h, spatial_w).contiguous()
+            _, _, spatial_h, spatial_w = intermediate_mask_stage2.shape
+            intermediate_mask_stage2 = intermediate_mask_stage2.reshape(bsz, frames,self.num_classes, spatial_h, spatial_w).contiguous()
 
             intermediate_mask = [intermediate_mask_stage2]
 
@@ -351,36 +350,17 @@ class rtmvss(nn.Module):
             # Auxiliary predictions from intermediate supervision
             # intermediate_mask is a list with [intermediate_mask_stage2] - these are probabilities from mixer2
             aux_fusion = intermediate_mask[0]  # [bsz, frames, h2, w2]
-            
+                        
             if self.always_decode:
-                # Process all frames for auxiliary output
-                aux_fusion_upsampled = F.interpolate(
-                    aux_fusion.view(bsz * frames, 1, *aux_fusion.shape[2:]),  # [bsz*frames, 1, h2, w2]
-                    size=(h, w),
-                    mode='bilinear',
-                    align_corners=False
-                ).view(bsz, frames, h, w)  # [bsz, frames, h, w]
-                # Expand to num_classes
-                aux_fusion_expanded = aux_fusion_upsampled.unsqueeze(2).expand(-1, -1, self.num_classes, -1, -1)  # [bsz, frames, num_classes, h, w]
+                aux_fusion_logits = F.interpolate(
+                    aux_fusion.view(bsz * frames, self.num_classes, *aux_fusion.shape[3:]),
+                    size=(h, w), mode='bilinear', align_corners=False
+                ).view(bsz, frames, self.num_classes, h, w)
             else:
-                # Process only last frame
-                aux_fusion_upsampled = F.interpolate(
-                    aux_fusion[:, -1:, :, :],  # Take last frame [bsz, 1, h2, w2]
-                    size=(h, w),
-                    mode='bilinear',
-                    align_corners=False
-                )  # [bsz, 1, h, w]
-                # Expand to num_classes
-                aux_fusion_expanded = aux_fusion_upsampled.unsqueeze(2).expand(-1, -1, self.num_classes, -1, -1)  # [bsz, 1, num_classes, h, w]
-            
-            # Convert mixer output (probabilities) to logits with better numerical stability
-            # Use logit function: log(p / (1-p)), but clamp more aggressively
-            epsilon = 1e-6
-    
-            aux_fusion_clamped = torch.clamp(aux_fusion_expanded, epsilon, 1 - epsilon)
-            aux_fusion_logits = torch.log(aux_fusion_clamped) - torch.log(1 - aux_fusion_clamped)
-    
-    
+                aux_fusion_logits = F.interpolate(
+                    aux_fusion[:, -1].reshape(bsz, self.num_classes, *aux_fusion.shape[3:]),
+                    size=(h, w), mode='bilinear', align_corners=False
+                ).unsqueeze(1)  # [bsz, 1, num_classes, h, w]          
             
             # Return 5-tuple: (main, aux_rgb, aux_thermal, aux_fusion, features)
             return main_pred_logits, None, None, aux_fusion_logits, None
@@ -690,7 +670,7 @@ class bi_modal_parallel_adapter(nn.Module):
         self.fc_up = nn.Conv2d(self.in_channel * 2, 64, (3, 3), padding=(1, 1), bias=True)
         self.activate = nn.GELU()
         self.fc_down = nn.Conv2d(64, self.out_channel * 2, 1)
-        self.skip = nn.Conv2d(self.in_channel * 2, self.out_channel * 2, 1)
+        # self.skip = nn.Conv2d(self.in_channel * 2, self.out_channel * 2, 1)
 
     def forward(self, x1, x2):
         x = torch.concat([x1, x2], dim=1)

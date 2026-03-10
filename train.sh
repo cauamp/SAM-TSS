@@ -1,6 +1,7 @@
 # Model Training
 
 # Stage1: Training Warm-up for RTMVSS model
+<<<<<<< HEAD
 CUDA_LAUNCH_BLOCKING=1  uv run src/sam_tss/main.py \
   --model rtmvss_1.py \
   --sam2-config sam2.1_hiera_l.yaml \
@@ -29,8 +30,8 @@ CUDA_LAUNCH_BLOCKING=1  uv run src/sam_tss/main.py \
 #   --sam2-ckpt /path/to/sam2_hiera_large.pt \
 #   --load save/training_base_rtmvss/model_base.pth \
 #   --num-classes 26 \
-#   --num-frame-queries 5 \
-#   --num-video-queries 5 \
+#   --num-frame-queries 30 \
+#   --num-video-queries 8 \
 #   --enable-memory \
 #   --training \
 #   --gpus 2 \

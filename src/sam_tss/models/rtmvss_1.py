@@ -295,8 +295,8 @@ class rtmvss(nn.Module):
         
         
                 
-                for idx,data  in enumerate(high_res_features_expanded):
-                    print(f"Before decoder - high_res_features_expanded[{idx}] has NaN: {torch.isnan(high_res_features_expanded[idx]).any()}")
+                # for idx,data  in enumerate(high_res_features_expanded):
+                    # print(f"Before decoder - high_res_features_expanded[{idx}] has NaN: {torch.isnan(high_res_features_expanded[idx]).any()}")
                     
                 low_res_multimasks, _, _, _ = self.sam2.sam_mask_decoder(
                     image_embeddings=image_embeddings_expanded,
@@ -509,37 +509,37 @@ class rtmvss(nn.Module):
 
     def update_video_queries(self, pix_feat, pred_masks_high_res, alpha=0.1):
         
-        print(f"[DEBUG update_video_queries] Input pix_feat has NaN: {torch.isnan(pix_feat).any()}, min: {pix_feat.min()}, max: {pix_feat.max()}")
-        print(f"[DEBUG update_video_queries] Input pred_masks_high_res has NaN: {torch.isnan(pred_masks_high_res).any()}, min: {pred_masks_high_res.min()}, max: {pred_masks_high_res.max()}")
+        # print(f"[DEBUG update_video_queries] Input pix_feat has NaN: {torch.isnan(pix_feat).any()}, min: {pix_feat.min()}, max: {pix_feat.max()}")
+        # print(f"[DEBUG update_video_queries] Input pred_masks_high_res has NaN: {torch.isnan(pred_masks_high_res).any()}, min: {pred_masks_high_res.min()}, max: {pred_masks_high_res.max()}")
         maskmem_out = self.sam2.memory_encoder(
             pix_feat,
             pred_masks_high_res,
             skip_mask_sigmoid=True,  # sigmoid already applied
         )
         maskmem_feature = maskmem_out["vision_features"]  # bsz, 64, 28, 28
-        print(f"[DEBUG update_video_queries] maskmem_feature has NaN: {torch.isnan(maskmem_feature).any()}")
+        # print(f"[DEBUG update_video_queries] maskmem_feature has NaN: {torch.isnan(maskmem_feature).any()}")
         maskmem_feature = self.memory_proj(maskmem_feature.flatten(2).permute(0, 2, 1).contiguous())
 
-        print(f"[DEBUG update_video_queries] After memory_proj has NaN: {torch.isnan(maskmem_feature).any()}")
+        # print(f"[DEBUG update_video_queries] After memory_proj has NaN: {torch.isnan(maskmem_feature).any()}")
 
         # self.video_query_weight [num, bsz, hidden_dim]
-        print(f"[DEBUG update_video_queries] Before transformer - video_query_weight has NaN: {torch.isnan(self.video_query_weight).any()}, min: {self.video_query_weight.min()}, max: {self.video_query_weight.max()}")
+        # print(f"[DEBUG update_video_queries] Before transformer - video_query_weight has NaN: {torch.isnan(self.video_query_weight).any()}, min: {self.video_query_weight.min()}, max: {self.video_query_weight.max()}")
         
         # self.video_query_weight [num, bsz, hidden_dim]
         query_feat = self.transformer_cross_attention(
             self.video_query_weight.permute(1, 2, 0).contiguous(), maskmem_feature.permute(0, 2, 1).contiguous()
         )
-        print(f"[DEBUG update_video_queries] After cross_attention has NaN: {torch.isnan(query_feat).any()}")
+        # print(f"[DEBUG update_video_queries] After cross_attention has NaN: {torch.isnan(query_feat).any()}")
         query_feat = self.transformer_self_attention(query_feat, query_feat)
-        print(f"[DEBUG update_video_queries] After self_attention has NaN: {torch.isnan(query_feat).any()}")
+        # print(f"[DEBUG update_video_queries] After self_attention has NaN: {torch.isnan(query_feat).any()}")
 
         query_feat = self.transformer_ffn(query_feat.permute(0, 2, 1).contiguous())
         
-        print(f"[DEBUG update_video_queries] After FFN has NaN: {torch.isnan(query_feat).any()}")
+        # print(f"[DEBUG update_video_queries] After FFN has NaN: {torch.isnan(query_feat).any()}")
         
         self.video_query_weight = self.video_query_weight * alpha + query_feat.permute(1, 0, 2).contiguous()
 
-        print(f"[DEBUG update_video_queries] Updated video_query_weight has NaN: {torch.isnan(self.video_query_weight).any()}, min: {self.video_query_weight.min()}, max: {self.video_query_weight.max()}")
+        # print(f"[DEBUG update_video_queries] Updated video_query_weight has NaN: {torch.isnan(self.video_query_weight).any()}, min: {self.video_query_weight.min()}, max: {self.video_query_weight.max()}")
       
         return
 

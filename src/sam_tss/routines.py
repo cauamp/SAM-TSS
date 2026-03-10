@@ -226,11 +226,10 @@ def train(args, board, saver, model, device, rank, checkpoint):
 
     loader = DataLoader(dataset_train, num_workers=args.num_workers, batch_size=args.batch_size, shuffle=shuffle, sampler=train_sampler, pin_memory=True)
 
-    if print_all_logs:
-        dataset_val = DATASETS_DICT[args.dataset](args, 'test',
-                                                  co_transform=False, shallow_dec=shallow_dec, augment=False, interval=interval, print_all_logs=print_all_logs)
+    dataset_val = DATASETS_DICT[args.dataset](args, 'test',
+                                              co_transform=False, shallow_dec=shallow_dec, augment=False, interval=interval, print_all_logs=print_all_logs)
 
-        loader_val = DataLoader(dataset_val, num_workers=args.num_workers, batch_size=args.batch_size, shuffle=False)
+    loader_val = DataLoader(dataset_val, num_workers=args.num_workers, batch_size=args.batch_size, shuffle=False)
 
     criterion = TrainingLoss(args, device)
     criterion.to(device)
@@ -282,12 +281,14 @@ def train(args, board, saver, model, device, rank, checkpoint):
             if args.distributed:
                 dist.destroy_process_group()
             raise
-        if print_all_logs:
-            # Validate on 500 val images after each epoch of training
-            step, mean_iou_val, mean_loss_val = epoch_routine(
-                args, epoch, model, loader_val, optimizer, criterion,
-                is_train=False, shallow_dec=shallow_dec, board=board, dataset=dataset_val, device=device)
+        # Run validation on ALL ranks to avoid DDP collective mismatches.
+        # The model or criterion may call collective ops (gather/all_reduce) during
+        # the forward pass; all ranks must participate or NCCL will deadlock/crash.
+        step, mean_iou_val, mean_loss_val = epoch_routine(
+            args, epoch, model, loader_val, optimizer, criterion,
+            is_train=False, shallow_dec=shallow_dec, board=board, dataset=dataset_val, device=device)
 
+        if print_all_logs:
             # Remember best valIoU and save checkpoint
             if mean_iou_val == 0:
                 current_acc = -mean_loss_val
@@ -306,8 +307,8 @@ def train(args, board, saver, model, device, rank, checkpoint):
             saver.save_checkpoint(checkpoint_state_dict, is_best, shallow_dec)
             saver.save_model(model, shallow_dec, is_best, epoch, step, mean_iou_val)
             saver.save_epoch_report(shallow_dec, epoch, mean_loss_train, mean_loss_val, mean_iou_train, mean_iou_val, used_lr)
-        
-        # Synchronize all ranks after validation (rank 0 only) completes
+
+        # Synchronize all ranks after validation completes
         if args.distributed:
             dist.barrier()
 

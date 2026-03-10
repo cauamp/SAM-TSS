@@ -1,11 +1,8 @@
 #!/bin/bash
-
-export MODEL="rtmvss_2"
-export GPUS = 4
 #SBATCH --time=48:00:00          # Time limit (HH:MM:SS) - 48 hours for full training
 #SBATCH --output=run_%j/result.out   # Output file name 
 #SBATCH --error=run_%j/log.err
-#SBATCH --job-name=mvss-train-${MODEL}  # Name of the job
+#SBATCH --job-name=mvss-train # Name of the job
 
 #SBATCH --account=def-vislearn
 
@@ -13,12 +10,17 @@ export GPUS = 4
 #SBATCH --cpus-per-task=16       # Request 16 CPU cores
 #SBATCH --gpus-per-node=$GPUS       
 
+export MODEL="rtmvss_2"
+export GPUS = 4
+export SAVEDIR="run_$SLURM_JOB_ID"
+
 module --force purge # Clear all loaded modules
 
 # Prevent PyTorch from trying to load Level Zero (Intel GPU backend)
 export TORCH_USE_RTLD_GLOBAL=1
 export PYTORCH_IGNORE_LEVEL_ZERO=1
-export SAVEDIR="run_$SLURM_JOB_ID"
+
+
 # Load required modules
 module load StdEnv/2023 gcc/12.3
 module load opencv/4.13.0
@@ -27,9 +29,6 @@ module load opencv/4.13.0
 # Option 1: If using a custom activation script
 . ./activate.sh
 
-# Option 2: If using conda (uncomment if needed)
-# source ~/miniconda3/etc/profile.d/conda.sh
-# conda activate torch222
 
 # Create output directory for this job
 mkdir -p $SAVEDIR

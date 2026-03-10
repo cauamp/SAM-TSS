@@ -1,8 +1,11 @@
 #!/bin/bash
+
+export MODEL="rtmvss_2"
+
 #SBATCH --time=48:00:00          # Time limit (HH:MM:SS) - 48 hours for full training
 #SBATCH --output=run_%j/result.out   # Output file name 
 #SBATCH --error=run_%j/log.err
-#SBATCH --job-name=rtmvss-train  # Name of the job
+#SBATCH --job-name=mvss-train-${MODEL}  # Name of the job
 
 #SBATCH --account=def-vislearn
 
@@ -15,7 +18,6 @@ module --force purge # Clear all loaded modules
 # Prevent PyTorch from trying to load Level Zero (Intel GPU backend)
 export TORCH_USE_RTLD_GLOBAL=1
 export PYTORCH_IGNORE_LEVEL_ZERO=1
-export MODEL="rtmvss_2"
 export SAVEDIR="run_$SLURM_JOB_ID"
 # Load required modules
 module load StdEnv/2023 gcc/12.3

@@ -1,0 +1,1 @@
+Best epoch is 1, with mean IoU = 0.0112

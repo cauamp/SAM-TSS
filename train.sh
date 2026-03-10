@@ -1,7 +1,6 @@
 # Model Training
 
 # Stage1: Training Warm-up for RTMVSS model
-<<<<<<< HEAD
 CUDA_LAUNCH_BLOCKING=1  uv run src/sam_tss/main.py \
   --model rtmvss_1.py \
   --sam2-config sam2.1_hiera_l.yaml \
@@ -13,7 +12,7 @@ CUDA_LAUNCH_BLOCKING=1  uv run src/sam_tss/main.py \
   --enable-memory \
   --training \
   --baseline-mode \
-  --gpus 1 \
+  --gpus 4 \
   --lr-start 2e-4 \
   --lr-strategy plateau_08 \
   --num-epochs 150 \

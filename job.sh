@@ -8,7 +8,7 @@
 
 #SBATCH --mem=128G               # Request 128GB of memory
 #SBATCH --cpus-per-task=16       # Request 16 CPU cores
-#SBATCH --gpus-per-node=1        # Request 1 GPU per node (adjust for multi-GPU)
+#SBATCH --gpus-per-node=4        # Request 1 GPU per node (adjust for multi-GPU)
 
 module --force purge # Clear all loaded modules
 
@@ -32,13 +32,13 @@ module load opencv/4.13.0
 mkdir -p run_$SLURM_JOB_ID
 
 # Set CUDA_VISIBLE_DEVICES based on allocated GPUs
-export CUDA_VISIBLE_DEVICES=$SLURM_LOCALID
+#export CUDA_VISIBLE_DEVICES=$SLURM_LOCALID
 
 # Run the training script
 echo "Starting RTMVSS training at $(date)"
 echo "Job ID: $SLURM_JOB_ID"
 echo "Running on host: $(hostname)"
-echo "GPUs available: $CUDA_VISIBLE_DEVICES"
+#echo "GPUs available: $CUDA_VISIBLE_DEVICES"
 
 # Make train.sh executable
 chmod +x ./train.sh

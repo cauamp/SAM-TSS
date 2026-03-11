@@ -11,7 +11,7 @@
 #SBATCH --gpus-per-node=4      
 
 export MODEL="rtmvss_2"
-export GPUS = 4
+export GPUS=4
 export SAVEDIR="run_$SLURM_JOB_ID"
 
 module --force purge # Clear all loaded modules

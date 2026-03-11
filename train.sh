@@ -28,6 +28,8 @@ uv run src/sam_tss/main.py \
   --accumulation-steps 32 \
   --stm-queue-size 3 \
   --sample-rate 3 \
+  --class-query-size ${CLASS_QUERY_SIZE:-256} \
+  --resize-mode ${RESIZE_MODE:-og} \
   --savedir ${SAVEDIR:-save/training_base_rtmvss}
 
 # Stage2: Training with memory (uncomment after Stage1 completes)

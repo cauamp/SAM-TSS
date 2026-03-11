@@ -122,7 +122,7 @@ class rtmvss(nn.Module):
                 nn.Linear(self.hidden_dim, self.hidden_dim),
             )
 
-        self.class_query_size = 512
+        self.class_query_size = args.class_query_size if hasattr(args, 'class_query_size') else 256
         self.sparse_embed = nn.Linear(self._bb_feat_sizes[-1][0] * self._bb_feat_sizes[-1][1] + self.class_query_size, 256)
                 
         self.class_query = nn.Parameter(torch.empty(self.num_classes, self.class_query_size))

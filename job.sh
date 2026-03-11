@@ -19,7 +19,8 @@ module --force purge # Clear all loaded modules
 # Prevent PyTorch from trying to load Level Zero (Intel GPU backend)
 export TORCH_USE_RTLD_GLOBAL=1
 export PYTORCH_IGNORE_LEVEL_ZERO=1
-
+export CLASS_QUERY_SIZE=256
+export RESIZE_MODE="og"
 
 # Load required modules
 module load StdEnv/2023 gcc/12.3

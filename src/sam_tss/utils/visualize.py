@@ -2,7 +2,7 @@ import numpy as np
 import re
 import os
 import statistics
-
+import sys
 from torch.autograd import Variable
 from pathlib import Path
 from shutil import copyfile
@@ -208,9 +208,12 @@ def get_color_entry(val):
         return Colors.GREEN
 
 
-def colored_str(score, msg):
-    return get_color_entry(score) + msg + Colors.ENDC
+USE_COLOR = sys.stdout.isatty()
 
+def colored_str(score, msg):
+    if not USE_COLOR:
+        return msg
+    return get_color_entry(score) + msg + Colors.ENDC
 
 def print_summary(data_dict, name):
 

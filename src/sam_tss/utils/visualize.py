@@ -273,7 +273,7 @@ def print_optimized_model_params(model):
     count = 0
     for name, param in model.named_parameters():
         if param.requires_grad:
-            print(name)
+            # print(name)
             count += 1
     print("Total optimized parameters:", count)
 

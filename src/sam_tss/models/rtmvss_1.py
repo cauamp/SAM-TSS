@@ -53,23 +53,23 @@ class rtmvss(nn.Module):
         self.encoder_adapter3 = bi_modal_parallel_adapter(channel_list[2], channel_list[3])
         self.encoder_adapter4 = bi_modal_parallel_adapter(channel_list[3], channel_list[3])
 
-        self.mixer0 = nn.Sequential(
-            nn.Conv2d(32, 32, (3, 3), padding=(1, 1), bias=True),
-            nn.ReLU(),
-            nn.Conv2d(32, 32, (3, 3), padding=(1, 1), bias=True),
-            nn.ReLU(),
-            nn.Conv2d(32, 1, (1, 1), bias=True),
-            nn.Sigmoid(),
-        )
+        # self.mixer0 = nn.Sequential(
+        #     nn.Conv2d(32, 32, (3, 3), padding=(1, 1), bias=True),
+        #     nn.ReLU(),
+        #     nn.Conv2d(32, 32, (3, 3), padding=(1, 1), bias=True),
+        #     nn.ReLU(),
+        #     nn.Conv2d(32, 1, (1, 1), bias=True),
+        #     nn.Sigmoid(),
+        # )
 
-        self.mixer1 = nn.Sequential(
-            nn.Conv2d(64, 32, (3, 3), padding=(1, 1), bias=True),
-            nn.ReLU(),
-            nn.Conv2d(32, 32, (3, 3), padding=(1, 1), bias=True),
-            nn.ReLU(),
-            nn.Conv2d(32, 1, (1, 1), bias=True),
-            nn.Sigmoid(),
-        )
+        # self.mixer1 = nn.Sequential(
+        #     nn.Conv2d(64, 32, (3, 3), padding=(1, 1), bias=True),
+        #     nn.ReLU(),
+        #     nn.Conv2d(32, 32, (3, 3), padding=(1, 1), bias=True),
+        #     nn.ReLU(),
+        #     nn.Conv2d(32, 1, (1, 1), bias=True),
+        #     nn.Sigmoid(),
+        # )
 
         self.mixer2 = nn.Sequential(
             nn.Conv2d(256, 128, (3, 3), padding=(1, 1), bias=True),

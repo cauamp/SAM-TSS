@@ -62,22 +62,22 @@ class rtmvss(nn.Module):
             nn.Sigmoid(),
         )
 
-        self.mixer1 = nn.Sequential(
-            nn.Conv2d(64, 32, (3, 3), padding=(1, 1), bias=True),
-            nn.ReLU(),
-            nn.Conv2d(32, 32, (3, 3), padding=(1, 1), bias=True),
-            nn.ReLU(),
-            nn.Conv2d(32, 1, (1, 1), bias=True),
-            nn.Sigmoid(),
-        )
+        # self.mixer1 = nn.Sequential(
+        #     nn.Conv2d(64, 32, (3, 3), padding=(1, 1), bias=True),
+        #     nn.ReLU(),
+        #     nn.Conv2d(32, 32, (3, 3), padding=(1, 1), bias=True),
+        #     nn.ReLU(),
+        #     nn.Conv2d(32, 1, (1, 1), bias=True),
+        #     nn.Sigmoid(),
+        # )
 
-        self.mixer2 = nn.Sequential(
-            nn.Conv2d(256, 128, (3, 3), padding=(1, 1), bias=True),
-            nn.ReLU(),
-            nn.Conv2d(128, 32, (3, 3), padding=(1, 1), bias=True),
-            nn.ReLU(),
-            nn.Conv2d(32, self.num_classes, (1, 1), bias=True),
-            )
+        # self.mixer2 = nn.Sequential(
+        #     nn.Conv2d(256, 128, (3, 3), padding=(1, 1), bias=True),
+        #     nn.ReLU(),
+        #     nn.Conv2d(128, 32, (3, 3), padding=(1, 1), bias=True),
+        #     nn.ReLU(),
+        #     nn.Conv2d(32, self.num_classes, (1, 1), bias=True),
+        #     )
 
         self.sam2 = build_sam2_video_predictor(
             config_file=args.sam2_config, ckpt_path=args.sam2_ckpt, device=device, mode="train"

@@ -25,7 +25,7 @@ uv run src/sam_tss/main.py \
   --lr-strategy plateau_08 \
   --num-epochs 150 \
   --batch-size 1 \
-  --accumulation-steps 4 \
+  --accumulation-steps 32 \
   --stm-queue-size 3 \
   --sample-rate 3 \
   --savedir ${SAVEDIR:-save/training_base_rtmvss}

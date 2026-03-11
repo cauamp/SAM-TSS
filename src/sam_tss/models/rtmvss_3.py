@@ -122,7 +122,7 @@ class rtmvss(nn.Module):
                 nn.Linear(self.hidden_dim, self.hidden_dim),
             )
 
-        self.class_query_size = 256
+        self.class_query_size = 512
         self.sparse_embed = nn.Linear(self._bb_feat_sizes[-1][0] * self._bb_feat_sizes[-1][1] + self.class_query_size, 256)
                 
         self.class_query = nn.Parameter(torch.empty(self.num_classes, self.class_query_size))
@@ -261,8 +261,8 @@ class rtmvss(nn.Module):
                     self.class_query
                         .unsqueeze(0)                     # [1, num_classes, 256]
                         .expand(bsz, -1, -1)              # [bsz, num_classes, 256]
-                        .reshape(bsz * self.num_classes, 256)
-                        .unsqueeze(1)                     # [bsz*num_classes, 1, 256]
+                        .reshape(bsz * self.num_classes, self.class_query_size)
+                        .unsqueeze(1)                     # [bsz*num_classes, 1, ?]
                         .contiguous()
                 )
                 
@@ -412,8 +412,8 @@ class rtmvss(nn.Module):
                     self.class_query
                         .unsqueeze(0)                     # [1, num_classes, 256]
                         .expand(bsz, -1, -1)              # [bsz, num_classes, 256]
-                        .reshape(bsz * self.num_classes, 256)
-                        .unsqueeze(1)                     # [bsz*num_classes, 1, 256]
+                        .reshape(bsz * self.num_classes, self.class_query_size)
+                        .unsqueeze(1)                     # [bsz*num_classes, 1, ?]
                         .contiguous()
                 )
                 

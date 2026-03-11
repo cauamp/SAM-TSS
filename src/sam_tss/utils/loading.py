@@ -4,10 +4,13 @@ import os
 from models.mvnet import MVNet
 from models.rtmvss_1 import rtmvss
 from models.rtmvss_2 import rtmvss as rtmvss2
+from models.rtmvss_3 import rtmvss as rtmvss3
+
 models = {
     "mvnet": MVNet,
     "rtmvss_1": rtmvss,
-    "rtmvss_2": rtmvss2
+    "rtmvss_2": rtmvss2,
+    "rtmvss_3": rtmvss3
 }
 
 

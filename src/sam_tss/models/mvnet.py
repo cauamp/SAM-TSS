@@ -104,7 +104,7 @@ class MVNet(nn.Module):
         self.memory_strategy = args.memory_strategy                 # sigmoid-do1
         self.stm_queue_size = args.stm_queue_size                   # 3
         self.sample_rate = args.sample_rate
-        self.backbone = args.backbone                               # deeplab
+        self.backbone = "deeplab50"                               # deeplab
 
         if args.backbone == "deeplab50":
             use_layer = 50

@@ -51,6 +51,8 @@ def epoch_routine(args, epoch, model, loader, optimizer,
 
     epoch_loss = []
     times = []
+    grad_norms = []
+    grad_stats = []
     if is_train:
         tag = "TRAINING"
         tag_short = "TRAIN"
@@ -117,6 +119,24 @@ def epoch_routine(args, epoch, model, loader, optimizer,
             
             # Only perform optimizer step after accumulating gradients
             if (step + 1) % args.accumulation_steps == 0 or (step + 1) == len(loader):
+                # Compute gradient statistics before clipping
+                total_norm = 0.0
+                grad_max = 0.0
+                grad_mean_sum = 0.0
+                num_params = 0
+                for p in model.parameters():
+                    if p.grad is not None:
+                        param_norm = p.grad.data.norm(2)
+                        total_norm += param_norm.item() ** 2
+                        grad_max = max(grad_max, p.grad.data.abs().max().item())
+                        grad_mean_sum += p.grad.data.abs().mean().item()
+                        num_params += 1
+                total_norm = total_norm ** 0.5
+                grad_mean = grad_mean_sum / num_params if num_params > 0 else 0.0
+                
+                grad_norms.append(total_norm)
+                grad_stats.append({'norm': total_norm, 'max': grad_max, 'mean': grad_mean})
+                
                 # Clip gradients to prevent explosion/NaN
                 torch.nn.utils.clip_grad_norm_(model.parameters(), max_norm=5.0) # remove ?            
                 optimizer.step()
@@ -182,6 +202,16 @@ def epoch_routine(args, epoch, model, loader, optimizer,
                              "Median step time per image {:.4f} ms | Total images: {:5d}" \
                     .format(tag_short, mean_loss, epoch, step, seq_len,
                             total_img_count, 1000 * statistics.median(times), gpu_multiplier * total_img_count)
+                
+                # Add gradient logging for training steps
+                if is_train and len(grad_stats) > 0:
+                    recent_grad_stats = grad_stats[-min(10, len(grad_stats)):]
+                    avg_grad_norm = sum(g['norm'] for g in recent_grad_stats) / len(recent_grad_stats)
+                    avg_grad_max = sum(g['max'] for g in recent_grad_stats) / len(recent_grad_stats)
+                    avg_grad_mean = sum(g['mean'] for g in recent_grad_stats) / len(recent_grad_stats)
+                    report_str += " | Grad norm: {:.4f} | Grad max: {:.4f} | Grad mean: {:.6f}".format(
+                        avg_grad_norm, avg_grad_max, avg_grad_mean)
+                
                 print(report_str)
 
     epoch_miou = 0

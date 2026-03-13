@@ -2,7 +2,7 @@
 import os
 import time
 import torch
-from src.sam_tss.utils.utils import setup_seed
+from utils.utils import setup_seed
 setup_seed(0)
 from argparse import ArgumentParser
 

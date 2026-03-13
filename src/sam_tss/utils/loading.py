@@ -9,7 +9,7 @@ from models.rtmvss_3a import rtmvss as rtmvss3a
 from models.rtmvss_3b import rtmvss as rtmvss3b
 from models.rtmvss_40 import rtmvss as rtmvss4
 from models.rtmvss_5 import rtmvss as rtmvss5
-from models.rtmvss_6a import build_rtmvss6_from_argsa
+from models.rtmvss_6a import build_rtmvss6_from_args as build_rtmvss6_from_argsa
 
 models = {
     "mvnet": MVNet,

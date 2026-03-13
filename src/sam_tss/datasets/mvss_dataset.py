@@ -140,7 +140,8 @@ class MVSeg(GenericDataset):
             exit(0)
 
         target_transform = target_transform_mvseg      # Convert it to long-type tensor
-        normalize_tensor = normalize_tensor_mvseg
+        # Apply ImageNet normalization only for SAM-based backbone to match SAM-DAQ preprocessing.
+        normalize_tensor = normalize_tensor_mvseg if args.backbone == "sam_based" else None
 
         super(MVSeg, self).__init__(
             args, filenames, filenames_gt, filenames_ir, classes_dict,

@@ -163,6 +163,11 @@ class GenericDataset(Dataset):
                 images[i] = ToTensor()(image)
                 thermals[i] = ToTensor()(thermals[i])
 
+            # Optional normalization (e.g., SAM-based backbones use ImageNet stats).
+            if self.normalize_tensor is not None:
+                images[i] = self.normalize_tensor(images[i])
+                thermals[i] = self.normalize_tensor(thermals[i])
+
 
         # [img3, img2, img1, ori_img]
         # [None, None, None, ori_GT]

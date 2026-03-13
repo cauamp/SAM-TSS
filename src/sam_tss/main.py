@@ -2,7 +2,8 @@
 import os
 import time
 import torch
-
+from src.sam_tss.utils.utils import setup_seed
+setup_seed(0)
 from argparse import ArgumentParser
 
 import torch.multiprocessing as mp
@@ -179,7 +180,7 @@ if __name__ == '__main__':
     parser.add_argument('--stm-queue-size', type=int, default=3)
     parser.add_argument('--sample-rate', type=int, default=1)
     
-    parser.add_argument('--class-query-size', type=int, default=256, help='Dimension of the class query used in sparse embedding')
+    parser.add_argument('--class-query-size', type=int, default=1024, help='Dimension of the class query used in sparse embedding')
     parser.add_argument('--resize-mode', type=str, default="og", choices=['og', 'sam'], help='Resize mode for input images (original or SAM-specific)')
 
     # Augment related options
@@ -203,6 +204,7 @@ if __name__ == '__main__':
         print("Cannot be at the same time in training and evaluation mode!")
         exit(1)
 
+    
     # Options simplifications
     if args.eval_mode:
         args.num_epochs = 1

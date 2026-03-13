@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --time=48:00:00          # Time limit (HH:MM:SS) - 48 hours for full training
+#SBATCH --time=58:00:00          # Time limit (HH:MM:SS) - 48 hours for full training
 #SBATCH --output=run_%j/result.out   # Output file name 
 #SBATCH --error=run_%j/log.err
 #SBATCH --job-name=mvss-train # Name of the job
@@ -19,7 +19,7 @@ module --force purge # Clear all loaded modules
 # Prevent PyTorch from trying to load Level Zero (Intel GPU backend)
 export TORCH_USE_RTLD_GLOBAL=1
 export PYTORCH_IGNORE_LEVEL_ZERO=1
-export CLASS_QUERY_SIZE=256
+export CLASS_QUERY_SIZE=1024
 export RESIZE_MODE="og"
 
 # Load required modules

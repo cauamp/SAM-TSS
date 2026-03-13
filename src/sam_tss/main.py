@@ -100,7 +100,7 @@ if __name__ == '__main__':
     parser.add_argument('--model', default="rtmvss_1.py")
     #parser.add_argument('--weights', default="trained_models/erfnet_pretrained.pth")
     parser.add_argument('--weights', default=False)
-    parser.add_argument('--backbone', type=str, default="deeplab50")
+    parser.add_argument('--backbone', type=str, default="sam_based")
     
     # RTMVSS / SAM2 specific options
     parser.add_argument('--sam2-config', type=str, default="sam2.1_hiera_l.yaml", 

@@ -1,1 +1,0 @@
-Best epoch is 147, with mean IoU = 0.5483

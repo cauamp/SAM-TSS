@@ -13,7 +13,7 @@ uv run src/sam_tss/main.py \
   --model ${MODEL:-.py} \
   --sam2-config sam2.1_hiera_l.yaml \
   --sam2-ckpt ./src/sam_tss/models/sam2/sam2.1_hiera_large.pt \
-  --load ./src/sam_tss/weights/dvisal.pt \
+  --load ./run_57653716/model_best.pth \
   --num-classes 26 \
   --num-frame-queries 30 \
   --num-video-queries 8 \
@@ -21,11 +21,11 @@ uv run src/sam_tss/main.py \
   --training \
   --baseline-mode \
   --gpus $GPUS   \
-  --lr-start 2e-4 \
+  --lr-start 1e-4 \
   --lr-strategy plateau_08 \
   --num-epochs 150 \
   --batch-size 2 \
-  --accumulation-steps 32 \
+  --accumulation-steps 16 \
   --stm-queue-size 3 \
   --sample-rate 3 \
   --class-query-size ${CLASS_QUERY_SIZE:-256} \

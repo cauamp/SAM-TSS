@@ -10,7 +10,7 @@
 #SBATCH --cpus-per-task=16       # Request 16 CPU cores
 #SBATCH --gpus-per-node=4      
 
-export MODEL="rtmvss_3.py"
+export MODEL="rtmvss_5.py"
 export GPUS=4
 export SAVEDIR="run_$SLURM_JOB_ID"
 

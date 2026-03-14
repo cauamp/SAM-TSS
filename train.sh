@@ -1,6 +1,5 @@
 # Model Training
 
-# Stage1: Training Warm-up for RTMVSS model
 # Enable NCCL debugging and extend timeout for slower operations
 export NCCL_DEBUG=INFO
 export NCCL_TIMEOUT=1800
@@ -9,6 +8,7 @@ export TORCH_DISTRIBUTED_DEBUG=DETAIL
 # Uncomment below for production runs (disables detailed debugging)
 # CUDA_LAUNCH_BLOCKING=1
 
+# Stage1
 uv run src/sam_tss/main.py \
   --model ${MODEL:-.py} \
   --sam2-config sam2.1_hiera_l.yaml \
@@ -32,12 +32,12 @@ uv run src/sam_tss/main.py \
   --resize-mode ${RESIZE_MODE:-og} \
   --savedir ${SAVEDIR:-save/training_base_rtmvss}
 
-# Stage2: Training with memory (uncomment after Stage1 completes)
+# Stage2
 # CUDA_VISIBLE_DEVICES=0,1 python src/sam_tss/main.py \
-#   --model rtmvss_1.py \
+#   --model ${MODEL:-.py} \
 #   --sam2-config sam2.1_hiera_l.yaml \
-#   --sam2-ckpt /path/to/sam2_hiera_large.pt \
-#   --load save/training_base_rtmvss/model_base.pth \
+#   --sam2-ckpt ./src/sam_tss/models/sam2/sam2.1_hiera_large.pt \
+#   --load run_57653716/model_best.pth \
 #   --num-classes 26 \
 #   --num-frame-queries 30 \
 #   --num-video-queries 8 \
@@ -48,7 +48,7 @@ uv run src/sam_tss/main.py \
 #   --lr-strategy plateau_08 \
 #   --num-epochs 200 \
 #   --batch-size 2 \
-#   --accumulation-steps 2 \
+#   --accumulation-steps 16 \
 #   --stm-queue-size 3 \
 #   --sample-rate 3 \
 #   --savedir ${SAVEDIR:-save/training_msa_rtmvss}

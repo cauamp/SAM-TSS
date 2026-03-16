@@ -132,6 +132,8 @@ class MVSeg(GenericDataset):
                 work_res = (320, 480) #(480, 640)
             elif args.resize_mode == "sam":
                 work_res = (1024, 1024) 
+            elif args.resize_mode == "sam1":
+                work_res = (683, 1024) 
             else:
                 work_res = (320, 480) #(480, 640)
         else:

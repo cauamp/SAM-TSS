@@ -181,7 +181,7 @@ if __name__ == '__main__':
     parser.add_argument('--sample-rate', type=int, default=1)
     
     parser.add_argument('--class-query-size', type=int, default=1024, help='Dimension of the class query used in sparse embedding')
-    parser.add_argument('--resize-mode', type=str, default="og", choices=['og', 'sam'], help='Resize mode for input images (original or SAM-specific)')
+    parser.add_argument('--resize-mode', type=str, default="og", choices=['og', 'sam', 'sam1'], help='Resize mode for input images (original or SAM-specific)')
 
     # Augment related options
     parser.add_argument('--random-crop', action='store_true', default=True)

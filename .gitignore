@@ -21,3 +21,4 @@ run_*/
 *.err
 
 .ignore/
+tmp/

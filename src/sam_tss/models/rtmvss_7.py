@@ -28,16 +28,16 @@ class rtmvss(nn.Module):
             nn.Conv2d(1, 3, (3, 3), padding=(1, 1), bias=True), nn.ReLU(), nn.Conv2d(3, 3, 1)
         )
 
-        self._bb_feat_sizes = [
-            (256, 256),
-            (128, 128),
-            (64, 64),
-        ]
         # self._bb_feat_sizes = [
-        #     (120, 120),
-        #     (60, 60),
-        #     (30, 30),
+        #     (256, 256),
+        #     (128, 128),
+        #     (64, 64),
         # ]
+        self._bb_feat_sizes = [
+            (120, 120),
+            (60, 60),
+            (30, 30),
+        ]
         if "sam2.1_hiera_l" in args.sam2_config:
             channel_list = [144, 288, 576, 1152]
         elif "sam2.1_hiera_b+" in args.sam2_config:

@@ -5,6 +5,7 @@
 # LICENSE file in the root directory of this source tree.
 
 import logging
+import math
 from functools import partial
 from typing import List, Tuple, Union
 
@@ -274,9 +275,10 @@ class Hiera(nn.Module):
         h, w = hw
         window_embed = self.pos_embed_window
         pos_embed = F.interpolate(self.pos_embed, size=(h, w), mode="bicubic")
-        pos_embed = pos_embed + window_embed.tile(
-            [x // y for x, y in zip(pos_embed.shape, window_embed.shape)]
-        )
+        repeat_h = math.ceil(h / window_embed.shape[2])
+        repeat_w = math.ceil(w / window_embed.shape[3])
+        tiled_window_embed = window_embed.repeat(1, 1, repeat_h, repeat_w)[:, :, :h, :w]
+        pos_embed = pos_embed + tiled_window_embed
         pos_embed = pos_embed.permute(0, 2, 3, 1)
         return pos_embed
 

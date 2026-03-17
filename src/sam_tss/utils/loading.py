@@ -15,7 +15,7 @@ from models.rtmvss_3g import rtmvss as rtmvss3g
 from models.rtmvss_40 import rtmvss as rtmvss4
 from models.rtmvss_5 import rtmvss as rtmvss5
 from models.rtmvss_6a import build_rtmvss6_from_args as build_rtmvss6_from_argsa
-
+from models.rtmvss_7 import rtmvss as rtmvss7
 models = {
     "mvnet": MVNet,
     "rtmvss_1": rtmvss,
@@ -31,6 +31,7 @@ models = {
     "rtmvss_40": rtmvss4,
     "rtmvss_5": rtmvss5,
     "rtmvss_6a": build_rtmvss6_from_argsa,
+    "rtmvss_7": rtmvss7,
 }
 
 

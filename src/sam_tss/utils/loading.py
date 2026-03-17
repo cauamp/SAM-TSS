@@ -9,6 +9,7 @@ from models.rtmvss_3a import rtmvss as rtmvss3a
 from models.rtmvss_3b import rtmvss as rtmvss3b
 from models.rtmvss_3c import rtmvss as rtmvss3c
 from models.rtmvss_3d import rtmvss as rtmvss3d
+from models.rtmvss_3e import rtmvss as rtmvss3e
 from models.rtmvss_40 import rtmvss as rtmvss4
 from models.rtmvss_5 import rtmvss as rtmvss5
 from models.rtmvss_6a import build_rtmvss6_from_args as build_rtmvss6_from_argsa

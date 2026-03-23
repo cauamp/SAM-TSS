@@ -98,7 +98,9 @@ class rtmvss(nn.Module):
         self.frame_queries = nn.Embedding(self.num_frame_queries, self.hidden_dim)
 
         self.frame_queires_embed = query_embedding(self.hidden_dim)
-        if args.enable_memory:
+        # Enable memory if explicitly set or if baseline_mode is enabled
+        self.enable_memory = (hasattr(args, 'enable_memory') and args.enable_memory) or (hasattr(args, 'baseline_mode') and args.baseline_mode)
+        if self.enable_memory:
             self.num_video_queries = args.num_video_queries
             self.video_queries = nn.Embedding(self.num_video_queries, self.hidden_dim)
 
@@ -197,7 +199,7 @@ class rtmvss(nn.Module):
             total_feas: None (not using metric learning)
         """
         # Determine if using memory and if training
-        is_mem = True  # Always use memory for better performance
+        is_mem = self.enable_memory  # Use memory if it was enabled during initialization
         is_training = self.is_training
         
         # Rename for internal compatibility

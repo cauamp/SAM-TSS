@@ -10,9 +10,17 @@
 #SBATCH --cpus-per-task=16       # Request 16 CPU cores
 #SBATCH --gpus-per-node=4      
 
-export MODEL="rtmvss_5.py"
+export MODEL="rtmvss_7a.py"
 export GPUS=4
 export SAVEDIR="run_$SLURM_JOB_ID"
+
+# Training parameters
+export BATCH_SIZE=2 
+export ACCUMULATION_STEPS=8
+export BASELINE_MODE=1
+export LR_START=2e-4
+export LR_STRATEGY="plateau_08"
+export LOAD="./src/sam_tss/weights/dvisal.pt"
 
 module --force purge # Clear all loaded modules
 
@@ -33,6 +41,18 @@ module load opencv/4.13.0
 
 # Create output directory for this job
 mkdir -p $SAVEDIR
+echo  "">$SAVEDIR/config.txt
+
+echo "MODEL=${MODEL}" >> $SAVEDIR/config.txt
+echo "GPUS=${GPUS}" >> $SAVEDIR/config.txt
+echo "BATCH_SIZE=${BATCH_SIZE}" >> $SAVEDIR/config.txt
+echo "ACCUMULATION_STEPS=${ACCUMULATION_STEPS}" >> $SAVEDIR/config.txt
+echo "BASELINE_MODE=${BASELINE_MODE}" >> $SAVEDIR/config.txt
+echo "LR_START=${LR_START}" >> $SAVEDIR/config.txt
+echo "LR_STRATEGY=${LR_STRATEGY}" >> $SAVEDIR/config.txt
+echo "LOAD=${LOAD}" >> $SAVEDIR/config.txt
+echo "CLASS_QUERY_SIZE=${CLASS_QUERY_SIZE}" >> $SAVEDIR/config.txt
+echo "RESIZE_MODE=${RESIZE_MODE}" >> $SAVEDIR/config.txt
 
 # Set CUDA_VISIBLE_DEVICES based on allocated GPUs
 #export CUDA_VISIBLE_DEVICES=$SLURM_LOCALID

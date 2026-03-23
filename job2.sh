@@ -18,7 +18,7 @@ export SAVEDIR="exp7/run_$SLURM_JOB_ID"
 export BATCH_SIZE=4 
 export ACCUMULATION_STEPS=8
 export BASELINE_MODE=0
-export LR_START=2e-4
+export LR_START=3e-4
 export LR_STRATEGY="plateau_08"
 export LOAD="./src/sam_tss/weights/dvisal.pt"
 

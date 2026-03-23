@@ -15,8 +15,8 @@ uv run src/sam_tss/main.py \
   --sam2-ckpt ./src/sam_tss/models/sam2/sam2.1_hiera_large.pt \
   $([ -n "${LOAD}" ] && echo "--load ${LOAD}") \
   --num-classes 26 \
-  --num-frame-queries 30 \
-  --num-video-queries 8 \
+  --num-frame-queries ${NUM_FRAME_QUERIES:-30} \
+  --num-video-queries ${NUM_VIDEO_QUERIES:-8} \
   --enable-memory \
   --training \
   $([ "${BASELINE_MODE:-0}" = "1" ] && echo "--baseline-mode") \

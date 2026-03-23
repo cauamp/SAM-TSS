@@ -10,14 +10,14 @@
 #SBATCH --cpus-per-task=16       # Request 16 CPU cores
 #SBATCH --gpus-per-node=4      
 
-export MODEL="rtmvss_7.py"
+export MODEL="rtmvss_3.py"
 export GPUS=4
-export SAVEDIR="exp7/run_$SLURM_JOB_ID"
+export SAVEDIR="exp3/run_$SLURM_JOB_ID"
 
 # Training parameters
 export BATCH_SIZE=4 
-export ACCUMULATION_STEPS=8
-export BASELINE_MODE=0
+export ACCUMULATION_STEPS=2
+export BASELINE_MODE=1
 export LR_START=2e-4
 export LR_STRATEGY="plateau_08"
 export LOAD="./src/sam_tss/weights/dvisal.pt"

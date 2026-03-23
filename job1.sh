@@ -20,7 +20,7 @@ export ACCUMULATION_STEPS=8
 export BASELINE_MODE=0
 export LR_START=2e-4
 export LR_STRATEGY="plateau_08"
-export LOAD="./src/sam_tss/weights/dvisal.pt"
+# export LOAD="./src/sam_tss/weights/dvisal.pt"
 
 module --force purge # Clear all loaded modules
 

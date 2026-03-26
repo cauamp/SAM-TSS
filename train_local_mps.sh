@@ -26,7 +26,7 @@
 
 #Stage2:
 uv run src/sam_tss/main.py \
-  --model rtmvss_3.py \
+  --model rtmvss_7a.py \
   --sam2-config sam2.1_hiera_l.yaml \
   --sam2-ckpt ./src/sam_tss/models/sam2/sam2.1_hiera_large.pt \
   --load runs/run_57653716/model_best.pth \
@@ -42,8 +42,7 @@ uv run src/sam_tss/main.py \
   --accumulation-steps 16 \
   --stm-queue-size 3 \
   --sample-rate 3 \
-  --savedir ${SAVEDIR:-save/training_msa_rtmvss} \
-  --gpus 1
-
-
+  --savedir .ignore/training_base_rtmvss_mps \
+  --gpus 1 \
+  --resize-mode og
 

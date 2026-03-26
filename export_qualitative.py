@@ -1,5 +1,4 @@
 import ast
-import os
 import sys
 from argparse import ArgumentParser, Namespace
 from pathlib import Path
@@ -168,6 +167,7 @@ def save_panel(
     thermal: np.ndarray,
     gt_map: np.ndarray,
     pred_map: np.ndarray,
+    aux_pred_map: Optional[np.ndarray] = None,
 ) -> None:
     color_map = cmap()
     gt_rgb = class_to_RGB(gt_map, N=len(color_map), cmap=color_map)
@@ -183,6 +183,10 @@ def save_panel(
         ],
         axis=1,
     )
+    if aux_pred_map is not None:
+        print("Adding auxiliary prediction to panel")
+        aux_pred_rgb = class_to_RGB(aux_pred_map, N=len(color_map), cmap=color_map)
+        panel = np.concatenate([panel, aux_pred_rgb, overlay(rgb, aux_pred_rgb)], axis=1)
 
     src = Path(file_path)
     frame = src.stem
@@ -196,16 +200,17 @@ def save_panel(
 
     Image.fromarray(panel).save(panel_path)
     Image.fromarray(pred_rgb).save(pred_path)
-    
-    #rename out_dir/overlay and out_dir/pred_rgb to out_dir/{split}_overlay and out_dir/{split}_pred_rgb
+
+    # rename out_dir/overlay and out_dir/pred_rgb to out_dir/{split}_overlay and out_dir/{split}_pred_rgb
     new_overlay_path = split_dir / f"{index:03d}_{video}_{frame}_lowres_overlay.png"
     new_pred_path = split_dir / f"{index:03d}_{video}_{frame}_lowres_pred.png"
     new_img_path = split_dir / f"{index:03d}_{video}_{frame}_lowres_img.png"
 
     # use mv to rename the files
-    os.rename("./tmp/overlay.png", new_overlay_path)
-    os.rename("./tmp/pred_rgb.png", new_pred_path)
-    os.rename("./tmp/lowres_img.png", new_img_path)
+    # os.rename("./tmp/overlay.png", new_overlay_path)
+    # os.rename("./tmp/pred_rgb.png", new_pred_path)
+    # os.rename("./tmp/lowres_img.png", new_img_path)
+
 
 def run_split(
     args: Namespace,
@@ -248,24 +253,20 @@ def run_split(
             model.module.reset_hidden_state()
             outputs = model(images, thermals, step=step, epoch=0)
             probabilities = outputs[0] if isinstance(outputs, (list, tuple)) else outputs
+            aux_probs = outputs[-2] if isinstance(outputs, (list, tuple)) and len(outputs) > 2 else None
+            aux_pred_labels = aux_probs.max(dim=2, keepdim=True)[1] if aux_probs is not None else None
             pred_labels = probabilities.max(dim=2, keepdim=True)[1]
 
             t = images.size(1) - 1 if args.always_decode else 0
             pred_map = pred_labels[0, t, 0].cpu().numpy().astype(np.uint8)
+            aux_pred_map = (
+                aux_pred_labels[0, t, 0].cpu().numpy().astype(np.uint8) if aux_pred_labels is not None else None
+            )
             gt_map = labels[0, 0, 0].cpu().numpy().astype(np.uint8)
             rgb = denormalize_to_uint8(images[0, -1], args.backbone)
             thermal = denormalize_to_uint8(thermals[0, -1], args.backbone)
 
-            save_panel(
-                output_dir,
-                split,
-                exported,
-                file_path[0],
-                rgb,
-                thermal,
-                gt_map,
-                pred_map,
-            )
+            save_panel(output_dir, split, exported, file_path[0], rgb, thermal, gt_map, pred_map, aux_pred_map)
             exported += 1
 
     return exported

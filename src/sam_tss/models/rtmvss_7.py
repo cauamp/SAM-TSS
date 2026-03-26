@@ -19,9 +19,9 @@ class rtmvss(nn.Module):
 
         self.pix_feat = None
         self.device = device
-        self.is_training = args.training if hasattr(args, 'training') else True
-        self.win_size = args.win_size if hasattr(args, 'win_size') else 4
-        self.always_decode = args.always_decode if hasattr(args, 'always_decode') else False
+        self.is_training = args.training if hasattr(args, "training") else True
+        self.win_size = args.win_size if hasattr(args, "win_size") else 4
+        self.always_decode = args.always_decode if hasattr(args, "always_decode") else False
 
         # adapter to project the depth image to proper rgb space
         self.encoder_adapter0 = nn.Sequential(
@@ -82,7 +82,7 @@ class rtmvss(nn.Module):
             nn.Conv2d(128, 32, (3, 3), padding=(1, 1), bias=True),
             nn.ReLU(),
             nn.Conv2d(32, self.num_classes, (1, 1), bias=True),
-            )
+        )
 
         self.sam2 = build_sam2_video_predictor(
             config_file=args.sam2_config, ckpt_path=args.sam2_ckpt, device=device, mode="train"
@@ -99,7 +99,9 @@ class rtmvss(nn.Module):
 
         self.frame_queires_embed = query_embedding(self.hidden_dim)
         # Enable memory if explicitly set or if baseline_mode is enabled
-        self.enable_memory = (hasattr(args, 'enable_memory') and args.enable_memory) or (hasattr(args, 'baseline_mode') and args.baseline_mode)
+        self.enable_memory = (hasattr(args, "enable_memory") and args.enable_memory) or (
+            hasattr(args, "baseline_mode") and args.baseline_mode
+        )
         if self.enable_memory:
             self.num_video_queries = args.num_video_queries
             self.video_queries = nn.Embedding(self.num_video_queries, self.hidden_dim)
@@ -127,13 +129,15 @@ class rtmvss(nn.Module):
                 nn.Linear(self.hidden_dim, self.hidden_dim),
             )
 
-        self.class_query_size = args.class_query_size if hasattr(args, 'class_query_size') else 256
-        self.sparse_embed = nn.Linear(self._bb_feat_sizes[-1][0] * self._bb_feat_sizes[-1][1] + self.class_query_size, 256)
-                
+        self.class_query_size = args.class_query_size if hasattr(args, "class_query_size") else 256
+        self.sparse_embed = nn.Linear(
+            self._bb_feat_sizes[-1][0] * self._bb_feat_sizes[-1][1] + self.class_query_size, 256
+        )
+
         self.class_query = nn.Parameter(torch.empty(self.num_classes, self.class_query_size))
 
         nn.init.trunc_normal_(self.class_query, std=0.02)
-        
+
         # Memory state for video queries (compatibility with MVNet structure)
         self.video_query_initialized = False
 
@@ -180,8 +184,8 @@ class rtmvss(nn.Module):
     def reset_hidden_state(self):
         """Reset memory state between video sequences (MVNet compatibility)"""
         self.video_query_initialized = False
-        if hasattr(self, 'video_query_weight'):
-            delattr(self, 'video_query_weight')
+        if hasattr(self, "video_query_weight"):
+            delattr(self, "video_query_weight")
 
     def forward(self, input, thermal, step=0, epoch=0):
         """
@@ -194,20 +198,20 @@ class rtmvss(nn.Module):
         Returns:
             probabilities: [batch_size, temporal_len, num_classes, h, w] - main predictions (logits)
             probabilities_aux: None (not used)
-            probabilities_thermal: None (not used) 
+            probabilities_thermal: None (not used)
             probabilities_fusion: [batch_size, temporal_len, num_classes, h, w] - auxiliary predictions (logits)
             total_feas: None (not using metric learning)
         """
         # Determine if using memory and if training
         is_mem = self.enable_memory  # Use memory if it was enabled during initialization
         is_training = self.is_training
-        
+
         # Rename for internal compatibility
         imgs = input
         depths = thermal
-        
+
         return self._forward_internal(imgs, depths, is_mem=is_mem, is_training=is_training, current_ti=step)
-    
+
     def _forward_internal(self, imgs, depths, is_mem=True, is_training=True, current_ti=0):
         frames_pred = []
 
@@ -215,12 +219,12 @@ class rtmvss(nn.Module):
         #           )
         bsz, frames, _, h, w = imgs.shape
         imgs = imgs.view(-1, 3, h, w).contiguous()
-        
+
         # Handle both 1-channel and 3-channel thermal input
         if depths.size(2) == 3:
             depths = depths[:, :, 0:1, :, :]  # Take only first channel if 3-channel
         depths = depths.view(-1, 1, h, w).contiguous()
-        
+
         imgs = self.square_pad(imgs)
         depths = self.square_pad(depths)
         # print(f"After padding - imgs: {imgs.shape}, depths: {depths.shape}")
@@ -230,21 +234,23 @@ class rtmvss(nn.Module):
         feats_img, feats_d = self.sam2_image_encoder(imgs, d_proj)
 
         # print(f"Encoder output feature shapes: {[feat.shape for feat in feats_img]}")  # Debug print
-        #resize imgs and depths to 512x512 
+        # resize imgs and depths to 512x512
         # imgs = F.interpolate(imgs, size=(512, 512), mode='bilinear', align_corners=False)
         # depths = F.interpolate(depths, size=(512, 512), mode='bilinear', align_corners=False)
-        
+
         # Use actual feature sizes computed from the backbone
-        feat_sizes = self.actual_feat_sizes if hasattr(self, 'actual_feat_sizes') else self._bb_feat_sizes
-        
+        feat_sizes = self.actual_feat_sizes if hasattr(self, "actual_feat_sizes") else self._bb_feat_sizes
+
         # auxiliary supervision
         if is_training:
-            intermediate_mask_stage2 = self.mixer2(feats_img[2])  
-    
+            intermediate_mask_stage2 = self.mixer2(feats_img[2])
+
             intermediate_mask_stage2 = intermediate_mask_stage2.squeeze(1)  # [bsz*frames, H, W]
             # Infer actual spatial dimensions from tensor shape
             _, _, spatial_h, spatial_w = intermediate_mask_stage2.shape
-            intermediate_mask_stage2 = intermediate_mask_stage2.reshape(bsz, frames,self.num_classes, spatial_h, spatial_w).contiguous()
+            intermediate_mask_stage2 = intermediate_mask_stage2.reshape(
+                bsz, frames, self.num_classes, spatial_h, spatial_w
+            ).contiguous()
 
             intermediate_mask = [intermediate_mask_stage2]
 
@@ -293,50 +299,72 @@ class rtmvss(nn.Module):
                 video_embed_with_current_feat = torch.einsum(
                     "bqc,bchw->bqhw", video_query_embeddings, feats_img[-1][:, ti]
                 ).contiguous()
-        
-        
+
                 # dense_embeddings = self.dense_embed(video_embed_with_current_feat)
-                
+
                 if is_mem:
                     embed = video_embed_with_current_feat.view(bsz, self.num_video_queries, -1).contiguous()
                 else:
                     embed = video_embed_with_current_feat.view(bsz, self.num_frame_queries, -1).contiguous()
-                
-                sparse_embeddings_expanded = embed.unsqueeze(1).expand(-1, self.num_classes, -1, -1).reshape(bsz * self.num_classes, self.num_video_queries if is_mem else self.num_frame_queries, -1).contiguous()
+
+                sparse_embeddings_expanded = (
+                    embed.unsqueeze(1)
+                    .expand(-1, self.num_classes, -1, -1)
+                    .reshape(bsz * self.num_classes, self.num_video_queries if is_mem else self.num_frame_queries, -1)
+                    .contiguous()
+                )
                 Q = sparse_embeddings_expanded.size(1)
 
                 class_queries = (
-                    self.class_query
-                        .unsqueeze(0)                     # [1, num_classes, 256]
-                        .expand(bsz, -1, -1)              # [bsz, num_classes, 256]
-                        .reshape(bsz * self.num_classes, self.class_query_size)
-                        .unsqueeze(1)                     # [bsz*num_classes, 1, ?]
-                        .contiguous()
+                    self.class_query.unsqueeze(0)  # [1, num_classes, 256]
+                    .expand(bsz, -1, -1)  # [bsz, num_classes, 256]
+                    .reshape(bsz * self.num_classes, self.class_query_size)
+                    .unsqueeze(1)  # [bsz*num_classes, 1, ?]
+                    .contiguous()
                 )
-                
-                class_queries_expanded = class_queries.expand(-1, Q, -1)  
-                
+
+                class_queries_expanded = class_queries.expand(-1, Q, -1)
+
                 sparse_embeddings = self.sparse_embed(
-                        torch.cat([sparse_embeddings_expanded, class_queries_expanded], dim=2) 
-                    )# [B*C, Q, 256]
-                
+                    torch.cat([sparse_embeddings_expanded, class_queries_expanded], dim=2)
+                )  # [B*C, Q, 256]
+
                 # Expand other inputs for all classes
                 # feats_img[-1][:, ti]: [bsz, C, H, W] -> [bsz*num_classes, C, H, W]
-                image_embeddings_expanded = feats_img[-1][:, ti].unsqueeze(1).expand(-1, self.num_classes, -1, -1, -1).reshape(bsz * self.num_classes, *feats_img[-1][:, ti].shape[1:]).contiguous()
+                image_embeddings_expanded = (
+                    feats_img[-1][:, ti]
+                    .unsqueeze(1)
+                    .expand(-1, self.num_classes, -1, -1, -1)
+                    .reshape(bsz * self.num_classes, *feats_img[-1][:, ti].shape[1:])
+                    .contiguous()
+                )
 
                 # dense_embeddings: [bsz, 256, 28, 28] -> [bsz*num_classes, 256, 28, 28]
-                dense_embeddings_expanded = dense_embeddings.unsqueeze(1).expand(-1, self.num_classes, -1, -1, -1).reshape(bsz * self.num_classes, *dense_embeddings.shape[1:]).contiguous()
+                dense_embeddings_expanded = (
+                    dense_embeddings.unsqueeze(1)
+                    .expand(-1, self.num_classes, -1, -1, -1)
+                    .reshape(bsz * self.num_classes, *dense_embeddings.shape[1:])
+                    .contiguous()
+                )
 
                 # high_res_features: list of [bsz, C, H, W] -> list of [bsz*num_classes, C, H, W]
                 high_res_features_expanded = [
-                    feat.unsqueeze(1).expand(-1, self.num_classes, -1, -1, -1).reshape(bsz * self.num_classes, *feat.shape[1:]).contiguous()
+                    feat.unsqueeze(1)
+                    .expand(-1, self.num_classes, -1, -1, -1)
+                    .reshape(bsz * self.num_classes, *feat.shape[1:])
+                    .contiguous()
                     for feat in high_res_features
                 ]
 
-                # Run mask decoder once for all classes                    
+                # Run mask decoder once for all classes
                 low_res_multimasks, _, _, _ = self.sam2.sam_mask_decoder(
                     image_embeddings=image_embeddings_expanded,
-                    image_pe=F.interpolate(self.sam2.sam_prompt_encoder.get_dense_pe(), size=(feat_h, feat_w), mode='bilinear', align_corners=False) ,
+                    image_pe=F.interpolate(
+                        self.sam2.sam_prompt_encoder.get_dense_pe(),
+                        size=(feat_h, feat_w),
+                        mode="bilinear",
+                        align_corners=False,
+                    ),
                     sparse_prompt_embeddings=sparse_embeddings,
                     dense_prompt_embeddings=dense_embeddings_expanded,
                     multimask_output=False,
@@ -344,9 +372,8 @@ class rtmvss(nn.Module):
                     high_res_features=high_res_features_expanded,
                 )
 
+                low_res_multimasks = low_res_multimasks.float()
 
-                low_res_multimasks = low_res_multimasks.float()            
-                
                 sam_high_mask = F.interpolate(
                     low_res_multimasks,
                     size=(h, w),
@@ -360,13 +387,12 @@ class rtmvss(nn.Module):
                 sam_high_mask = sam_high_mask.squeeze(1)
                 # Reshape back: [bsz*num_classes, h, w] -> [bsz, num_classes, h, w]
                 sam_high_masks_logits = sam_high_mask.view(bsz, self.num_classes, h, w).contiguous()
-        
 
                 if is_mem:
                     # update video queries based on aggregated foreground mask (excluding background)
                     # Aggregate all foreground classes (classes 1+) using max pooling
                     masks_probs = torch.sigmoid(sam_high_masks_logits)  # [bsz, num_classes, h, w]
-            
+
                     # Aggregate foreground only (skip class 0 which is background)
                     foreground_mask = masks_probs[:, 1:, :, :].max(dim=1, keepdim=True)[0]  # [bsz, 1, h, w]
 
@@ -380,8 +406,7 @@ class rtmvss(nn.Module):
 
                     # Use non-expanded features for memory update
                     self.update_video_queries(feats_img[-1][:, ti], foreground_mask)
-                    
-        
+
                 frames_pred.append(sam_high_masks_logits)
 
             # Convert to MVNet-compatible output format
@@ -392,22 +417,26 @@ class rtmvss(nn.Module):
             else:
                 # Only last frame: [bsz, 1, num_classes, h, w]
                 main_pred_logits = frames_pred[-1].unsqueeze(1)  # [bsz, 1, num_classes, h, w]
-            
+
             # Auxiliary predictions from intermediate supervision
             # intermediate_mask is a list with [intermediate_mask_stage2] - these are probabilities from mixer2
             aux_fusion = intermediate_mask[0]  # [bsz, frames, h2, w2]
-                        
+
             if self.always_decode:
                 aux_fusion_logits = F.interpolate(
                     aux_fusion.view(bsz * frames, self.num_classes, *aux_fusion.shape[3:]),
-                    size=(h, w), mode='bilinear', align_corners=False
+                    size=(h, w),
+                    mode="bilinear",
+                    align_corners=False,
                 ).view(bsz, frames, self.num_classes, h, w)
             else:
                 aux_fusion_logits = F.interpolate(
                     aux_fusion[:, -1].reshape(bsz, self.num_classes, *aux_fusion.shape[3:]),
-                    size=(h, w), mode='bilinear', align_corners=False
-                ).unsqueeze(1)  # [bsz, 1, num_classes, h, w]          
-            
+                    size=(h, w),
+                    mode="bilinear",
+                    align_corners=False,
+                ).unsqueeze(1)  # [bsz, 1, num_classes, h, w]
+
             # Return 5-tuple: (main, aux_rgb, aux_thermal, aux_fusion, features)
             return main_pred_logits, None, None, aux_fusion_logits, None
         else:
@@ -447,55 +476,77 @@ class rtmvss(nn.Module):
                 "bqc,bchw->bqhw", video_query_embeddings, feats_img[-1][:, 0]
             ).contiguous()
             # dense_embeddings = self.dense_embed(video_embed_with_current_feat)
-            
-                            
+
             if is_mem:
-                    embed = video_embed_with_current_feat.view(bsz, self.num_video_queries, -1).contiguous()
+                embed = video_embed_with_current_feat.view(bsz, self.num_video_queries, -1).contiguous()
             else:
-                    embed = video_embed_with_current_feat.view(bsz, self.num_frame_queries, -1).contiguous()
-                
-            sparse_embeddings_expanded = embed.unsqueeze(1).expand(-1, self.num_classes, -1, -1).reshape(bsz * self.num_classes, self.num_video_queries if is_mem else self.num_frame_queries, -1).contiguous()
+                embed = video_embed_with_current_feat.view(bsz, self.num_frame_queries, -1).contiguous()
+
+            sparse_embeddings_expanded = (
+                embed.unsqueeze(1)
+                .expand(-1, self.num_classes, -1, -1)
+                .reshape(bsz * self.num_classes, self.num_video_queries if is_mem else self.num_frame_queries, -1)
+                .contiguous()
+            )
             Q = sparse_embeddings_expanded.size(1)
 
             class_queries = (
-                    self.class_query
-                        .unsqueeze(0)                     # [1, num_classes, 256]
-                        .expand(bsz, -1, -1)              # [bsz, num_classes, 256]
-                        .reshape(bsz * self.num_classes, self.class_query_size)
-                        .unsqueeze(1)                     # [bsz*num_classes, 1, ?]
-                        .contiguous()
-                )
-                
-            class_queries_expanded = class_queries.expand(-1, Q, -1)  
-                
+                self.class_query.unsqueeze(0)  # [1, num_classes, 256]
+                .expand(bsz, -1, -1)  # [bsz, num_classes, 256]
+                .reshape(bsz * self.num_classes, self.class_query_size)
+                .unsqueeze(1)  # [bsz*num_classes, 1, ?]
+                .contiguous()
+            )
+
+            class_queries_expanded = class_queries.expand(-1, Q, -1)
+
             sparse_embeddings = self.sparse_embed(
-                    torch.cat([sparse_embeddings_expanded, class_queries_expanded], dim=2) 
-                    )# [B*C, Q, 256]
-                
+                torch.cat([sparse_embeddings_expanded, class_queries_expanded], dim=2)
+            )  # [B*C, Q, 256]
+
             # Expand other inputs for all classes
             # feats_img[-1][:, 0]: [bsz, C, H, W] -> [bsz*num_classes, C, H, W]
-            image_embeddings_expanded = feats_img[-1][:, 0].unsqueeze(1).expand(-1, self.num_classes, -1, -1, -1).reshape(bsz * self.num_classes, *feats_img[-1][:, 0].shape[1:]).contiguous()
+            image_embeddings_expanded = (
+                feats_img[-1][:, 0]
+                .unsqueeze(1)
+                .expand(-1, self.num_classes, -1, -1, -1)
+                .reshape(bsz * self.num_classes, *feats_img[-1][:, 0].shape[1:])
+                .contiguous()
+            )
 
             # dense_embeddings: [bsz, 256, 28, 28] -> [bsz*num_classes, 256, 28, 28]
-            dense_embeddings_expanded = dense_embeddings.unsqueeze(1).expand(-1, self.num_classes, -1, -1, -1).reshape(bsz * self.num_classes, *dense_embeddings.shape[1:]).contiguous()
+            dense_embeddings_expanded = (
+                dense_embeddings.unsqueeze(1)
+                .expand(-1, self.num_classes, -1, -1, -1)
+                .reshape(bsz * self.num_classes, *dense_embeddings.shape[1:])
+                .contiguous()
+            )
 
             # high_res_features: list of [bsz, C, H, W] -> list of [bsz*num_classes, C, H, W]
             high_res_features_expanded = [
-                feat.unsqueeze(1).expand(-1, self.num_classes, -1, -1, -1).reshape(bsz * self.num_classes, *feat.shape[1:]).contiguous()
+                feat.unsqueeze(1)
+                .expand(-1, self.num_classes, -1, -1, -1)
+                .reshape(bsz * self.num_classes, *feat.shape[1:])
+                .contiguous()
                 for feat in high_res_features
             ]
 
             # Run mask decoder once for all classes
             low_res_multimasks, _, _, _ = self.sam2.sam_mask_decoder(
                 image_embeddings=image_embeddings_expanded,
-                image_pe=F.interpolate(self.sam2.sam_prompt_encoder.get_dense_pe(), size=(feat_h, feat_w), mode='bilinear', align_corners=False) ,
+                image_pe=F.interpolate(
+                    self.sam2.sam_prompt_encoder.get_dense_pe(),
+                    size=(feat_h, feat_w),
+                    mode="bilinear",
+                    align_corners=False,
+                ),
                 sparse_prompt_embeddings=sparse_embeddings,
                 dense_prompt_embeddings=dense_embeddings_expanded,
                 multimask_output=False,
                 repeat_image=False,
                 high_res_features=high_res_features_expanded,
             )
-            
+
             low_res_multimasks = low_res_multimasks.float()
             sam_high_mask = F.interpolate(
                 low_res_multimasks,
@@ -523,7 +574,7 @@ class rtmvss(nn.Module):
             # # print("Saved low-res prediction visualization to ./tmp/pred_rgb.png")
             # #overlay on original image resized to low_res mask size
             # img = imgs[0].cpu()
-            
+
             # mean = torch.tensor([0.485, 0.456, 0.406]).view(3,1,1)
             # std  = torch.tensor([0.229, 0.224, 0.225]).view(3,1,1)
 
@@ -540,7 +591,7 @@ class rtmvss(nn.Module):
             sam_high_mask = sam_high_mask.squeeze(1)
             # Reshape back: [bsz*num_classes, h, w] -> [bsz, num_classes, h, w]
             sam_high_masks_logits = sam_high_mask.view(bsz, self.num_classes, h, w).contiguous()
-            
+
             if is_mem:
                 # update video queries based on aggregated foreground mask (excluding background)
                 # Aggregate all foreground classes (classes 1+) using max pooling
@@ -562,12 +613,12 @@ class rtmvss(nn.Module):
             # Convert to MVNet-compatible output format for inference
             # Add temporal dimension: [bsz, num_classes, h, w] -> [bsz, 1, num_classes, h, w]
             main_pred_logits = sam_high_masks_logits.unsqueeze(1)
-            
+
             # Return 5-tuple: (main, aux_rgb, aux_thermal, aux_fusion, features)
             return main_pred_logits, None, None, None, None
 
     def update_video_queries(self, pix_feat, pred_masks_high_res, alpha=0.1):
-        
+
         # print(f"[DEBUG update_video_queries] Input pix_feat has NaN: {torch.isnan(pix_feat).any()}, min: {pix_feat.min()}, max: {pix_feat.max()}")
         # print(f"[DEBUG update_video_queries] Input pred_masks_high_res has NaN: {torch.isnan(pred_masks_high_res).any()}, min: {pred_masks_high_res.min()}, max: {pred_masks_high_res.max()}")
         maskmem_out = self.sam2.memory_encoder(
@@ -583,7 +634,7 @@ class rtmvss(nn.Module):
 
         # self.video_query_weight [num, bsz, hidden_dim]
         # print(f"[DEBUG update_video_queries] Before transformer - video_query_weight has NaN: {torch.isnan(self.video_query_weight).any()}, min: {self.video_query_weight.min()}, max: {self.video_query_weight.max()}")
-        
+
         # self.video_query_weight [num, bsz, hidden_dim]
         query_feat = self.transformer_cross_attention(
             self.video_query_weight.permute(1, 2, 0).contiguous(), maskmem_feature.permute(0, 2, 1).contiguous()
@@ -593,13 +644,13 @@ class rtmvss(nn.Module):
         # print(f"[DEBUG update_video_queries] After self_attention has NaN: {torch.isnan(query_feat).any()}")
 
         query_feat = self.transformer_ffn(query_feat.permute(0, 2, 1).contiguous())
-        
+
         # print(f"[DEBUG update_video_queries] After FFN has NaN: {torch.isnan(query_feat).any()}")
-        
+
         self.video_query_weight = self.video_query_weight * alpha + query_feat.permute(1, 0, 2).contiguous()
 
         # print(f"[DEBUG update_video_queries] Updated video_query_weight has NaN: {torch.isnan(self.video_query_weight).any()}, min: {self.video_query_weight.min()}, max: {self.video_query_weight.max()}")
-      
+
         return
 
     """
@@ -730,11 +781,13 @@ class rtmvss(nn.Module):
         actual_feat_sizes = []
         for i, feat in enumerate(vision_feats):
             spatial_dim, actual_batch_dim, channels = feat.shape  # Note: spatial_dim first!
-            
+
             # Infer H and W from spatial_dim (assuming square features)
-            feat_size = int(spatial_dim ** 0.5)
+            feat_size = int(spatial_dim**0.5)
             # print(f"Feature size at level {i}: {feat_size}x{feat_size}")
-            assert feat_size * feat_size == spatial_dim, f"Expected square features at level {i}, got spatial_dim={spatial_dim}, shape={feat.shape}"
+            assert feat_size * feat_size == spatial_dim, (
+                f"Expected square features at level {i}, got spatial_dim={spatial_dim}, shape={feat.shape}"
+            )
             actual_feat_sizes.append((feat_size, feat_size))
             # Reshape: [H*W, bsz*frames, C] -> [bsz*frames, C, H*W] -> [bsz*frames, C, H, W]
             # Permute to get [bsz*frames, C, H*W] first
@@ -742,12 +795,11 @@ class rtmvss(nn.Module):
             # Then reshape to [bsz*frames, C, H, W]
             feat_reshaped = feat_permuted.reshape(actual_batch_dim, channels, feat_size, feat_size).contiguous()
             feats.append(feat_reshaped)
-        
+
         # Store actual feature sizes for use in forward pass
         self.actual_feat_sizes = actual_feat_sizes
 
         return feats
-
 
     def square_pad(self, x):
         _, _, h, w = x.shape
@@ -769,6 +821,7 @@ class rtmvss(nn.Module):
         if pad_h > 0 or pad_w > 0:
             x = F.pad(x, (0, pad_w, 0, pad_h))
         return x
+
 
 class query_embedding(nn.Module):
     def __init__(self, hidden_dim):
@@ -838,7 +891,7 @@ class cross_attention(nn.Module):
 
         attn = F.softmax(scores, dim=-1)
 
-        output = torch.matmul(attn, value)        
+        output = torch.matmul(attn, value)
         # print(output.shape)
         # exit(0)
         if dim == 4:

@@ -20,6 +20,7 @@ from models.rtmvss_7a import rtmvss as rtmvss7a
 from models.rtmvss_7b import rtmvss as rtmvss7b
 from models.rtmvss_7c import rtmvss as rtmvss7c
 from models.rtmvss_7d import rtmvss as rtmvss7d
+from models.rtmvss_7e import rtmvss as rtmvss7e
 
 models = {
     "mvnet": MVNet,
@@ -41,6 +42,7 @@ models = {
     "rtmvss_7b": rtmvss7b,
     "rtmvss_7c": rtmvss7c,
     "rtmvss_7d": rtmvss7d,
+    "rtmvss_7e": rtmvss7e,
 }
 
 

@@ -118,10 +118,11 @@ if __name__ == "__main__":
     import glob
 
     for run_path in glob.glob("./runs/*/"):
-        if "746" not in run_path:
+        if Path(run_path, "training_plot.png").exists():
+            print(f"Plot already exists for {run_path}, skipping...")
             continue
+        print(f"Processing run: {run_path}")
         try:
             plot_training_log(run_path)
         except Exception as e:
             print(f"Error: {e}", file=sys.stderr)
-            sys.exit(1)

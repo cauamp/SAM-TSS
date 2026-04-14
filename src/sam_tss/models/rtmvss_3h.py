@@ -1,0 +1,983 @@
+# MIT License
+# Copyright (c) 2025 LinJ0866
+#
+# This file is part of an extended version of the original MIT-licensed project.
+# See the root LICENSE file for the original license.
+
+import math
+import torch
+
+from torch import nn
+from torch.nn import functional as F
+from .sam2.build_sam import build_sam2_video_predictor
+
+
+class rtmvss(nn.Module):
+    def __init__(self, args, device):
+        super().__init__()
+        self.num_classes = args.num_classes
+
+        self.pix_feat = None
+        self.device = device
+        self.is_training = args.training if hasattr(args, "training") else True
+        self.win_size = args.win_size if hasattr(args, "win_size") else 4
+        self.always_decode = args.always_decode if hasattr(args, "always_decode") else False
+
+        # adapter to project the depth image to proper rgb space
+        self.encoder_adapter0 = nn.Sequential(
+            nn.Conv2d(1, 3, (3, 3), padding=(1, 1), bias=True), nn.ReLU(), nn.Conv2d(3, 3, 1)
+        )
+
+        # self._bb_feat_sizes = [
+        #     (256, 256),
+        #     (128, 128),
+        #     (64, 64),
+        # ]
+        self._bb_feat_sizes = [
+            (120, 120),
+            (60, 60),
+            (30, 30),
+        ]
+        if "sam2.1_hiera_l" in args.sam2_config:
+            channel_list = [144, 288, 576, 1152]
+        elif "sam2.1_hiera_b+" in args.sam2_config:
+            channel_list = [112, 224, 448, 896]
+        elif "sam2.1_hiera_s" in args.sam2_config:
+            channel_list = [96, 192, 384, 768]
+        elif "sam2.1_hiera_t" in args.sam2_config:
+            channel_list = [96, 192, 384, 768]
+        else:
+            raise ValueError(f"Unsupported SAM2 config: {args.sam2_config}")
+
+        # adapter to finetune the image encoder and fuse the rgb and depth features
+        self.encoder_adapter0_ = nn.Sequential(
+            nn.Conv2d(3, 64, (3, 3), padding=(1, 1), bias=True), nn.ReLU(), nn.Conv2d(64, channel_list[0], 1), nn.ReLU()
+        )
+        self.encoder_adapter1 = bi_modal_parallel_adapter(channel_list[0], channel_list[1])
+        self.encoder_adapter2 = bi_modal_parallel_adapter(channel_list[1], channel_list[2])
+        self.encoder_adapter3 = bi_modal_parallel_adapter(channel_list[2], channel_list[3])
+        self.encoder_adapter4 = bi_modal_parallel_adapter(channel_list[3], channel_list[3])
+
+        # self.mixer0 = nn.Sequential(
+        #     nn.Conv2d(32, 32, (3, 3), padding=(1, 1), bias=True),
+        #     nn.ReLU(),
+        #     nn.Conv2d(32, 32, (3, 3), padding=(1, 1), bias=True),
+        #     nn.ReLU(),
+        #     nn.Conv2d(32, 1, (1, 1), bias=True),
+        #     nn.Sigmoid(),
+        # )
+
+        # self.mixer1 = nn.Sequential(
+        #     nn.Conv2d(64, 32, (3, 3), padding=(1, 1), bias=True),
+        #     nn.ReLU(),
+        #     nn.Conv2d(32, 32, (3, 3), padding=(1, 1), bias=True),
+        #     nn.ReLU(),
+        #     nn.Conv2d(32, 1, (1, 1), bias=True),
+        #     nn.Sigmoid(),
+        # )
+
+        self.mixer2 = nn.Sequential(
+            nn.Conv2d(256, 128, (3, 3), padding=(1, 1), bias=True),
+            nn.ReLU(),
+            nn.Conv2d(128, 32, (3, 3), padding=(1, 1), bias=True),
+            nn.ReLU(),
+            nn.Conv2d(32, self.num_classes, (1, 1), bias=True),
+        )
+
+        self.sam2 = build_sam2_video_predictor(
+            config_file=args.sam2_config, ckpt_path=args.sam2_ckpt, device=device, mode="train"
+        )
+        self._set_sam2_patch_embed_4x4()
+        self._configure_multiclass_sam_mask_decoder()
+        self._freeze_sam_decoder()
+        for param in self.sam2.image_encoder.trunk.parameters():
+            param.requires_grad = False
+        for param in self.sam2.image_encoder.trunk.patch_embed.parameters():
+            param.requires_grad = True
+
+        self.hidden_dim = 64
+        self.num_frame_queries = args.num_frame_queries
+        self.frame_queries = nn.Embedding(self.num_classes * self.num_frame_queries, self.hidden_dim)
+
+        self.frame_queires_embed = query_embedding(self.hidden_dim)
+        # Enable memory if explicitly set or if baseline_mode is enabled
+        self.enable_memory = (hasattr(args, "enable_memory") and args.enable_memory) or (
+            hasattr(args, "baseline_mode") and args.baseline_mode
+        )
+        if self.enable_memory:
+            self.num_video_queries = args.num_video_queries
+            self.video_queries = nn.Embedding(self.num_classes * self.num_video_queries, self.hidden_dim)
+
+            self.frame2video_embed = nn.Sequential(
+                nn.Conv2d(self.num_classes * self.num_frame_queries, 256, 1),
+                nn.ReLU(),
+            )
+            self.video_queires_embed = query_embedding(self.hidden_dim)
+
+            self.video_cross_attention = cross_attention(4, 256)
+
+            self.transformer_cross_attention = cross_attention(8, self.hidden_dim)
+            self.transformer_self_attention = cross_attention(8, self.hidden_dim)
+            self.transformer_ffn = nn.Sequential(
+                nn.Linear(self.hidden_dim, self.hidden_dim),
+                nn.LayerNorm(self.hidden_dim),
+                nn.GELU(),
+            )
+
+            self.memory_proj = nn.Sequential(
+                nn.Linear(64, self.hidden_dim),
+                nn.LayerNorm(self.hidden_dim),
+                nn.GELU(),
+                nn.Linear(self.hidden_dim, self.hidden_dim),
+            )
+
+        self.sparse_embed = nn.Linear(self._bb_feat_sizes[-1][0] * self._bb_feat_sizes[-1][1], 256)
+
+        # Memory state for video queries (compatibility with MVNet structure)
+        self.video_query_initialized = False
+
+    def _build_class_frame_queries(self, bsz):
+        frame_query_weight = self.frame_queries.weight.view(self.num_classes, self.num_frame_queries, self.hidden_dim)
+        frame_query_weight = frame_query_weight.unsqueeze(2).expand(-1, -1, bsz, -1).contiguous()
+        frame_query_weight_flat = frame_query_weight.view(
+            self.num_classes * self.num_frame_queries, bsz, self.hidden_dim
+        )
+        frame_query_embeddings = self.frame_queires_embed(frame_query_weight_flat)
+        return frame_query_embeddings.view(bsz, self.num_classes, self.num_frame_queries, -1).contiguous()
+
+    def _initialize_video_queries(self, bsz):
+        if not self.video_query_initialized:
+            video_query_weight = self.video_queries.weight.view(
+                self.num_classes, self.num_video_queries, self.hidden_dim
+            )
+            self.video_query_weight = video_query_weight.unsqueeze(2).expand(-1, -1, bsz, -1).clone().contiguous()
+            self.video_query_initialized = True
+
+    def _set_sam2_patch_embed_4x4(self):
+        patch_embed = self.sam2.image_encoder.trunk.patch_embed
+        old_proj = patch_embed.proj
+
+        if (
+            tuple(old_proj.kernel_size) == (4, 4)
+            and tuple(old_proj.stride) == (4, 4)
+            and tuple(old_proj.padding) == (0, 0)
+        ):
+            return
+
+        new_proj = nn.Conv2d(
+            old_proj.in_channels,
+            old_proj.out_channels,
+            kernel_size=(4, 4),
+            stride=(4, 4),
+            padding=(0, 0),
+            bias=old_proj.bias is not None,
+        ).to(device=old_proj.weight.device, dtype=old_proj.weight.dtype)
+
+        with torch.no_grad():
+            old_weight = old_proj.weight
+            if old_weight.shape[-2:] == (7, 7):
+                new_proj.weight.copy_(old_weight[:, :, 1:5, 1:5])
+            elif old_weight.shape[-2:] == (4, 4):
+                new_proj.weight.copy_(old_weight)
+            else:
+                resized = F.interpolate(
+                    old_weight.reshape(-1, 1, old_weight.shape[-2], old_weight.shape[-1]),
+                    size=(4, 4),
+                    mode="bilinear",
+                    align_corners=False,
+                ).reshape(old_weight.shape[0], old_weight.shape[1], 4, 4)
+                new_proj.weight.copy_(resized)
+
+            if old_proj.bias is not None:
+                new_proj.bias.copy_(old_proj.bias)
+
+        patch_embed.proj = new_proj
+
+    def _configure_multiclass_sam_mask_decoder(self):
+        """Reconfigure SAM decoder so each class owns a full copy of old mask tokens."""
+        decoder = self.sam2.sam_mask_decoder
+        if getattr(decoder, "_rtmvss_multiclass", False):
+            return
+
+        old_mask_tokens = decoder.mask_tokens
+        old_hyper_mlps = decoder.output_hypernetworks_mlps
+        old_iou_head = decoder.iou_prediction_head
+
+        device = old_mask_tokens.weight.device
+        dtype = old_mask_tokens.weight.dtype
+        transformer_dim = decoder.transformer_dim
+        old_num_mask_tokens = old_mask_tokens.weight.shape[0]
+        self.class_mask_tokens_per_class = old_num_mask_tokens
+
+        decoder.num_mask_tokens = self.num_classes * old_num_mask_tokens
+        decoder.num_multimask_outputs = max(decoder.num_mask_tokens - 1, 0)
+
+        new_mask_tokens = nn.Embedding(decoder.num_mask_tokens, transformer_dim).to(device=device, dtype=dtype)
+        with torch.no_grad():
+            expanded_tokens = old_mask_tokens.weight.repeat(self.num_classes, 1)
+            new_mask_tokens.weight.copy_(expanded_tokens)
+        decoder.mask_tokens = new_mask_tokens
+
+        hyper_hidden_dim = old_hyper_mlps[0].layers[0].out_features
+        hyper_output_dim = old_hyper_mlps[0].layers[-1].out_features
+        hyper_num_layers = old_hyper_mlps[0].num_layers
+        new_hyper_mlps = nn.ModuleList()
+        for i in range(decoder.num_mask_tokens):
+            mlp = type(old_hyper_mlps[0])(
+                transformer_dim,
+                hyper_hidden_dim,
+                hyper_output_dim,
+                hyper_num_layers,
+            ).to(device=device, dtype=dtype)
+            src_idx = i % len(old_hyper_mlps)
+            mlp.load_state_dict(old_hyper_mlps[src_idx].state_dict())
+            new_hyper_mlps.append(mlp)
+        decoder.output_hypernetworks_mlps = new_hyper_mlps
+
+        iou_num_layers = old_iou_head.num_layers
+        iou_hidden_dim = old_iou_head.layers[0].out_features
+        iou_sigmoid_output = getattr(old_iou_head, "sigmoid_output", False)
+        new_iou_head = type(old_iou_head)(
+            transformer_dim,
+            iou_hidden_dim,
+            decoder.num_mask_tokens,
+            iou_num_layers,
+            sigmoid_output=iou_sigmoid_output,
+        ).to(device=device, dtype=dtype)
+
+        with torch.no_grad():
+            for layer_idx in range(iou_num_layers - 1):
+                new_iou_head.layers[layer_idx].weight.copy_(old_iou_head.layers[layer_idx].weight)
+                new_iou_head.layers[layer_idx].bias.copy_(old_iou_head.layers[layer_idx].bias)
+
+            old_last = old_iou_head.layers[-1]
+            new_last = new_iou_head.layers[-1]
+            copy_count = min(decoder.num_mask_tokens, old_last.out_features)
+            new_last.weight[:copy_count].copy_(old_last.weight[:copy_count])
+            new_last.bias[:copy_count].copy_(old_last.bias[:copy_count])
+            if decoder.num_mask_tokens > copy_count:
+                new_last.weight[copy_count:].copy_(
+                    old_last.weight[0].unsqueeze(0).expand(decoder.num_mask_tokens - copy_count, -1)
+                )
+                new_last.bias[copy_count:].copy_(old_last.bias[0].expand(decoder.num_mask_tokens - copy_count))
+
+        decoder.iou_prediction_head = new_iou_head
+        decoder._rtmvss_multiclass = True
+
+    def _freeze_sam_decoder(self):
+        """Keep SAM decoder weights fixed in this 3h variant."""
+        for param in self.sam2.sam_mask_decoder.parameters():
+            param.requires_grad = False
+
+    def reset_hidden_state(self):
+        """Reset memory state between video sequences (MVNet compatibility)"""
+        self.video_query_initialized = False
+        if hasattr(self, "video_query_weight"):
+            delattr(self, "video_query_weight")
+
+    def _decode_all_class_masks(self, image_embeddings, dense_embeddings, sparse_embeddings, high_res_features):
+        """Run decoder once and reduce per-class token groups to one mask per class."""
+        feat_h, feat_w = image_embeddings.shape[-2:]
+
+        low_res_multimasks, ious, _, _ = self.sam2.sam_mask_decoder.predict_masks(
+            image_embeddings=image_embeddings,
+            image_pe=F.interpolate(
+                self.sam2.sam_prompt_encoder.get_dense_pe(),
+                size=(feat_h, feat_w),
+                mode="bilinear",
+                align_corners=False,
+            ),
+            sparse_prompt_embeddings=sparse_embeddings,
+            dense_prompt_embeddings=dense_embeddings,
+            repeat_image=False,
+            high_res_features=high_res_features,
+        )
+
+        token_per_class = getattr(self, "class_mask_tokens_per_class", 1)
+        expected_channels = self.num_classes * token_per_class
+        if low_res_multimasks.shape[1] != expected_channels:
+            raise RuntimeError(f"Expected {expected_channels} decoder channels, got {low_res_multimasks.shape[1]}")
+
+        bsz, _, low_h, low_w = low_res_multimasks.shape
+        low_res_multimasks = low_res_multimasks.view(bsz, self.num_classes, token_per_class, low_h, low_w).contiguous()
+        ious = ious.view(bsz, self.num_classes, token_per_class).contiguous()
+
+        if token_per_class == 1:
+            return low_res_multimasks.squeeze(2).float().contiguous()
+
+        # Select the best token per class using IoU quality predictions.
+        best_token_idx = torch.argmax(ious, dim=2)
+        gather_idx = best_token_idx.unsqueeze(-1).unsqueeze(-1).unsqueeze(-1).expand(-1, -1, 1, low_h, low_w)
+        best_class_masks = torch.gather(low_res_multimasks, dim=2, index=gather_idx).squeeze(2)
+
+        return best_class_masks.float().contiguous()
+
+    def forward(self, input, thermal, step=0, epoch=0):
+        """
+        Forward pass adapted for MVNet training structure.
+        Args:
+            input: RGB images [batch_size, seq_len, 3, h, w]
+            thermal: Thermal/depth images [batch_size, seq_len, 3, h, w] or [batch_size, seq_len, 1, h, w]
+            step: Current training step (for compatibility)
+            epoch: Current epoch (for compatibility)
+        Returns:
+            probabilities: [batch_size, temporal_len, num_classes, h, w] - main predictions (logits)
+            probabilities_aux: None (not used)
+            probabilities_thermal: None (not used)
+            probabilities_fusion: [batch_size, temporal_len, num_classes, h, w] - auxiliary predictions (logits)
+            total_feas: None (not using metric learning)
+        """
+        # Determine if using memory and if training
+        is_mem = self.enable_memory  # Use memory if it was enabled during initialization
+        is_training = self.is_training
+
+        # Rename for internal compatibility
+        imgs = input
+        depths = thermal
+
+        return self._forward_internal(imgs, depths, is_mem=is_mem, is_training=is_training, current_ti=step)
+
+    def _forward_internal(self, imgs, depths, is_mem=True, is_training=True, current_ti=0):
+        frames_pred = []
+
+        # print(f"Input dimensions - imgs: {imgs.shape}, depths: {depths.shape}"
+        #           )
+        bsz, frames, _, h, w = imgs.shape
+        imgs = imgs.view(-1, 3, h, w).contiguous()
+
+        # Handle both 1-channel and 3-channel thermal input
+        if depths.size(2) == 3:
+            depths = depths[:, :, 0:1, :, :]  # Take only first channel if 3-channel
+        depths = depths.view(-1, 1, h, w).contiguous()
+
+        imgs = self.square_pad(imgs)
+        depths = self.square_pad(depths)
+        # print(f"After padding - imgs: {imgs.shape}, depths: {depths.shape}")
+        d_proj = self.encoder_adapter0(depths)
+
+        # d_proj = depths.repeat(1, 3, 1, 1)
+        feats_img, feats_d = self.sam2_image_encoder(imgs, d_proj)
+
+        # print(f"Encoder output feature shapes: {[feat.shape for feat in feats_img]}")  # Debug print
+        # resize imgs and depths to 512x512
+        # imgs = F.interpolate(imgs, size=(512, 512), mode='bilinear', align_corners=False)
+        # depths = F.interpolate(depths, size=(512, 512), mode='bilinear', align_corners=False)
+
+        # Use actual feature sizes computed from the backbone
+        feat_sizes = self.actual_feat_sizes if hasattr(self, "actual_feat_sizes") else self._bb_feat_sizes
+
+        # auxiliary supervision
+        if is_training:
+            intermediate_mask_stage2 = self.mixer2(feats_img[2])
+
+            intermediate_mask_stage2 = intermediate_mask_stage2.squeeze(1)  # [bsz*frames, H, W]
+            # Infer actual spatial dimensions from tensor shape
+            _, _, spatial_h, spatial_w = intermediate_mask_stage2.shape
+            intermediate_mask_stage2 = intermediate_mask_stage2.reshape(
+                bsz, frames, self.num_classes, spatial_h, spatial_w
+            ).contiguous()
+
+            intermediate_mask = [intermediate_mask_stage2]
+
+        # Reshape features for temporal processing
+        for i in range(3):
+            # Dynamically infer the spatial size from the actual tensor
+            _, C, feat_h, feat_w = feats_img[i].shape  # [bsz*frames, C, H, W]
+            feats_img[i] = feats_img[i].reshape(bsz, frames, C, feat_h, feat_w).contiguous()
+            feats_d[i] = feats_d[i].reshape(bsz, frames, C, feat_h, feat_w).contiguous()
+
+        if is_training:
+            if is_mem and not self.video_query_initialized:
+                self._initialize_video_queries(bsz)
+
+            # Use feat_sizes[-1] for the lowest resolution level (main embeddings)
+            dense_embeddings = self.sam2.sam_prompt_encoder.no_mask_embed.weight.reshape(1, -1, 1, 1).expand(
+                bsz, -1, feat_sizes[-1][0], feat_sizes[-1][1]
+            )
+
+            for ti in range(0, frames):
+                # Use levels 0 and 1 for high-res features
+                high_res_features = [feats_img[idx][:, ti] for idx in range(2)]
+
+                frame_query_embeddings = self._build_class_frame_queries(bsz)
+                frame_query_embeddings_flat = frame_query_embeddings.view(
+                    bsz, self.num_classes * self.num_frame_queries, -1
+                ).contiguous()
+
+                if is_mem:
+                    frame_query_feat = torch.einsum(
+                        "bqc,bchw->bqhw", frame_query_embeddings_flat, feats_img[-1][:, ti]
+                    ).contiguous()
+                    frame_query_feat = self.frame2video_embed(frame_query_feat)
+                    video_query_embeddings = (
+                        self.video_queires_embed(
+                            self.video_query_weight.view(
+                                self.num_classes * self.num_video_queries, bsz, self.hidden_dim
+                            )
+                        )
+                        .view(bsz, self.num_classes, self.num_video_queries, -1)
+                        .contiguous()
+                    )
+
+                    # fuse the frame information to the video query
+                    # frame_query_embeddings: [bsz, num_queries, hidden_dim]
+                    video_query_embeddings = (
+                        self.video_cross_attention(
+                            video_query_embeddings.view(bsz, self.num_classes * self.num_video_queries, -1)
+                            .transpose(1, 2)
+                            .contiguous(),
+                            frame_query_feat,
+                        )
+                        .transpose(1, 2)
+                        .view(bsz, self.num_classes, self.num_video_queries, -1)
+                        .contiguous()
+                    )
+                else:
+                    video_query_embeddings = frame_query_embeddings
+
+                # dense_embeddings = self.dense_embed(video_embed_with_current_feat)
+
+                if is_mem:
+                    video_embed_with_current_feat = torch.einsum(
+                        "bqc,bchw->bqhw",
+                        video_query_embeddings.view(bsz, self.num_classes * self.num_video_queries, -1),
+                        feats_img[-1][:, ti],
+                    ).contiguous()
+                    video_embed_with_current_feat = video_embed_with_current_feat.view(
+                        bsz, self.num_classes, self.num_video_queries, feat_h, feat_w
+                    ).contiguous()
+                else:
+                    video_embed_with_current_feat = torch.einsum(
+                        "bqc,bchw->bqhw",
+                        video_query_embeddings.view(bsz, self.num_classes * self.num_frame_queries, -1),
+                        feats_img[-1][:, ti],
+                    ).contiguous()
+                    video_embed_with_current_feat = video_embed_with_current_feat.view(
+                        bsz, self.num_classes, self.num_frame_queries, feat_h, feat_w
+                    ).contiguous()
+
+                if is_mem:
+                    embed = video_embed_with_current_feat.view(
+                        bsz, self.num_classes * self.num_video_queries, -1
+                    ).contiguous()
+                else:
+                    embed = video_embed_with_current_feat.view(
+                        bsz, self.num_classes * self.num_frame_queries, -1
+                    ).contiguous()
+
+                sparse_embeddings = self.sparse_embed(embed)  # [B, C*Q, 256]
+
+                low_res_multimasks = self._decode_all_class_masks(
+                    image_embeddings=feats_img[-1][:, ti],
+                    dense_embeddings=dense_embeddings,
+                    sparse_embeddings=sparse_embeddings,
+                    high_res_features=high_res_features,
+                )
+
+                sam_high_masks_logits = F.interpolate(
+                    low_res_multimasks,
+                    size=(h, w),
+                    mode="bilinear",
+                    align_corners=False,
+                )
+                # Keep raw logits - no sigmoid needed since MVNet expects logits
+                # print(f"Low-res multimasks shape: {low_res_multimasks.shape}")  # Debug print
+                # print(f"High-res mask shape (logits): {sam_high_masks_logits.shape}")  # Debug print
+
+                if is_mem:
+                    masks_probs = torch.sigmoid(sam_high_masks_logits)  # [bsz, num_classes, h, w]
+                    for class_idx in range(self.num_classes):
+                        class_mask = masks_probs[:, class_idx : class_idx + 1, :, :]
+                        _, _, mask_h, mask_w = class_mask.shape
+                        target_h, target_w = feat_h * 16, feat_w * 16
+                        pad_h = target_h - mask_h
+                        pad_w = target_w - mask_w
+                        if pad_h > 0 or pad_w > 0:
+                            class_mask = F.pad(class_mask, (0, pad_w, 0, pad_h))
+                        self.update_video_queries(feats_img[-1][:, ti], class_mask, class_idx=class_idx)
+
+                frames_pred.append(sam_high_masks_logits)
+
+            # Convert to MVNet-compatible output format
+            # Main predictions: all frames if always_decode, otherwise last frame only
+            if self.always_decode:
+                # Stack all frame predictions: [bsz, frames, num_classes, h, w]
+                main_pred_logits = torch.stack(frames_pred, dim=1)  # [bsz, frames, num_classes, h, w]
+            else:
+                # Only last frame: [bsz, 1, num_classes, h, w]
+                main_pred_logits = frames_pred[-1].unsqueeze(1)  # [bsz, 1, num_classes, h, w]
+
+            # Auxiliary predictions from intermediate supervision
+            # intermediate_mask is a list with [intermediate_mask_stage2] - these are probabilities from mixer2
+            aux_fusion = intermediate_mask[0]  # [bsz, frames, h2, w2]
+
+            if self.always_decode:
+                aux_fusion_logits = F.interpolate(
+                    aux_fusion.view(bsz * frames, self.num_classes, *aux_fusion.shape[3:]),
+                    size=(h, w),
+                    mode="bilinear",
+                    align_corners=False,
+                ).view(bsz, frames, self.num_classes, h, w)
+            else:
+                aux_fusion_logits = F.interpolate(
+                    aux_fusion[:, -1].reshape(bsz, self.num_classes, *aux_fusion.shape[3:]),
+                    size=(h, w),
+                    mode="bilinear",
+                    align_corners=False,
+                ).unsqueeze(1)  # [bsz, 1, num_classes, h, w]
+
+            # Return 5-tuple: (main, aux_rgb, aux_thermal, aux_fusion, features)
+            return main_pred_logits, None, None, aux_fusion_logits, None
+        else:
+            if is_mem and not self.video_query_initialized:
+                self._initialize_video_queries(bsz)
+
+            # sparse_embeddings = torch.empty(
+            #     (bsz, 0, 256), device=self.device
+            # )
+            dense_embeddings = self.sam2.sam_prompt_encoder.no_mask_embed.weight.reshape(1, -1, 1, 1).expand(
+                bsz, -1, feat_sizes[-1][0], feat_sizes[-1][1]
+            )
+            high_res_features = [feats_img[idx][:, 0] for idx in range(2)]
+
+            frame_query_embeddings = self._build_class_frame_queries(bsz)
+            frame_query_embeddings_flat = frame_query_embeddings.view(
+                bsz, self.num_classes * self.num_frame_queries, -1
+            ).contiguous()
+
+            if is_mem:
+                frame_query_feat = torch.einsum(
+                    "bqc,bchw->bqhw", frame_query_embeddings_flat, feats_img[-1][:, 0]
+                ).contiguous()
+                frame_query_feat = self.frame2video_embed(frame_query_feat)
+                video_query_embeddings = (
+                    self.video_queires_embed(
+                        self.video_query_weight.view(self.num_classes * self.num_video_queries, bsz, self.hidden_dim)
+                    )
+                    .view(bsz, self.num_classes, self.num_video_queries, -1)
+                    .contiguous()
+                )
+
+                # fuse the frame information to the video query
+                # frame_query_embeddings: [bsz, num_queries, hidden_dim]
+                video_query_embeddings = (
+                    self.video_cross_attention(
+                        video_query_embeddings.view(bsz, self.num_classes * self.num_video_queries, -1)
+                        .transpose(1, 2)
+                        .contiguous(),
+                        frame_query_feat,
+                    )
+                    .transpose(1, 2)
+                    .view(bsz, self.num_classes, self.num_video_queries, -1)
+                    .contiguous()
+                )
+            else:
+                video_query_embeddings = frame_query_embeddings
+
+            if is_mem:
+                video_embed_with_current_feat = torch.einsum(
+                    "bqc,bchw->bqhw",
+                    video_query_embeddings.view(bsz, self.num_classes * self.num_video_queries, -1),
+                    feats_img[-1][:, 0],
+                ).contiguous()
+                video_embed_with_current_feat = video_embed_with_current_feat.view(
+                    bsz, self.num_classes, self.num_video_queries, feat_h, feat_w
+                ).contiguous()
+            else:
+                video_embed_with_current_feat = torch.einsum(
+                    "bqc,bchw->bqhw",
+                    video_query_embeddings.view(bsz, self.num_classes * self.num_frame_queries, -1),
+                    feats_img[-1][:, 0],
+                ).contiguous()
+                video_embed_with_current_feat = video_embed_with_current_feat.view(
+                    bsz, self.num_classes, self.num_frame_queries, feat_h, feat_w
+                ).contiguous()
+            # dense_embeddings = self.dense_embed(video_embed_with_current_feat)
+
+            if is_mem:
+                embed = video_embed_with_current_feat.view(
+                    bsz, self.num_classes * self.num_video_queries, -1
+                ).contiguous()
+            else:
+                embed = video_embed_with_current_feat.view(
+                    bsz, self.num_classes * self.num_frame_queries, -1
+                ).contiguous()
+
+            sparse_embeddings = self.sparse_embed(embed)  # [B, C*Q, 256]
+
+            low_res_multimasks = self._decode_all_class_masks(
+                image_embeddings=feats_img[-1][:, 0],
+                dense_embeddings=dense_embeddings,
+                sparse_embeddings=sparse_embeddings,
+                high_res_features=high_res_features,
+            )
+
+            sam_high_masks_logits = F.interpolate(
+                low_res_multimasks,
+                size=(h, w),
+                mode="bilinear",
+                align_corners=False,
+            )
+            # Keep raw logits - no sigmoid needed since MVNet expects logits
+            # print(f"Low-res multimasks shape (sam_mask_decoder output): {low_res_multimasks.shape} ")  # Debug print
+            # save in ./tmp low_res_multimasks for debugging
+            # pred_labels = torch.argmax(low_res_multimasks, dim=0)  # [1,120,120]
+
+            # from sam_tss.datasets.mvss_dataset import cmap
+            # from sam_tss.utils.utils import class_to_RGB
+            # from PIL import Image
+            # import numpy as np
+
+            # pred_map = pred_labels.squeeze(0).cpu().numpy().astype(np.uint8)  # [120,120]
+            # print(f"pred_map shape: {pred_map.shape}")
+
+            # color_map = cmap()
+
+            # pred_rgb = class_to_RGB(pred_map, N=len(color_map), cmap=color_map)
+            # Image.fromarray(pred_rgb).save("./tmp/pred_rgb.png")
+            # # print("Saved low-res prediction visualization to ./tmp/pred_rgb.png")
+            # #overlay on original image resized to low_res mask size
+            # img = imgs[0].cpu()
+
+            # mean = torch.tensor([0.485, 0.456, 0.406]).view(3,1,1)
+            # std  = torch.tensor([0.229, 0.224, 0.225]).view(3,1,1)
+
+            # img = img * std + mean  # denormalize
+            # img = img.clamp(0,1)
+            # img = (img.permute(1,2,0).numpy() * 255).astype(np.uint8)
+            # img =Image.fromarray(img)
+            # img = img.resize(pred_map.shape[::-1], resample=Image.BILINEAR)
+            # img.save("./tmp/lowres_img.png")
+            # overlay = Image.blend(img, Image.fromarray(pred_rgb), alpha=0.5)
+            # overlay.save("./tmp/overlay.png")
+            # print(f"High-res mask shape (logits): {sam_high_masks_logits.shape} \n\n")  # Debug print
+
+            if is_mem:
+                masks_probs = torch.sigmoid(sam_high_masks_logits)  # [bsz, num_classes, h, w]
+                for class_idx in range(self.num_classes):
+                    class_mask = masks_probs[:, class_idx : class_idx + 1, :, :]
+                    _, _, mask_h, mask_w = class_mask.shape
+                    target_h, target_w = feat_h * 16, feat_w * 16
+                    pad_h = target_h - mask_h
+                    pad_w = target_w - mask_w
+                    if pad_h > 0 or pad_w > 0:
+                        class_mask = F.pad(class_mask, (0, pad_w, 0, pad_h))
+                    self.update_video_queries(feats_img[-1][:, 0], class_mask, class_idx=class_idx)
+
+            # Convert to MVNet-compatible output format for inference
+            # Add temporal dimension: [bsz, num_classes, h, w] -> [bsz, 1, num_classes, h, w]
+            main_pred_logits = sam_high_masks_logits.unsqueeze(1)
+
+            # Return 5-tuple: (main, aux_rgb, aux_thermal, aux_fusion, features)
+            return main_pred_logits, None, None, None, None
+
+    def update_video_queries(self, pix_feat, pred_masks_high_res, class_idx, alpha=0.1):
+
+        # print(f"[DEBUG update_video_queries] Input pix_feat has NaN: {torch.isnan(pix_feat).any()}, min: {pix_feat.min()}, max: {pix_feat.max()}")
+        # print(f"[DEBUG update_video_queries] Input pred_masks_high_res has NaN: {torch.isnan(pred_masks_high_res).any()}, min: {pred_masks_high_res.min()}, max: {pred_masks_high_res.max()}")
+        maskmem_out = self.sam2.memory_encoder(
+            pix_feat,
+            pred_masks_high_res,
+            skip_mask_sigmoid=True,  # sigmoid already applied
+        )
+        maskmem_feature = maskmem_out["vision_features"]  # bsz, 64, 28, 28
+        # print(f"[DEBUG update_video_queries] maskmem_feature has NaN: {torch.isnan(maskmem_feature).any()}")
+        maskmem_feature = self.memory_proj(maskmem_feature.flatten(2).permute(0, 2, 1).contiguous())
+
+        # print(f"[DEBUG update_video_queries] After memory_proj has NaN: {torch.isnan(maskmem_feature).any()}")
+
+        # self.video_query_weight [num, bsz, hidden_dim]
+        # print(f"[DEBUG update_video_queries] Before transformer - video_query_weight has NaN: {torch.isnan(self.video_query_weight).any()}, min: {self.video_query_weight.min()}, max: {self.video_query_weight.max()}")
+
+        query_weight = self.video_query_weight[class_idx]
+
+        query_feat = self.transformer_cross_attention(
+            query_weight.permute(1, 2, 0).contiguous(), maskmem_feature.permute(0, 2, 1).contiguous()
+        )
+        # print(f"[DEBUG update_video_queries] After cross_attention has NaN: {torch.isnan(query_feat).any()}")
+        query_feat = self.transformer_self_attention(query_feat, query_feat)
+        # print(f"[DEBUG update_video_queries] After self_attention has NaN: {torch.isnan(query_feat).any()}")
+
+        query_feat = self.transformer_ffn(query_feat.permute(0, 2, 1).contiguous())
+
+        # print(f"[DEBUG update_video_queries] After FFN has NaN: {torch.isnan(query_feat).any()}")
+
+        updated_query = query_weight * alpha + query_feat.permute(1, 0, 2).contiguous()
+        class_selector = (
+            F.one_hot(
+                torch.tensor(class_idx, device=updated_query.device),
+                num_classes=self.num_classes,
+            )
+            .view(self.num_classes, 1, 1, 1)
+            .type_as(updated_query)
+        )
+        self.video_query_weight = (
+            self.video_query_weight * (1 - class_selector) + updated_query.unsqueeze(0) * class_selector
+        )
+
+        # print(f"[DEBUG update_video_queries] Updated video_query_weight has NaN: {torch.isnan(self.video_query_weight).any()}, min: {self.video_query_weight.min()}, max: {self.video_query_weight.max()}")
+
+        return
+
+    """
+    3-level features
+    for 1024x1024:
+    - [B, 32, 112, 112]
+    - [B, 64, 56, 56]
+    - [B, 256, 28, 28]
+    """
+
+    def sam2_image_encoder(self, rgb, d):
+        batch_size = rgb.shape[0]
+
+        assert self.sam2.image_encoder.trunk.channel_list == self.sam2.image_encoder.neck.backbone_channel_list, (
+            f"Channel dims of trunk and neck do not match. Trunk: {self.sam2.image_encoder.trunk.channel_list}, neck: {self.sam2.image_encoder.neck.backbone_channel_list}"
+        )
+
+        """
+        trunk in image encoder has 4 levels of features:
+        - feat torch.Size([B, 112, 112, 112])
+        - feat torch.Size([B, 224, 56, 56])
+        - feat torch.Size([B, 448, 28, 28])
+        - feat torch.Size([B, 896, 14, 14])
+        
+        feat_rgb_0 shape: torch.Size([4, 144, 256, 256]), feat_d_0 shape: torch.Size([4, 144, 256, 256])
+        feat_rgb_1 shape: torch.Size([4, 288, 128, 128]), feat_d_1 shape: torch.Size([4, 288, 128, 128])
+        feat_rgb_2 shape: torch.Size([4, 576, 64, 64]), feat_d_2 shape: torch.Size([4, 576, 64, 64])
+        feat_rgb_3 shape: torch.Size([4, 1152, 32, 32]), feat_d_3 shape: torch.Size([4, 1152, 32, 32])
+        Feature size at level 0: 256x256
+        Feature size at level 1: 128x128
+        Feature size at level 2: 64x64
+        
+        og with pad:
+        feat_rgb_0 shape: torch.Size([4, 144, 120, 120]), feat_d_0 shape: torch.Size([4, 144, 120, 120])
+        feat_rgb_1 shape: torch.Size([4, 288, 60, 60]), feat_d_1 shape: torch.Size([4, 288, 60, 60])
+        feat_rgb_2 shape: torch.Size([4, 576, 30, 30]), feat_d_2 shape: torch.Size([4, 576, 30, 30])
+        feat_rgb_3 shape: torch.Size([4, 1152, 15, 15]), feat_d_3 shape: torch.Size([4, 1152, 15, 15])
+        Feature size at level 0: 120x120
+        Feature size at level 1: 60x60
+        Feature size at level 2: 30x30
+        """
+        # add encoder adapter to the last block of each level of features
+        feat_rgb_0 = self.sam2.image_encoder.trunk(rgb, 0).contiguous()
+        feat_d_0 = self.sam2.image_encoder.trunk(d, 0).contiguous()
+        # print(f"feat_rgb_0 shape: {feat_rgb_0.shape}, feat_d_0 shape: {feat_d_0.shape}")
+
+        feat_d_0_skip = self.encoder_adapter0_(F.interpolate(d, size=feat_d_0.shape[-2:], mode="bilinear"))
+        feat_d_0 = feat_d_0 + feat_d_0_skip
+
+        with torch.no_grad():
+            feat_rgb_1 = self.sam2.image_encoder.trunk(feat_rgb_0, 1).contiguous()
+            feat_d_1 = self.sam2.image_encoder.trunk(feat_d_0, 1).contiguous()
+            # print(f"feat_rgb_1 shape: {feat_rgb_1.shape}, feat_d_1 shape: {feat_d_1.shape}")
+
+        # parallel adapter
+        feat_rgb_0_skip, feat_d_0_skip = self.encoder_adapter1(feat_rgb_0, feat_d_0)  # parallel adapter
+        feat_rgb_0_skip = F.interpolate(feat_rgb_0_skip, size=feat_rgb_1.shape[-2:], mode="bilinear")
+        feat_d_0_skip = F.interpolate(feat_d_0_skip, size=feat_rgb_1.shape[-2:], mode="bilinear")
+        feat_rgb_1 = feat_rgb_1 + feat_rgb_0_skip
+        feat_d_1 = feat_d_1 + feat_d_0_skip
+
+        with torch.no_grad():
+            feat_rgb_2 = self.sam2.image_encoder.trunk(feat_rgb_1, 2).contiguous()
+            feat_d_2 = self.sam2.image_encoder.trunk(feat_d_1, 2).contiguous()
+            # print(f"feat_rgb_2 shape: {feat_rgb_2.shape}, feat_d_2 shape: {feat_d_2.shape}")
+
+        # parallel adapter
+        feat_rgb_1_skip, feat_d_1_skip = self.encoder_adapter2(feat_rgb_1, feat_d_1)  # parallel adapter
+        feat_rgb_1_skip = F.interpolate(feat_rgb_1_skip, size=feat_rgb_2.shape[-2:], mode="bilinear")
+        feat_d_1_skip = F.interpolate(feat_d_1_skip, size=feat_rgb_2.shape[-2:], mode="bilinear")
+        feat_rgb_2 = feat_rgb_2 + feat_rgb_1_skip
+        feat_d_2 = feat_d_2 + feat_d_1_skip
+
+        with torch.no_grad():
+            feat_rgb_3 = self.sam2.image_encoder.trunk(feat_rgb_2, 3).contiguous()
+            feat_d_3 = self.sam2.image_encoder.trunk(feat_d_2, 3).contiguous()
+            # print(f"feat_rgb_3 shape: {feat_rgb_3.shape}, feat_d_3 shape: {feat_d_3.shape}")
+
+        # parallel adapter
+        feat_rgb_2_skip, feat_d_2_skip = self.encoder_adapter3(feat_rgb_2, feat_d_2)  # parallel adapter
+        feat_rgb_2_skip = F.interpolate(feat_rgb_2_skip, size=feat_rgb_3.shape[-2:], mode="bilinear")
+        feat_d_2_skip = F.interpolate(feat_d_2_skip, size=feat_rgb_3.shape[-2:], mode="bilinear")
+        feat_rgb_3 = feat_rgb_3 + feat_rgb_2_skip
+        feat_d_3 = feat_d_3 + feat_d_2_skip
+
+        # adapter
+        feat_rgb_3_skip, _ = self.encoder_adapter4(feat_rgb_3, feat_d_3)
+        feat_rgb_3 = feat_rgb_3 + feat_rgb_3_skip
+
+        feats_rgb = [feat_rgb_0, feat_rgb_1, feat_rgb_2, feat_rgb_3]
+        feats_d = [feat_d_0, feat_d_1, feat_d_2, feat_d_3]
+
+        feats_rgb = self.prepare_backbone_features(feats_rgb, batch_size)
+        feats_d = self.prepare_backbone_features(feats_d, batch_size)
+
+        return feats_rgb, feats_d
+
+    def prepare_backbone_features(self, feats, batch_size):
+        # sam2.modeling.backbones.image_encoder.py ImageEncoder
+        features, pos = self.sam2.image_encoder.neck(feats)
+        if self.sam2.image_encoder.scalp > 0:
+            # Discard the lowest resolution features
+            features, pos = features[: -self.sam2.image_encoder.scalp], pos[: -self.sam2.image_encoder.scalp]
+
+        src = features[-1]
+        backbone_out = {
+            "vision_features": src,
+            "vision_pos_enc": pos,
+            "backbone_fpn": features,
+        }
+
+        # sam2.modeling.sam2_base.py SAM2Base.forward_image
+        if self.sam2.use_high_res_features_in_sam:
+            # precompute projected level 0 and level 1 features in SAM decoder
+            # to avoid running it again on every SAM click
+            backbone_out["backbone_fpn"][0] = self.sam2.sam_mask_decoder.conv_s0(backbone_out["backbone_fpn"][0])
+            backbone_out["backbone_fpn"][1] = self.sam2.sam_mask_decoder.conv_s1(backbone_out["backbone_fpn"][1])
+        _, vision_feats, _, _ = self.sam2._prepare_backbone_features(backbone_out)
+
+        # Add no_mem_embed, which is added to the lowest rest feat. map during training on videos
+        if self.sam2.directly_add_no_mem_embed:
+            vision_feats[-1] = vision_feats[-1] + self.sam2.no_mem_embed
+
+        # Dynamically compute feature sizes from actual tensor shapes
+        # vision_feats from SAM2 have shape [H*W, bsz*frames, C] (note: spatial first!)
+        # We need to reshape them to [bsz*frames, C, H, W]
+        feats = []
+        actual_feat_sizes = []
+        for i, feat in enumerate(vision_feats):
+            spatial_dim, actual_batch_dim, channels = feat.shape  # Note: spatial_dim first!
+
+            # Infer H and W from spatial_dim (assuming square features)
+            feat_size = int(spatial_dim**0.5)
+            # print(f"Feature size at level {i}: {feat_size}x{feat_size}")
+            assert feat_size * feat_size == spatial_dim, (
+                f"Expected square features at level {i}, got spatial_dim={spatial_dim}, shape={feat.shape}"
+            )
+            actual_feat_sizes.append((feat_size, feat_size))
+            # Reshape: [H*W, bsz*frames, C] -> [bsz*frames, C, H*W] -> [bsz*frames, C, H, W]
+            # Permute to get [bsz*frames, C, H*W] first
+            feat_permuted = feat.permute(1, 2, 0)  # [H*W, batch, C] -> [batch, C, H*W]
+            # Then reshape to [bsz*frames, C, H, W]
+            feat_reshaped = feat_permuted.reshape(actual_batch_dim, channels, feat_size, feat_size).contiguous()
+            feats.append(feat_reshaped)
+
+        # Store actual feature sizes for use in forward pass
+        self.actual_feat_sizes = actual_feat_sizes
+
+        return feats
+
+    def square_pad(self, x):
+        _, _, h, w = x.shape
+        if h > w:
+            diff = h - w
+            left = diff // 2
+            right = diff - left
+            x = F.pad(x, (left, right, 0, 0))
+        elif w > h:
+            diff = w - h
+            top = diff // 2
+            bottom = diff - top
+            x = F.pad(x, (0, 0, top, bottom))
+
+        _, _, h, w = x.shape
+        target = int(math.ceil(max(h, w) / 32.0) * 32)
+        pad_h = target - h
+        pad_w = target - w
+        if pad_h > 0 or pad_w > 0:
+            x = F.pad(x, (0, pad_w, 0, pad_h))
+        return x
+
+
+class query_embedding(nn.Module):
+    def __init__(self, hidden_dim):
+        super().__init__()
+        self.decoder_norm = nn.LayerNorm(hidden_dim)
+        self.mask_embed = MLP(hidden_dim, hidden_dim, 256, 3)
+
+    def forward(self, query):
+        query = self.decoder_norm(query)
+        query = query.transpose(0, 1).contiguous()
+        query_embeddings = self.mask_embed(query)
+
+        return query_embeddings
+
+
+class bi_modal_parallel_adapter(nn.Module):
+    def __init__(self, in_channel, out_channel):
+        super().__init__()
+        self.in_channel = in_channel
+        self.out_channel = out_channel
+        self.fc_up = nn.Conv2d(self.in_channel * 2, 64, (3, 3), padding=(1, 1), bias=True)
+        self.activate = nn.GELU()
+        self.fc_down = nn.Conv2d(64, self.out_channel * 2, 1)
+        # self.skip = nn.Conv2d(self.in_channel * 2, self.out_channel * 2, 1)
+
+    def forward(self, x1, x2):
+        x = torch.concat([x1, x2], dim=1)
+        out = self.fc_up(x)
+        out = self.activate(out)
+        out = self.fc_down(out)
+
+        out1, out2 = torch.split(out, split_size_or_sections=self.out_channel, dim=1)
+        return out1, out2
+
+
+class cross_attention(nn.Module):
+    def __init__(self, h, d_model):
+        super().__init__()
+
+        self.h = h
+        self.d_model = d_model // h
+
+        self.linear_q = nn.Linear(d_model, d_model)
+        self.linear_k = nn.Linear(d_model, d_model)
+        self.linear_v = nn.Linear(d_model, d_model)
+
+    # dim = 3: [bsz, ch, l]
+    # dim = 4: [bsz, ch, h, w]
+    def forward(self, x1, x2):
+        dim = 3
+        if x1.dim() == 4:
+            bsz, _, h, w = x1.shape
+            dim = 4
+        elif x1.dim() == 3:
+            bsz, ch, _ = x1.shape
+        x1 = x1.flatten(2).transpose(1, 2).contiguous()
+        x2 = x2.flatten(2).transpose(1, 2).contiguous()
+        # print(x1.shape, x2.shape)
+
+        query = self.linear_q(x1).view(bsz, -1, self.h, self.d_model).transpose(1, 2).contiguous()
+        key = self.linear_k(x2).view(bsz, -1, self.h, self.d_model).transpose(1, 2).contiguous()
+        value = self.linear_v(x2).view(bsz, -1, self.h, self.d_model).transpose(1, 2).contiguous()
+
+        scores = torch.matmul(query, key.transpose(-2, -1)) / math.sqrt(query.shape[-1])
+
+        scores = scores - scores.amax(dim=-1, keepdim=True)  # stabilize
+
+        attn = F.softmax(scores, dim=-1)
+
+        output = torch.matmul(attn, value)
+        # print(output.shape)
+        # exit(0)
+        if dim == 4:
+            output = output.view(bsz, h, w, -1).permute(0, 3, 1, 2).contiguous()
+        elif dim == 3:
+            output = output.transpose(1, 2).contiguous().view(bsz, -1, ch).transpose(1, 2).contiguous()
+
+        return output
+
+
+class MLP(nn.Module):
+    """Very simple multi-layer perceptron (also called FFN)"""
+
+    def __init__(self, input_dim, hidden_dim, output_dim, num_layers):
+        super().__init__()
+        self.num_layers = num_layers
+        h = [hidden_dim] * (num_layers - 1)
+        self.layers = nn.ModuleList(nn.Linear(n, k) for n, k in zip([input_dim] + h, h + [output_dim]))
+
+    def forward(self, x):
+        for i, layer in enumerate(self.layers):
+            x = F.relu(layer(x)) if i < self.num_layers - 1 else layer(x)
+        return x

@@ -278,8 +278,8 @@ def main() -> None:
     parser.add_argument("--args-file", default=None, help="Optional path to args.txt (defaults to <run-dir>/args.txt)")
     parser.add_argument("--ckpt", default=None, help="Optional path to checkpoint (.pth or .pth.tar)")
     parser.add_argument("--output-dir", default="./tmp", help="Output folder for qualitative results")
-    parser.add_argument("--num-train", type=int, default=3, help="Number of train samples to export")
-    parser.add_argument("--num-test", type=int, default=3, help="Number of test samples to export")
+    parser.add_argument("--num-train", type=int, default=10, help="Number of train samples to export")
+    parser.add_argument("--num-test", type=int, default=10, help="Number of test samples to export")
     parser.add_argument("--train-split", default="train", help="Train split filename stem (e.g. train for train.txt)")
     parser.add_argument("--test-split", default="test", help="Test split filename stem (e.g. test for test.txt)")
     parser.add_argument("--device", default="auto", choices=["auto", "cuda", "mps", "cpu"])
@@ -301,7 +301,7 @@ def main() -> None:
     args = parse_namespace_file(args_file)
 
     checkpoint_path = resolve_checkpoint(run_dir, cli.ckpt)
-    output_dir = Path(cli.output_dir)
+    output_dir = Path(cli.output_dir) / run_dir.name
     if not output_dir.is_absolute():
         output_dir = PROJECT_ROOT / output_dir
     output_dir.mkdir(parents=True, exist_ok=True)
